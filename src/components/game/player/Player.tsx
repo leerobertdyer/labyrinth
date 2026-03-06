@@ -1,76 +1,89 @@
 import { useKeyboardControls } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import { useRef } from "react";
-
-import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { MainCharacter } from "@/components/game/models/mixamo/mainCharacter";
 
 export default function Player() {
   const ref = useRef<RapierRigidBody>(null);
+  const meshRef = useRef<THREE.Group>(null);
   const [, get] = useKeyboardControls();
   const { camera } = useThree();
-  const speed = 5;
 
-  const cameraAngleRef = useRef({ theta: Math.PI, phi: Math.PI / 3 })
+  const speed = 5;
+  const rotateSpeed = 2;
+  const camRotateSpeed = 1.5;
   const cameraRadius = 8;
 
-  useFrame((state, delta) => {
-    const { forward, backward, left, right, rotateLeft, rotateRight, rotateUp, rotateDown } = get()
-    if (!ref.current) return
-  
-    // Camera rotation
-    const rotateSpeed = 1.5
-    if (rotateLeft) cameraAngleRef.current.theta -= rotateSpeed * delta
-    if (rotateRight) cameraAngleRef.current.theta += rotateSpeed * delta
-    if (rotateUp) cameraAngleRef.current.phi -= rotateSpeed * delta
-    if (rotateDown) cameraAngleRef.current.phi += rotateSpeed * delta
-  
-    cameraAngleRef.current.phi = Math.max(0.1, Math.min(Math.PI - 0.1, cameraAngleRef.current.phi))
-  
-    // Player movement — still camera relative
-    const cameraForward = new THREE.Vector3()
-    camera.getWorldDirection(cameraForward)
-    cameraForward.y = 0
-    cameraForward.normalize()
-  
-    const cameraRight = new THREE.Vector3()
-    cameraRight.crossVectors(cameraForward, new THREE.Vector3(0, 1, 0))
-    cameraRight.normalize()
-  
-    const moveDir = new THREE.Vector3()
-    if (forward) moveDir.add(cameraForward)
-    if (backward) moveDir.sub(cameraForward)
-    if (right) moveDir.add(cameraRight)
-    if (left) moveDir.sub(cameraRight)
-  
+  // playerFacing = world-space Y angle the mesh is pointing
+  // theta = camera's current horizontal orbit angle (lazily follows playerFacing)
+  const playerFacingRef = useRef(0);
+  const cameraAngleRef = useRef({ theta: Math.PI, phi: Math.PI / 3 });
+
+  useFrame((_, delta) => {
+    if (!ref.current || !meshRef.current) return;
+
+    const { moveForward, moveBackward, strafeLeft, strafeRight, rotateLeft, rotateRight, camUp, camDown } = get();
+
+    // --- Vertical camera orbit ---
+    if (camUp)   cameraAngleRef.current.phi -= camRotateSpeed * delta;
+    if (camDown) cameraAngleRef.current.phi += camRotateSpeed * delta;
+    cameraAngleRef.current.phi = Math.max(0.1, Math.min(Math.PI - 0.1, cameraAngleRef.current.phi));
+
+    // --- Player rotation ---
+    if (rotateLeft)  playerFacingRef.current += rotateSpeed * delta;
+    if (rotateRight) playerFacingRef.current -= rotateSpeed * delta;
+
+    // Apply mesh rotation
+    meshRef.current.rotation.y = playerFacingRef.current;
+
+    // --- Derive movement vectors from player facing (not camera) ---
+    const facing = playerFacingRef.current;
+    const playerForward = new THREE.Vector3(Math.sin(facing), 0, Math.cos(facing));
+    const playerRight = new THREE.Vector3(Math.cos(facing), 0, -Math.sin(facing));
+
+    const moveDir = new THREE.Vector3();
+    if (moveForward)  moveDir.add(playerForward);
+    if (moveBackward) moveDir.sub(playerForward);
+    if (strafeRight)  moveDir.sub(playerRight);
+    if (strafeLeft)   moveDir.add(playerRight);
+
     if (moveDir.length() > 0) {
-      moveDir.normalize()
-      const current = ref.current.translation()
+      moveDir.normalize();
+      const current = ref.current.translation();
       ref.current.setTranslation({
         x: current.x + moveDir.x * speed * delta,
         y: current.y,
-        z: current.z + moveDir.z * speed * delta
-      }, true)
+        z: current.z + moveDir.z * speed * delta,
+      }, true);
     }
-  
-    // Update camera position on sphere
-    const { theta, phi } = cameraAngleRef.current
-    const playerPos = ref.current.translation()
-  
+
+    // --- Camera lazy-follows player facing ---
+    // Target is directly behind the player: facing + PI
+    const targetTheta = playerFacingRef.current + Math.PI;
+    const current = cameraAngleRef.current.theta;
+    const diff = ((targetTheta - current + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+    cameraAngleRef.current.theta += diff * 5 * delta; // 5 = follow speed, tune to taste
+
+    // --- Update camera position ---
+    const { theta, phi } = cameraAngleRef.current;
+    const playerPos = ref.current.translation();
+
     camera.position.set(
       playerPos.x + cameraRadius * Math.sin(phi) * Math.sin(theta),
       playerPos.y + cameraRadius * Math.cos(phi),
       playerPos.z + cameraRadius * Math.sin(phi) * Math.cos(theta)
-    )
-  
-    camera.lookAt(playerPos.x, playerPos.y, playerPos.z)
-  })
+    );
+
+    camera.lookAt(playerPos.x, playerPos.y, playerPos.z);
+  });
 
   return (
     <RigidBody ref={ref} colliders="cuboid" lockRotations>
-      <MainCharacter />
+      <group ref={meshRef}>
+        <MainCharacter />
+      </group>
     </RigidBody>
   );
 }
