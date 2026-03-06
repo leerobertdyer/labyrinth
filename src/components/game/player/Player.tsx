@@ -11,7 +11,7 @@ export default function Player() {
   const [, get] = useKeyboardControls();
   const { camera } = useThree();
 
-  const speed = 5;
+  const speed = 8;
   const rotateSpeed = 2;
   const camRotateSpeed = 1.5;
   const cameraRadius = 8;
@@ -80,7 +80,7 @@ export default function Player() {
   });
 
   return (
-    <RigidBody ref={ref} colliders="cuboid" lockRotations>
+    <RigidBody ref={ref} ccd={true} colliders="cuboid" lockRotations>
       <group ref={meshRef}>
         <MainCharacter />
       </group>
