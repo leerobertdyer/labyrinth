@@ -5,10 +5,14 @@ import { KeyboardControls } from "@react-three/drei";
 import Scene from "./Scene";
 
 const controls = [
-  { name: "forward", keys: ["ArrowUp", "w", "W"] },
-  { name: "backward", keys: ["ArrowDown", "s", "S"] },
-  { name: "left", keys: ["ArrowLeft", "a", "A"] },
-  { name: "right", keys: ["ArrowRight", "d", "D"] },
+  { name: "forward", keys: ["ArrowUp"] },
+  { name: "backward", keys: ["ArrowDown"] },
+  { name: "left", keys: ["ArrowLeft"] },
+  { name: "right", keys: ["ArrowRight"] },
+  { name: "rotateLeft", keys: [ "a", "A"]},
+  { name: "rotateRight", keys: [ "d", "D"]},
+  { name: "rotateUp", keys: [ "w", "W"]},
+  { name: "rotateDown", keys: [ "s", "S"]},
 ];
 
 export default function GamePage() {
