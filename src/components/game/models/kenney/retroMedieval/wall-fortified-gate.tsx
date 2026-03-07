@@ -37,13 +37,13 @@ export function WallBDetailPaintedFortifiedGate(
 
   return (
     <group {...props} dispose={null}>
-      <RigidBody type="fixed">
+      <RigidBody type="fixed" colliders={false}>
         <mesh
           geometry={nodes["wall-fortified-gate_2"].geometry}
           material={materials.planks}
         />
-        <CuboidCollider args={[.375, 2, .8]} position={[-.35, 0, 0]} />
-        <CuboidCollider args={[.375, 2, .8]} position={[.35, 0, 0]} />
+        <CuboidCollider args={[.15, 1, .8]} position={[-.35, 0, 0]} />
+        <CuboidCollider args={[.15, 1, .8]} position={[.35, 0, 0]} />
         <mesh
           geometry={nodes["wall-fortified-gate_3"].geometry}
           material={materials.stones}

@@ -100,7 +100,7 @@ export default function Room({
   }
 
   return (
-    <RigidBody type="fixed">
+    <RigidBody type="fixed" colliders={false}>
       {/* Floor */}
       <FloorCeilingGrid
         size={size}
@@ -153,8 +153,6 @@ export default function Room({
                 ))}
               </>
             );
-          if (slot === "gate") return null;
-
           return null;
         }),
       )}

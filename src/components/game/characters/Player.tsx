@@ -109,7 +109,7 @@ export default function Player() {
   });
 
   return (
-    <RigidBody ref={ref} ccd={true} colliders={false} lockRotations>
+    <RigidBody ref={ref} ccd={true} colliders={false} lockRotations friction={2}>
       <CuboidCollider
         args={[0.4, 0.9, 0.4]}
         position={[0, 0.9, 0]}
