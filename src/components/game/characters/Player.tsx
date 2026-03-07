@@ -75,15 +75,21 @@ export default function Player() {
     if (strafeRight) moveDir.sub(playerRight);
     if (strafeLeft) moveDir.add(playerRight);
 
+    // Velocity-based movement so the player has real momentum (e.g. can push enemies)
+    const currentLinvel = ref.current.linvel();
     if (moveDir.length() > 0) {
       moveDir.normalize();
-      const current = ref.current.translation();
-      ref.current.setTranslation(
+      ref.current.setLinvel(
         {
-          x: current.x + moveDir.x * speed * delta,
-          y: current.y,
-          z: current.z + moveDir.z * speed * delta,
+          x: moveDir.x * speed,
+          y: currentLinvel.y,
+          z: moveDir.z * speed,
         },
+        true,
+      );
+    } else {
+      ref.current.setLinvel(
+        { x: 0, y: currentLinvel.y, z: 0 },
         true,
       );
     }
@@ -109,7 +115,7 @@ export default function Player() {
   });
 
   return (
-    <RigidBody ref={ref} ccd={true} colliders={false} lockRotations friction={2}>
+    <RigidBody ref={ref} ccd={true} colliders={false} lockRotations friction={2} mass={10}>
       <CuboidCollider
         args={[0.4, 0.9, 0.4]}
         position={[0, 0.9, 0]}

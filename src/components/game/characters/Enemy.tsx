@@ -12,9 +12,9 @@ export default function Enemy(props: EnemyProps) {
     : undefined;
 
   return (
-    <RigidBody type="fixed" position={position} rotation={rotation}>
-      <CuboidCollider args={[1, 1, 1]} position={[0, 0, 0]} />
-      <mesh>
+    <RigidBody type="dynamic" position={position} rotation={rotation} friction={.2} mass={.1} restitution={2}>
+      <CuboidCollider args={[1.25, 1.25, 1.25]} position={[0, 0, 0]} />
+      <mesh scale={2} >
         <boxGeometry />
         <meshBasicMaterial color="red" />
       </mesh>
