@@ -1,6 +1,6 @@
 import { useKeyboardControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { RapierRigidBody, RigidBody } from "@react-three/rapier";
+import { CuboidCollider, RapierRigidBody, RigidBody } from "@react-three/rapier";
 import { useRef } from "react";
 import * as THREE from "three";
 import { MainCharacter } from "@/components/game/models/mixamo/mainCharacter";
@@ -109,7 +109,13 @@ export default function Player() {
   });
 
   return (
-    <RigidBody ref={ref} ccd={true} colliders="cuboid" lockRotations>
+    <RigidBody ref={ref} ccd={true} colliders={false} lockRotations>
+      <CuboidCollider
+        args={[0.4, 0.9, 0.4]}
+        position={[0, 0.9, 0]}
+        restitution={0}
+        friction={1}
+      />
       <group ref={meshRef}>
         <MainCharacter />
       </group>

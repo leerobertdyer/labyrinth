@@ -3,7 +3,8 @@ import { useFrame } from "@react-three/fiber";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { Physics } from "@react-three/rapier";
 import * as THREE from "three";
-import Player from "@/components/game/player/Player";
+import Enemy from "@/components/game/characters/Enemy";
+import Player from "@/components/game/characters/Player";
 import Room, { WallEdge } from "@/components/game/structure/Room";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
 import { Vector3 } from "three";
@@ -44,11 +45,12 @@ export default function Scene() {
   const barrel4= { ...barrel1, pos: new Vector3(roomSize/2-1, .1, -3)}
   const barrels = [barrel1, barrel2, barrel3, barrel4]
   return (
-    <Physics gravity={[0, -1, 0]}>
+    <Physics gravity={[0, -1, 0]} debug>
       <axesHelper scale={13} position={[0, 1, 0]} />
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 5]} intensity={1} />
       <Player />
+      <Enemy position={[2, 1, 0]} />
       <Room
         size={roomSize}
         scale={new Vector3(1.7, 6, 4.5)}
