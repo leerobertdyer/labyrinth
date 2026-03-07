@@ -3,17 +3,7 @@
 import { Canvas } from "@react-three/fiber";
 import { KeyboardControls } from "@react-three/drei";
 import Scene from "./Scene";
-
-const controls = [
-  { name: "moveForward", keys: ["w", "W"] },
-  { name: "moveBackward", keys: ["s", "S"] },
-  { name: "strafeLeft", keys: ["a", "A"] },
-  { name: "strafeRight", keys: ["d", "D"] },
-  { name: "rotateLeft", keys: ["ArrowLeft"] },
-  { name: "rotateRight", keys: ["ArrowRight"] },
-  { name: "camUp", keys: ["ArrowUp"] },
-  { name: "camDown", keys: ["ArrowDown"] },
-];
+import { controls } from "./constants";
 
 export default function GamePage() {
   return (

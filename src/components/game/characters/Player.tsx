@@ -1,20 +1,17 @@
 import { useKeyboardControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { CapsuleCollider, CuboidCollider, RapierRigidBody, RigidBody } from "@react-three/rapier";
+import { CapsuleCollider, RapierRigidBody, RigidBody, useRapier } from "@react-three/rapier";
 import { useRef } from "react";
 import * as THREE from "three";
 import { MainCharacter } from "@/components/game/models/mixamo/mainCharacter";
+import { GROUND_RAY_LENGTH, GROUND_RAY_ORIGIN_OFFSET, JUMP_STRENGTH, playerCamRadius, playerCamRotateSpeed, playerRotateSpeed, playerSpeed } from "@/app/constants";
 
 export default function Player() {
   const ref = useRef<RapierRigidBody>(null);
   const meshRef = useRef<THREE.Group>(null);
   const [, get] = useKeyboardControls();
   const { camera } = useThree();
-
-  const speed = 8;
-  const rotateSpeed = 2;
-  const camRotateSpeed = 1.5;
-  const cameraRadius = 8;
+  const { world, rapier } = useRapier();
 
   // playerFacing = world-space Y angle the mesh is pointing
   // theta = camera's current horizontal orbit angle (lazily follows playerFacing)
@@ -33,26 +30,27 @@ export default function Player() {
       rotateRight,
       camUp,
       camDown,
+      jump,
     } = get();
 
 
     // --- Vertical camera orbit ---
     const playerPos = ref.current.translation();
     const floorY = 0.5;
-    const ratio = (floorY - playerPos.y) / cameraRadius;
+    const ratio = (floorY - playerPos.y) / playerCamRadius;
     const phiMax =
       ratio >= 1 ? 0.1 : ratio <= -1 ? Math.PI - 0.1 : Math.acos(ratio);
 
-    if (camUp) cameraAngleRef.current.phi -= camRotateSpeed * delta;
-    if (camDown) cameraAngleRef.current.phi += camRotateSpeed * delta;
+    if (camUp) cameraAngleRef.current.phi -= playerCamRotateSpeed * delta;
+    if (camDown) cameraAngleRef.current.phi += playerCamRotateSpeed * delta;
     cameraAngleRef.current.phi = Math.max(
       0.1,
       Math.min(Math.min(phiMax, Math.PI - 0.1), cameraAngleRef.current.phi),
     );
 
     // --- Player rotation ---
-    if (rotateLeft) playerFacingRef.current += rotateSpeed * delta;
-    if (rotateRight) playerFacingRef.current -= rotateSpeed * delta;
+    if (rotateLeft) playerFacingRef.current += playerRotateSpeed * delta;
+    if (rotateRight) playerFacingRef.current -= playerRotateSpeed * delta;
 
     // Apply mesh rotation
     meshRef.current.rotation.y = playerFacingRef.current;
@@ -83,15 +81,43 @@ export default function Player() {
       moveDir.normalize();
       ref.current.setLinvel(
         {
-          x: moveDir.x * speed,
+          x: moveDir.x * playerSpeed,
           y: currentLinvel.y,
-          z: moveDir.z * speed,
+          z: moveDir.z * playerSpeed,
         },
         true,
       );
     } else {
       ref.current.setLinvel(
         { x: 0, y: currentLinvel.y, z: 0 },
+        true,
+      );
+    }
+
+    // Jump: only when grounded (raycast down from feet)
+    const rayOrigin = {
+      x: playerPos.x,
+      y: playerPos.y + GROUND_RAY_ORIGIN_OFFSET,
+      z: playerPos.z,
+    };
+    const rayDir = { x: 0, y: -1, z: 0 };
+    const ray = new rapier.Ray(rayOrigin, rayDir);
+    const rayHit = world.castRay(
+      ray,
+      GROUND_RAY_LENGTH,
+      true,
+      undefined,
+      undefined,
+      ref.current.collider(0),
+      ref.current,
+    );
+    const isGrounded = rayHit !== null;
+
+    if (jump && isGrounded) {
+
+      const vel = ref.current.linvel();
+      ref.current.setLinvel(
+        { x: vel.x, y: JUMP_STRENGTH, z: vel.z },
         true,
       );
     }
@@ -108,9 +134,9 @@ export default function Player() {
     const { theta, phi } = cameraAngleRef.current;
 
     camera.position.set(
-      playerPos.x + cameraRadius * Math.sin(phi) * Math.sin(theta),
-      playerPos.y + cameraRadius * Math.cos(phi),
-      playerPos.z + cameraRadius * Math.sin(phi) * Math.cos(theta),
+      playerPos.x + playerCamRadius * Math.sin(phi) * Math.sin(theta),
+      playerPos.y + playerCamRadius * Math.cos(phi),
+      playerPos.z + playerCamRadius * Math.sin(phi) * Math.cos(theta),
     );
 
     camera.lookAt(playerPos.x, playerPos.y, playerPos.z);

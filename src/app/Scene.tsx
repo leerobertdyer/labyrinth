@@ -45,12 +45,12 @@ export default function Scene() {
   const barrel4= { ...barrel1, pos: new Vector3(roomSize/2-1, .1, -3)}
   const barrels = [barrel1, barrel2, barrel3, barrel4]
   return (
-    <Physics gravity={[0, -2, 0]} debug>
+    <Physics gravity={[0, -10, 0]} debug>
       <axesHelper scale={13} position={[0, 1, 0]} />
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 5]} intensity={1} />
       <Player />
-      <Enemy position={[2, 1, 0]} />
+      <Enemy position={[2, 1, 5]} />
       <Room
         size={roomSize}
         scale={new Vector3(1.7, 6, 4.5)}
