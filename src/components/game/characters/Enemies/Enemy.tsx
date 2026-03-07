@@ -1,14 +1,16 @@
-import { gameActor } from "@/machines/gameMachine";
+import { gameMachine } from "@/machines/gameMachine";
+import { useMachine } from "@xstate/react";
 import {
   CuboidCollider,
   RigidBody,
 } from "@react-three/rapier";
-import { useRef } from "react";
-import * as THREE from "three";
 
 type EnemyProps = React.ComponentProps<"group">;
 
 export default function Enemy(props: EnemyProps) {
+
+  // const [state, send] = useMachine(gameMachine);
+
   // Pass position/rotation directly to RigidBody so the physics body is definitely at the right place
   const position: [number, number, number] =
     Array.isArray(props.position) && props.position.length === 3
@@ -28,9 +30,9 @@ export default function Enemy(props: EnemyProps) {
         friction={0.2}
         mass={0.1}
         restitution={.2}
-        onCollisionEnter={(event) => {
-          gameActor.send({ type: 'PLAYER_HIT' });
-        }}
+        // onCollisionEnter={() => {
+        //   send({ type: 'PLAYER_HIT', damage: 10 });
+        // }}
       >
         <CuboidCollider args={[1.25, 1.25, 1.25]} position={[0, 0, 0]} />
         <mesh scale={2} >

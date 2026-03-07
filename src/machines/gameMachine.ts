@@ -1,31 +1,67 @@
-import { createMachine, assign, createActor } from 'xstate';
+import { createMachine, assign } from 'xstate';
 
-const gameMachine = createMachine({
-  context: {
-    health: 100,
-    amnesia: 0,
-    room: 'start',
-
-  },
-  on: {
-   PLAYER_HIT: {
-      actions: assign({
-        health: ({ context }) => context.health - 10,
-      }),
+export const gameMachine = createMachine({
+    id: "game",
+    types: {} as {
+        context: { health: number; amnesia: number; room: string };
+        events:
+        | { type: 'PLAYER_HIT'; damage: number }
+        | { type: 'ENTER_COMBAT' }
+        | { type: 'VICTORY' }
+        | { type: 'PAUSE' }
+        | { type: 'UNPAUSE'; currentState: string }
+        | { type: 'RESPAWN'; room: string };
     },
-    DEAD: {
-      actions: assign({
-        health: ({ context }) => 0,
-      }),
+    context: {
+        health: 100,
+        amnesia: 0,
+        room: 'start',
     },
-  },
+    initial: 'exploring',
+    states: {
+        paused: {
+            on: {
+                UNPAUSE: {
+                    target: 'exploring' // will need to change to sibling state 
+                }
+            }
+        },
+        exploring: {
+            on: {
+                ENTER_COMBAT: 'inCombat',
+                PAUSE: 'paused',
+                // GREET_NPC: 'talking'
+            }
+        },
+        inCombat: {
+            on: {
+                PLAYER_HIT: [
+                    {
+                        guard: ({ context, event }) =>
+                            event.type === 'PLAYER_HIT' && context.health <= event.damage,
+                        actions: assign({
+                            health: ({ context, event }) =>
+                                event.type === 'PLAYER_HIT' ? context.health - event.damage : context.health,
+                        }),
+                        target: 'dead',
+                    },
+                    {
+                        actions: assign({
+                            health: ({ context, event }) =>
+                                event.type === 'PLAYER_HIT' ? context.health - event.damage : context.health,
+                        }),
+                    },
+                ],
+                VICTORY: 'exploring'
+            }
+        },
+        dead: {
+            on: {
+                RESPAWN: {
+                    target: 'exploring',
+                    actions: assign({ health: 100, room: ({ event }) => event.room })
+                }
+            }
+        }
+    }
 });
-
-export const gameActor = createActor(gameMachine).start();
-gameActor.subscribe((state) => {
-    console.log(state.context.health);
-  });
-
-// // logs 1
-// gameActor.send({ type: 'DEAD' });
-// logs 0
