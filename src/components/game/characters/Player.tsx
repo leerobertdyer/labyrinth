@@ -1,6 +1,6 @@
 import { useKeyboardControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { CuboidCollider, RapierRigidBody, RigidBody } from "@react-three/rapier";
+import { CapsuleCollider, CuboidCollider, RapierRigidBody, RigidBody } from "@react-three/rapier";
 import { useRef } from "react";
 import * as THREE from "three";
 import { MainCharacter } from "@/components/game/models/mixamo/mainCharacter";
@@ -34,6 +34,7 @@ export default function Player() {
       camUp,
       camDown,
     } = get();
+
 
     // --- Vertical camera orbit ---
     const playerPos = ref.current.translation();
@@ -77,6 +78,7 @@ export default function Player() {
 
     // Velocity-based movement so the player has real momentum (e.g. can push enemies)
     const currentLinvel = ref.current.linvel();
+    // console.log(currentLinvel);
     if (moveDir.length() > 0) {
       moveDir.normalize();
       ref.current.setLinvel(
@@ -116,11 +118,11 @@ export default function Player() {
 
   return (
     <RigidBody ref={ref} ccd={true} colliders={false} lockRotations friction={2} mass={10}>
-      <CuboidCollider
-        args={[0.4, 0.9, 0.4]}
+      <CapsuleCollider
+        args={[0.5, 0.4]} // [half-height, radius]
         position={[0, 0.9, 0]}
         restitution={0}
-        friction={1}
+        friction={0}
       />
       <group ref={meshRef}>
         <MainCharacter />

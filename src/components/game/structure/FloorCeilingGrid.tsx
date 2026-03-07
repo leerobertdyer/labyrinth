@@ -25,9 +25,10 @@ export default function FloorCeilingGrid({
     <>
       {Array.from({ length: size }, (_, x) =>
         Array.from({ length: size }, (_, z) => (
-          <RigidBody type="fixed" colliders="cuboid" friction={1.2}>
+          <RigidBody type="fixed" colliders="cuboid" friction={1.2} 
+          key={`${x}-${z}`}
+          >
             <Model
-              key={`${x}-${z}`}
               rotation={type === "ceiling" ? [0, Math.PI, 0] : [0, 0, 0]}
               position={[x * tileSize - offset, height, z * tileSize - offset]}
             />

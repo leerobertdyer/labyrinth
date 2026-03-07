@@ -1,4 +1,3 @@
-import { WallFlatGate } from "@/components/game/models/kenney/retroMedieval/wall-flat-gate";
 import { WoodFloor } from "@/components/game/models/kenney/retroMedieval/wood-floor";
 import FloorCeilingGrid from "@/components/game/structure/FloorCeilingGrid";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
@@ -142,7 +141,7 @@ export default function Room({
 
           if (slot === "wall")
             return (
-              <>
+              <group key={`${edge.direction}-${i}`}>
                 {Array.from({ length: tilesToHeight }).map((_, j) => (
                   <WallBDetailPainted
                     key={`${edge.direction}-${i}-${j}`}
@@ -151,7 +150,7 @@ export default function Room({
                     rotation={rot}
                   />
                 ))}
-              </>
+              </group>
             );
           return null;
         }),
