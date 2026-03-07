@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function Uwall(props: React.ComponentProps<'group'>) {
+export function WallBDetailPainted(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/fantasyTown/wall.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

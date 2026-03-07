@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UwallUflatUgate(props: React.ComponentProps<'group'>) {
+export function WallFlatGate(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/wall-flat-gate.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

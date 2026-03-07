@@ -21,7 +21,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UwallUpaintUhalf(props: React.ComponentProps<'group'>) {
+export function WallBDetailPaintedUpaintUhalf(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/wall-paint-half.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

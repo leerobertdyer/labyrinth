@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function Uroof(props: React.ComponentProps<'group'>) {
+export function Roof(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/fantasyTown/roof.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

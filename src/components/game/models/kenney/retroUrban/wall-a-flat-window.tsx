@@ -23,7 +23,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UwallUaUflatUwindow(props: React.ComponentProps<'group'>) {
+export function WallBDetailPaintedUaUflatUwindow(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroUrban/wall-a-flat-window.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

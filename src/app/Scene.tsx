@@ -56,6 +56,7 @@ export default function Scene() {
       <Player />
       <Room
         size={roomSize}
+        scale={new Vector3(1.7, 10, 4.5)}
         tileSize={1}
         edges={[wallEdgesNorth, wallEdgesEast, wallEdgesWest, wallEdgesSouth]}
         debris={barrels}      />

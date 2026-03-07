@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UwallUcornerUedge(props: React.ComponentProps<'group'>) {
+export function WallBDetailPaintedUcornerUedge(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/fantasyTown/wall-corner-edge.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

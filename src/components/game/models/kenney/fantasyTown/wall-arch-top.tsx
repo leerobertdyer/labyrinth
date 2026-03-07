@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UwallUarchUtop(props: React.ComponentProps<'group'>) {
+export function WallBDetailPaintedUarchUtop(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/fantasyTown/wall-arch-top.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

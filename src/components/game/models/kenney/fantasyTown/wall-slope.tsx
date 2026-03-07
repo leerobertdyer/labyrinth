@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UwallUslope(props: React.ComponentProps<'group'>) {
+export function WallBDetailPaintedUslope(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/fantasyTown/wall-slope.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

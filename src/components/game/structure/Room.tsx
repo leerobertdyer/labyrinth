@@ -1,12 +1,14 @@
-import { Uwall } from "@/components/game/models/kenney/retroMedieval/wall";
-import { UwallUflatUgate } from "@/components/game/models/kenney/retroMedieval/wall-flat-gate";
-import { UwallUgateUhalf } from "@/components/game/models/kenney/retroMedieval/wall-gate-half";
-import { UwoodUfloor } from "@/components/game/models/kenney/retroMedieval/wood-floor";
-import { UwallUaUdetail } from "@/components/game/models/kenney/retroUrban/wall-a-detail";
-import FloorGrid from "@/components/game/structure/FloorGrid";
+import { Wall } from "@/components/game/models/kenney/retroMedieval/wall";
+import { WallFlatGate } from "@/components/game/models/kenney/retroMedieval/wall-flat-gate";
+import { WallGateHalf } from "@/components/game/models/kenney/retroMedieval/wall-gate-half";
+import { WoodFloor } from "@/components/game/models/kenney/retroMedieval/wood-floor";
+import { WallADetail } from "@/components/game/models/kenney/retroUrban/wall-a-detail";
+import FloorCeilingGrid from "@/components/game/structure/FloorCeilingGrid";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { ComponentType } from "react";
 import { Euler, Vector3 } from "three";
+import { Roof } from "@/components/game/models/kenney/retroMedieval/roof";
+import { WallBDetailPainted } from "../models/kenney/retroUrban/wall-b-detail-painted";
 
 type SlotType =
   | "wall"
@@ -49,7 +51,7 @@ function getEdgePositions(
   direction: string,
   slotIndex: number,
   size: number,
-  tileSize: number
+  tileSize: number,
 ): [number, number, number] {
   const half = (size * tileSize) / 2;
   const offset = slotIndex * tileSize - half + tileSize / 2;
@@ -81,7 +83,7 @@ export default function Room({
     (dir) => ({
       direction: dir as "north" | "south" | "east" | "west",
       slots: Array(size).fill("wall"),
-    })
+    }),
   );
 
   const resolvedEdges = edges ?? defaultEdges;
@@ -106,104 +108,132 @@ export default function Room({
   }
 
   return (
-      <RigidBody type="fixed">
-        {/* Floor */}
-        <FloorGrid size={size} tileSize={tileSize} Model={UwoodUfloor} />
+    <RigidBody type="fixed">
+      {/* Floor */}
+      <FloorCeilingGrid
+        size={size}
+        tileSize={tileSize}
+        Model={WoodFloor}
+        type="floor"
+        height={-0.1}
+      />
 
-        {/* Debris */}
-        {debris &&
-          debris.map((d: IDebris, i) => {
-            const Model = d.Model;
+      {/* Ceiling */}
+      <FloorCeilingGrid
+        size={size}
+        tileSize={tileSize}
+        Model={Roof}
+        type="ceiling"
+        height={scale.y}
+      />
+
+      {/* Debris */}
+      {debris &&
+        debris.map((d: IDebris, i) => {
+          const Model = d.Model;
+          return (
+            <Model
+              key={i}
+              position={d.pos}
+              scale={d.scale}
+              rotation={d.rotation}
+            />
+          );
+        })}
+
+      {/* Visual Tiles: Walls doors gates windows etc... */}
+      {resolvedEdges.map((edge) =>
+        edge.slots.map((slot, i) => {
+          const pos = getEdgePositions(edge.direction, i, size, tileSize);
+          const rot = EDGE_ROTATIONS[edge.direction];
+          const tilesToHeight = scale.y / tileSize;
+
+          if (slot === "wall")
             return (
-              <Model
-                key={i}
-                position={d.pos}
-                scale={d.scale}
-                rotation={d.rotation}
+              <>
+                {Array.from({ length: tilesToHeight }).map((_, j) => (
+                  <WallBDetailPainted
+                    key={`${edge.direction}-${i}-${j}`}
+                    scale={[scale.x, scale.y / tilesToHeight, scale.z]}
+                    position={[pos[0], pos[1] + j * tileSize, pos[2]]}
+                    rotation={rot}
+                  />
+                ))}
+              </>
+            );
+          if (slot === "gate")
+            return (
+              <WallFlatGate
+                key={`${edge.direction}-${i}`}
+                scale={scale}
+                position={pos}
+                rotation={rot}
               />
             );
-          })}
-        
-        {/* Visual Tiles: Walls doors gates windows etc... */}
-        {resolvedEdges.map((edge) => 
-          edge.slots.map((slot, i) => {
-            const pos = getEdgePositions(edge.direction, i, size, tileSize);
-            const rot = EDGE_ROTATIONS[edge.direction];
-
-            if (slot === "wall")
-              return (
-                <UwallUaUdetail
-                  key={`${edge.direction}-${i}`}
-                  scale={scale}
-                  position={pos}
-                  rotation={rot}
-                />
-              );
-            if (slot === "gate")
-              return (
-                <UwallUflatUgate
-                  key={`${edge.direction}-${i}`}
-                  scale={scale}
-                  position={pos}
-                  rotation={rot}
-                />
-              );
-            if (slot === "gateRight")
-              return (
-                <UwallUgateUhalf
-                  key={`${edge.direction}-${i}`}
-                  scale={[-scale.x * 0.6, scale.y, scale.z]}
-                  position={pos}
-                  rotation={rot}
-                />
-              );
-            if (slot === "gateLeft")
-              return (
-                <UwallUgateUhalf
-                  key={`${edge.direction}-${i}`}
-                  scale={[scale.x * 0.6, scale.y, scale.z]}
-                  position={pos}
-                  rotation={rot}
-                />
-              );
-            if (slot === "gateTop")
-              return (
-                <Uwall
-                  key={`${edge.direction}-${i}`}
-                  scale={[scale.x * 0.6, scale.y / 4, scale.z]}
-                  position={[pos[0], pos[1] + tileSize * 3.75, pos[2]]}
-                  rotation={rot}
-                />
-              );
-            return null;
-          })
-        )}
-
-        {/* Physics Colliders */}
-        {resolvedEdges.map((edge) => {
-          const isNS = edge.direction === "north" || edge.direction === "south";
-          return getWallRuns(edge.slots).map(({ start, end }) => {
-            const length = end - start;
-            const runCenter = start * tileSize + (length * tileSize) / 2 - half;
-            
-            const position: [ number, number, number ] = isNS
-              ? [ runCenter, scale.y / 2, edge.direction === "north" ? -half : half ]
-              : [ edge.direction === "east" ? half : -half, scale.y / 2, runCenter ]
-
-              const offset = -2.5
-            const args: [ number, number, number ] = isNS
-              ? [ (tileSize * length) / 2, scale.y, scale.z + offset]
-              : [ scale.z + offset, scale.y, (tileSize * length) / 2 ]
-
+          if (slot === "gateRight")
             return (
-              <CuboidCollider
+              <WallGateHalf
+                key={`${edge.direction}-${i}`}
+                scale={[-scale.x * 0.6, scale.y, scale.z]}
+                position={pos}
+                rotation={rot}
+              />
+            );
+          if (slot === "gateLeft")
+            return (
+              <WallGateHalf
+                key={`${edge.direction}-${i}`}
+                scale={[scale.x * 0.6, scale.y, scale.z]}
+                position={pos}
+                rotation={rot}
+              />
+            );
+          if (slot === "gateTop")
+            return (
+              <Wall
+                key={`${edge.direction}-${i}`}
+                scale={[scale.x * 0.6, scale.y / 4, scale.z]}
+                position={[pos[0], pos[1] + tileSize * 3.75, pos[2]]}
+                rotation={rot}
+              />
+            );
+          return null;
+        }),
+      )}
+
+      {/* Physics Colliders */}
+      {resolvedEdges.map((edge) => {
+        const isNS = edge.direction === "north" || edge.direction === "south";
+        return getWallRuns(edge.slots).map(({ start, end }) => {
+          const length = end - start;
+          const runCenter = start * tileSize + (length * tileSize) / 2 - half;
+
+          const position: [number, number, number] = isNS
+            ? [
+                runCenter,
+                scale.y / 2,
+                edge.direction === "north" ? -half : half,
+              ]
+            : [
+                edge.direction === "east" ? half : -half,
+                scale.y / 2,
+                runCenter,
+              ];
+
+          const offset = -2.5;
+          const args: [number, number, number] = isNS
+            ? [(tileSize * length) / 2, scale.y, scale.z + offset]
+            : [scale.z + offset, scale.y, (tileSize * length) / 2];
+
+          return (
+            <CuboidCollider
               key={`${edge.direction}-${start}`}
               args={args}
               position={position}
-              />
-            );
-          });
-        })}
-      </RigidBody>
+            />
+          );
+        });
+      })}
+    </RigidBody>
   );
 }
