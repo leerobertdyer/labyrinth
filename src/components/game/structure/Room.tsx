@@ -98,8 +98,18 @@ export default function Room({
     return runs;
   }
 
+  const halfFloor = (size * tileSize) / 2;
+  const floorHeight = 0.1; // floor surface at -0.1, so box center slightly below
+  const floorColliderY = -0.1 - floorHeight / 2;
+
   return (
     <RigidBody type="fixed" colliders={false}>
+      {/* Floor collision: single cuboid so player doesn't fall through */}
+      <CuboidCollider
+        args={[halfFloor, floorHeight / 2, halfFloor]}
+        position={[0, floorColliderY, 0]}
+        friction={1.2}
+      />
       {/* Floor */}
       <FloorCeilingGrid
         size={size}

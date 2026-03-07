@@ -1,4 +1,3 @@
-import { RigidBody } from "@react-three/rapier";
 import { ComponentType } from "react";
 
 interface IFloorCeilingGrid {
@@ -25,14 +24,11 @@ export default function FloorCeilingGrid({
     <>
       {Array.from({ length: size }, (_, x) =>
         Array.from({ length: size }, (_, z) => (
-          <RigidBody type="fixed" colliders="cuboid" friction={1.2} 
-          key={`${x}-${z}`}
-          >
-            <Model
-              rotation={type === "ceiling" ? [0, Math.PI, 0] : [0, 0, 0]}
-              position={[x * tileSize - offset, height, z * tileSize - offset]}
-            />
-          </RigidBody>
+          <Model
+            key={`${x}-${z}`}
+            rotation={type === "ceiling" ? [0, Math.PI, 0] : [0, 0, 0]}
+            position={[x * tileSize - offset, height, z * tileSize - offset]}
+          />
         )),
       )}
     </>

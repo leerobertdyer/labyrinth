@@ -1,6 +1,6 @@
 import type Rapier from "@dimforge/rapier3d-compat";
 import type { RigidBody as RapierRigidBody } from "@dimforge/rapier3d-compat";
-import type { MutableRefObject } from "react";
+import type { RefObject } from "react";
 import * as THREE from "three";
 import {
   GROUND_RAY_LENGTH,
@@ -31,8 +31,8 @@ export interface MovementContext {
   world: Rapier.World;
   rapier: typeof Rapier;
   camera: THREE.Camera;
-  playerFacingRef: MutableRefObject<number>;
-  cameraAngleRef: MutableRefObject<{ theta: number; phi: number }>;
+  playerFacingRef: RefObject<number>;
+  cameraAngleRef: RefObject<{ theta: number; phi: number }>;
   delta: number;
 }
 
