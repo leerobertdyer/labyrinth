@@ -15,13 +15,8 @@ export default function Scene() {
   const wallEdgesSouth: WallEdge = {
     direction: "south",
     slots: Array(roomSize).fill("wall").map((e: string, i: number) => {
-      switch(i) {
-        case 18:return "gateLeft"
-        case 19: return "gateTop"
-        case 20: return "gateTop"
-        case 21: return "gateRight"
-        default: return "wall"
-      }
+      if (i >= 18 && i <= 22) return "gate"
+      return "wall"
     })
   };
   const wallEdgesNorth: WallEdge = {
@@ -56,7 +51,7 @@ export default function Scene() {
       <Player />
       <Room
         size={roomSize}
-        scale={new Vector3(1.7, 10, 4.5)}
+        scale={new Vector3(1.7, 6, 4.5)}
         tileSize={1}
         edges={[wallEdgesNorth, wallEdgesEast, wallEdgesWest, wallEdgesSouth]}
         debris={barrels}      />

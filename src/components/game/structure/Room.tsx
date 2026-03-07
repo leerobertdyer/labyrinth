@@ -1,22 +1,14 @@
-import { Wall } from "@/components/game/models/kenney/retroMedieval/wall";
 import { WallFlatGate } from "@/components/game/models/kenney/retroMedieval/wall-flat-gate";
-import { WallGateHalf } from "@/components/game/models/kenney/retroMedieval/wall-gate-half";
 import { WoodFloor } from "@/components/game/models/kenney/retroMedieval/wood-floor";
-import { WallADetail } from "@/components/game/models/kenney/retroUrban/wall-a-detail";
 import FloorCeilingGrid from "@/components/game/structure/FloorCeilingGrid";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { ComponentType } from "react";
 import { Euler, Vector3 } from "three";
 import { Roof } from "@/components/game/models/kenney/retroMedieval/roof";
 import { WallBDetailPainted } from "../models/kenney/retroUrban/wall-b-detail-painted";
+import { WallBDetailPaintedFortifiedGate } from "../models/kenney/retroMedieval/wall-fortified-gate";
 
-type SlotType =
-  | "wall"
-  | "gate"
-  | "gateLeft"
-  | "gateRight"
-  | "gateTop"
-  | "empty";
+type SlotType = "wall" | "gate" | "empty";
 
 export interface WallEdge {
   direction: "north" | "south" | "east" | "west";
@@ -89,13 +81,13 @@ export default function Room({
   const resolvedEdges = edges ?? defaultEdges;
   const half = (size * tileSize) / 2;
 
-  function getWallRuns(slots: SlotType[]) {
+  function getEdgeRuns(slots: SlotType[], runType: SlotType) {
     const runs = [];
     let i = 0;
     while (i < slots.length) {
-      if (slots[i] === "wall") {
+      if (slots[i] === runType) {
         let j = i;
-        while (j < slots.length && slots[j] === "wall") {
+        while (j < slots.length && slots[j] === runType) {
           j++;
         }
         runs.push({ start: i, end: j });
@@ -141,7 +133,7 @@ export default function Room({
           );
         })}
 
-      {/* Visual Tiles: Walls doors gates windows etc... */}
+      {/* Visual Wall Runs */}
       {resolvedEdges.map((edge) =>
         edge.slots.map((slot, i) => {
           const pos = getEdgePositions(edge.direction, i, size, tileSize);
@@ -161,50 +153,40 @@ export default function Room({
                 ))}
               </>
             );
-          if (slot === "gate")
-            return (
-              <WallFlatGate
-                key={`${edge.direction}-${i}`}
-                scale={scale}
-                position={pos}
-                rotation={rot}
-              />
-            );
-          if (slot === "gateRight")
-            return (
-              <WallGateHalf
-                key={`${edge.direction}-${i}`}
-                scale={[-scale.x * 0.6, scale.y, scale.z]}
-                position={pos}
-                rotation={rot}
-              />
-            );
-          if (slot === "gateLeft")
-            return (
-              <WallGateHalf
-                key={`${edge.direction}-${i}`}
-                scale={[scale.x * 0.6, scale.y, scale.z]}
-                position={pos}
-                rotation={rot}
-              />
-            );
-          if (slot === "gateTop")
-            return (
-              <Wall
-                key={`${edge.direction}-${i}`}
-                scale={[scale.x * 0.6, scale.y / 4, scale.z]}
-                position={[pos[0], pos[1] + tileSize * 3.75, pos[2]]}
-                rotation={rot}
-              />
-            );
+          if (slot === "gate") return null;
+
           return null;
+        }),
+      )}
+
+      {/* Gate runs: one door per contiguous gate run */}
+      {resolvedEdges.map((edge) =>
+        getEdgeRuns(edge.slots, "gate").map(({ start, end }) => {
+          const runLength = end - start;
+          const pos = getEdgePositions(
+            edge.direction,
+            (start + end) / 2,
+            size,
+            tileSize,
+          );
+          return (
+            <RigidBody type="fixed" colliders="trimesh" restitution={0.2} friction={0.5}>
+              
+              <WallBDetailPaintedFortifiedGate
+                key={`${edge.direction}-gate-${start}`}
+                position={[pos[0], pos[1], pos[2]]}
+                rotation={EDGE_ROTATIONS[edge.direction]}
+                scale={[runLength + 1 * tileSize, scale.y, scale.z]}
+              />
+            </RigidBody>
+          );
         }),
       )}
 
       {/* Physics Colliders */}
       {resolvedEdges.map((edge) => {
         const isNS = edge.direction === "north" || edge.direction === "south";
-        return getWallRuns(edge.slots).map(({ start, end }) => {
+        return getEdgeRuns(edge.slots, "wall").map(({ start, end }) => {
           const length = end - start;
           const runCenter = start * tileSize + (length * tileSize) / 2 - half;
 
