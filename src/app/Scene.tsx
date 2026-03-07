@@ -5,7 +5,7 @@ import { Physics } from "@react-three/rapier";
 import * as THREE from "three";
 import Player from "@/components/game/player/Player";
 import Room, { WallEdge } from "@/components/game/structure/Room";
-import { Ubarrels } from "@/components/game/models/kenney/retroMedieval/barrels";
+import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
 import { Vector3 } from "three";
 
 export default function Scene() {
@@ -43,7 +43,7 @@ export default function Scene() {
       orbitRef.current.update();
     }
   });
-  const barrel1 = { pos: new Vector3(roomSize / 2 - 1, .1, 0), rotation: new THREE.Euler(0, Math.PI / 2, 0), scale: new Vector3(4, 4, 4), Model: Ubarrels }
+  const barrel1 = { pos: new Vector3(roomSize / 2 - 1, .1, 0), rotation: new THREE.Euler(0, Math.PI / 2, 0), scale: new Vector3(4, 4, 4), Model: Barrels }
   const barrel2= { ...barrel1, pos: new Vector3(roomSize/2-1, .1, 3)}
   const barrel3= { ...barrel1, pos: new Vector3(roomSize/2-1, .1, 6)}
   const barrel4= { ...barrel1, pos: new Vector3(roomSize/2-1, .1, -3)}
