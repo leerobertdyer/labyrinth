@@ -170,15 +170,12 @@ export default function Room({
             tileSize,
           );
           return (
-            <RigidBody type="fixed" colliders="trimesh" restitution={0.2} friction={0.5}>
-              
               <WallBDetailPaintedFortifiedGate
                 key={`${edge.direction}-gate-${start}`}
                 position={[pos[0], pos[1], pos[2]]}
                 rotation={EDGE_ROTATIONS[edge.direction]}
                 scale={[runLength + 1 * tileSize, scale.y, scale.z]}
               />
-            </RigidBody>
           );
         }),
       )}
