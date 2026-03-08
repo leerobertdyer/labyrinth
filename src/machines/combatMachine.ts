@@ -62,7 +62,7 @@ export const combatMachine = setup({
         playerTurn: {
             on: {
                 SELECT_ENEMY: {
-                    actions: [assign({ selectedEnemyId: ({ event }) => event.enemyId })]
+                    actions: [assign({ selectedEnemyId: ({ event }) => event.enemyId }), log(({ context }) => `Selected Enemy ID: ${context.selectedEnemyId}`)]
                 },
                 ATTACK: {
                     guard: ({ context }) => context.selectedEnemyId !== null,

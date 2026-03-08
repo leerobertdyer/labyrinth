@@ -3,7 +3,7 @@ import Arena from "./Arena";
 import PlayerMenu from "./PlayerMenu";
 import { useEffect } from "react";
 import EnemyChat from "./EnemyChat";
-import { combatControlsHandler } from "./controls";
+import { combatControlsHandler } from "./combatControls";
 import { useSelector } from "@xstate/react";
 import { CombatViews } from "./types";
 
@@ -34,9 +34,11 @@ function CombatViewContent({
   );
 
   useEffect(() => {
-    window.addEventListener("keydown", (event) => combatControlsHandler(event, selectedView));
-    return () => window.removeEventListener("keydown", (event) => combatControlsHandler(event, selectedView));
-  }, []);
+    const handler = (event: KeyboardEvent) =>
+      combatControlsHandler(event, selectedView, actor);
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [selectedView, actor]);
 
   return (
     <div className="absolute inset-0 bg-black/75 z-1000 flex flex-col items-center justify-center h-screen">
