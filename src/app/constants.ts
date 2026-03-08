@@ -1,4 +1,4 @@
-export const controls = [
+export const explorationControls = [
     { name: "moveForward", keys: ["w", "W"] },
     { name: "moveBackward", keys: ["s", "S"] },
     { name: "strafeLeft", keys: ["a", "A"] },
@@ -10,6 +10,19 @@ export const controls = [
     { name: "jump", keys: ["Space"] },
     { name: "pause", keys: ["p", "P"] }
 ];
+
+// export const combatControls = [
+//     { name: "UI_UP", keys: ["w", "W"] },
+//     { name: "UI_DOWN", keys: ["s", "S"] },
+//     { name: "UI_LEFT", keys: ["a", "A"] },
+//     { name: "UI_RIGHT", keys: ["d", "D"] },
+//     { name: "MENU_LEFT", keys: ["ArrowLeft"] },
+//     { name: "MENU_RIGHT", keys: ["ArrowRight"] },
+//     { name: "MENU_UP", keys: ["ArrowUp"] },
+//     { name: "MENU_DOWN", keys: ["ArrowDown"] },
+//     { name: "MENU_SELECT", keys: [" "] },
+//     { name: "MENU_BACK", keys: ["Backspace"] }
+// ];
 
 export const playerSpeed = 8;
 export const playerRotateSpeed = 2;

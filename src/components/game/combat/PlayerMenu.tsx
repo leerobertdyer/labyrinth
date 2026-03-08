@@ -15,6 +15,11 @@ export default function PlayerMenu() {
   
     const handleAttack = () => {
       combatActor?.send({ type: 'ATTACK' });
+      console.log("Attacked enemy:", state.context.enemies);
+    };
+
+    const handleRun = () => {
+      combatActor?.send({ type: 'FLEE' });
     };
 
   return (
@@ -29,10 +34,10 @@ export default function PlayerMenu() {
       ></div>
       <div className="flex flex-col items-center justify-center bg-gray-200 rounded-md p-4 gap-[2px]">
         <h1 className="text-black text-lg font-bold border-b-2 border-black mb-2">XXX's Actions</h1>
-        <ActionButton label="Attack" onClick={() => {}} />
+        <ActionButton label="Attack" onClick={handleAttack} />
         <ActionButton label="Defend" onClick={() => {}} />
         <ActionButton label="Item" onClick={() => {}} />
-        <ActionButton label="Run" onClick={() => {}} />
+        <ActionButton label="Run" onClick={handleRun} />
       </div>
     </div>
   );

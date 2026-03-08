@@ -11,5 +11,6 @@ function generateEnemy(name: string, image: string, maxHealth: number, attack: n
         maxHealth: maxHealth,
         experience: experience,
         attack: attack,
+        selected: false,
     }
 }

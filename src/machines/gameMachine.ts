@@ -8,7 +8,9 @@ const gameSetup = setup({
         // Define what events the machine can RECEIVE (for your UI events)
         events: {} as
             | { type: 'PLAYER_HIT'; damage: number }
+            | { type: 'SET_ENCOUNTER_ENEMIES'; encounterEnemies: Enemy[] }
             | { type: 'ENTER_COMBAT' }
+            | { type: 'LEAVE_COMBAT'}
             | { type: 'VICTORY' }
             | { type: 'PAUSE' }
             | { type: 'UNPAUSE' }
@@ -51,6 +53,9 @@ export const gameMachine = gameSetup.createMachine({
                         ]
                     }
                 ],
+                SET_ENCOUNTER_ENEMIES: {
+                    actions: [assign({ enemies: ({ event }) => event.encounterEnemies })]
+                },
                 PAUSE: '.paused' // Correct: Moves to playing.paused
             },
             states: {
@@ -64,13 +69,13 @@ export const gameMachine = gameSetup.createMachine({
                         id: 'combatActor',
                         src: 'combatMachine',
                         input: ({ context }) => ({
-                            playerHealth: context.health,
+                            player: { health: context.health, attack: 10, image: 'hero.png', maxHealth: 100, experience: 0 },
                             enemies: context.enemies
                         })
                     },
                     on: {
-                        // When the child actor sends 'VICTORY' to the parent
-                        VICTORY: 'exploring'
+                        LEAVE_COMBAT: 'exploring',
+                        VICTORY: 'exploring',
                     }
                 },
                 paused: {

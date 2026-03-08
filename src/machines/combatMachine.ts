@@ -1,106 +1,109 @@
 import { Player, type Enemy } from "@/components/game/combat/types";
-import { assign, enqueueActions, fromPromise, sendParent, setup } from "xstate";
+import { assign, fromPromise, log, sendParent, setup } from "xstate";
 
 export const combatMachine = setup({
     types: {
-        context: {} as { enemies: Enemy[]; player: Player; lastAction: { type: string; actor: string } | null },
+        input: {} as { player: Player; enemies: Enemy[] },
+        context: {} as { enemies: Enemy[]; player: Player; selectedEnemyId: string | null },
         events: {} as
-            | { type: 'IDLE' }
-            | { type: 'PLAYER_TURN' }
-            | { type: 'ENEMY_TURN' }
             | { type: 'ATTACK' }
-            | { type: 'VICTORY' }
-            | { type: 'DEFEAT' }
+            | { type: 'DEFEND' }
+            | { type: 'USE_ITEM'; itemId: string }
+            | { type: 'FLEE' }
+            | { type: 'NEXT_ROUND' }
+            | { type: 'SELECT_ENEMY'; enemyId: string }
     },
     actors: {
         enemyAI: fromPromise(async () => {
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-            return { damage: Math.floor(Math.random() * 10) + 1, actor: 'enemy' };
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            return { damage: 10 };
         }),
     },
     actions: {
-        calculateDamage: assign({
+        applyPlayerDamage: assign({
             enemies: ({ context }) => {
-                if (context.lastAction?.actor !== 'player') return context.enemies;
-                return context.enemies.map((enemy, index) => {
-                    if (index === 0) {
-                        return { ...enemy, health: Math.max(0, enemy.health - context.player.attack) };
-                    }
-                    return enemy;
-                });
+                if (!context.selectedEnemyId) return context.enemies;
+                return context.enemies.map(enemy =>
+                    enemy.id === context.selectedEnemyId
+                        ? { ...enemy, health: Math.max(0, enemy.health - context.player.attack) }
+                        : enemy
+                );
             }
         }),
+        applyEnemyDamage: assign({
+            player: ({ context, event }) => ({
+                ...context.player,
+                // event.output comes from the resolved promise
+                health: Math.max(0, context.player.health - (event as any).output.damage)
+            })
+        })
     },
+
     guards: {
-        enemyDead: ({ context }) => context.enemies.every(e => e.health <= 0),
+        allEnemiesVanquished: ({ context }) => context.enemies.every(e => e.health <= 0),
         playerDead: ({ context }) => context.player.health <= 0,
-        wasPlayerTurn: ({ context }) => context.lastAction?.actor === 'player'
     }
 }).createMachine({
     id: "combat",
-    context: {
-        enemies: [],
-        player: {
-            image: "Hero.png",
-            health: 100,
-            maxHealth: 100,
-            experience: 0,
-            attack: 10,
-        },
-        lastAction: null
-    },
-    initial: "idle",
+    initial: "playerTurn",
+    context: ({ input }: { input: { player: Player; enemies: Enemy[] } }) => ({
+        player: input.player,
+        enemies: input.enemies,
+        selectedEnemyId: null,
+    }),
     states: {
         playerTurn: {
             on: {
+                SELECT_ENEMY: {
+                    actions: [assign({ selectedEnemyId: ({ event }) => event.enemyId })]
+                },
                 ATTACK: {
-                    target: 'processingAction',
-                    // We pass "who is attacking" in the assignment
-                    actions: assign({
-                        lastAction: () => ({ type: 'attack', actor: 'player' })
-                    })
+                    guard: ({ context }) => context.selectedEnemyId !== null,
+                    target: 'checkEnemies',
+                    actions: ['applyPlayerDamage']
+                },
+                DEFEND: {
+                    actions: () => { }
+                },
+                USE_ITEM: {
+                    actions: () => { }
+                },
+                FLEE: {
+                    actions: [sendParent({ type: 'LEAVE_COMBAT' })],
                 }
             }
         },
+        checkEnemies: {
+            always: [
+                { guard: 'allEnemiesVanquished', target: 'victory' },
+                { target: 'enemyTurn' }
+            ]
+        },
         enemyTurn: {
-            // The enemy AI doesn't need a button, it triggers itself
             invoke: {
                 src: 'enemyAI',
                 onDone: {
-                    target: 'processingAction',
-                    actions: assign({
-                        lastAction: () => ({ type: 'attack', actor: 'enemy' })
-                    })
+                    target: 'checkPlayer',
+                    actions: [
+                        'applyEnemyDamage',
+                        sendParent(({ event }) => ({ type: 'PLAYER_HIT', damage: event.output.damage }))
+                    ]
                 }
             }
         },
-        processingAction: {
-            entry: [
-                'calculateDamage',
-                enqueueActions(({ context, enqueue }) => {
-                    if (context.lastAction?.actor === 'enemy') {
-                        enqueue.sendParent({ type: 'PLAYER_HIT', damage: 10 });
-                    }
-                }),
-            ],
-            after: {
-                1000: 'roundEnd'
-            }
-        },
-        roundEnd: {
+        checkPlayer: {
             always: [
-                { guard: 'enemyDead', target: 'victory' },
                 { guard: 'playerDead', target: 'defeat' },
-                {
-                    guard: 'wasPlayerTurn',
-                    target: 'enemyTurn'
-                },
                 { target: 'playerTurn' }
             ]
         },
         victory: {
-            entry: sendParent({ type: 'VICTORY' })
+            entry: sendParent({ type: 'VICTORY' }),
+            type: 'final'
         },
-        defeat: {}
+        defeat: {
+            entry: sendParent({ type: 'DEFEAT' }),
+            type: 'final'
+        }
     }
 });

@@ -1,10 +1,13 @@
 import { useRef } from "react";
 import { useGameMachine } from "@/contexts/GameMachineContext";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
+import { Enemy } from "../../combat/types";
 
-type EnemyProps = React.ComponentProps<"group">;
+type EnemyEncounterProps = React.ComponentProps<"group"> & {
+  encounterEnemies: Enemy[];
+};
 
-export default function Enemy(props: EnemyProps) {
+export default function EnemyEncounter(props: EnemyEncounterProps) {
   const [, send] = useGameMachine();
   const isInContactRef = useRef(false);
 
@@ -31,6 +34,7 @@ export default function Enemy(props: EnemyProps) {
         if (!isPlayer) return;
         if (!isInContactRef.current) {
           isInContactRef.current = true;
+          send({ type: "SET_ENCOUNTER_ENEMIES", encounterEnemies: props.encounterEnemies });
           send({ type: "ENTER_COMBAT"});
         }
       }}

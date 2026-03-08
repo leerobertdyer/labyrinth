@@ -24,6 +24,7 @@ export interface Enemy extends BattleStats {
     id: string;
     image: string;
     name: string;
+    selected: boolean;
 }
 
 export interface Player extends BattleStats {

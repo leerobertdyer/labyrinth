@@ -4,12 +4,13 @@ import { Html } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { Physics } from "@react-three/rapier";
 import * as THREE from "three";
-import Enemy from "@/components/game/characters/Enemies/Enemy";
+import EnemyEncounter from "@/components/game/characters/Enemies/EnemyEncounter";
 import Player from "@/components/game/characters/Player/Player";
 import Room, { WallEdge } from "@/components/game/structure/Room";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
 import { Vector3 } from "three";
 import { useGameMachine } from "@/contexts/GameMachineContext";
+import { skeleton1, skeleton2, skeleton3 } from "@/components/game/combat/enemies";
 
 export default function Scene() {
   const playerPos = useRef<THREE.Vector3>(new THREE.Vector3());
@@ -55,7 +56,7 @@ export default function Scene() {
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 5]} intensity={1} />
       <Player />
-      <Enemy position={[2, 1, 5]} />
+      <EnemyEncounter position={[2, 1, 5]} encounterEnemies={[skeleton1, skeleton2, skeleton3]} />
       <Room
         size={roomSize}
         scale={new Vector3(1.7, 6, 4.5)}
