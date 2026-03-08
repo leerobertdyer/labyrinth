@@ -1,16 +1,17 @@
 import { Player, type Enemy } from "@/components/game/combat/types";
-import { assign, fromPromise, log, sendParent, setup } from "xstate";
+import { assign, fromPromise, log, raise, sendParent, setup } from "xstate";
 
 export const combatMachine = setup({
     types: {
         input: {} as { player: Player; enemies: Enemy[] },
-        context: {} as { enemies: Enemy[]; player: Player; selectedEnemyId: string | null },
+        context: {} as { enemies: Enemy[]; player: Player; selectedEnemyId: string | null; selectedView: "PLAYER" | "ENEMY" | "CHAT" },
         events: {} as
             | { type: 'ATTACK' }
             | { type: 'DEFEND' }
             | { type: 'USE_ITEM'; itemId: string }
             | { type: 'FLEE' }
             | { type: 'NEXT_ROUND' }
+            | { type: 'SET_VIEW'; view: "PLAYER" | "ENEMY" | "CHAT" }
             | { type: 'SELECT_ENEMY'; enemyId: string }
     },
     actors: {
@@ -50,7 +51,13 @@ export const combatMachine = setup({
         player: input.player,
         enemies: input.enemies,
         selectedEnemyId: null,
+        selectedView: "PLAYER"
     }),
+    on: {
+        SET_VIEW: {
+            actions: [assign({ selectedView: ({ event }) => event.view })]
+        }
+    },
     states: {
         playerTurn: {
             on: {

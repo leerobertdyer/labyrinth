@@ -45,3 +45,5 @@ export interface Item {
         [key: string]: number;
     }[];
 }
+
+export type CombatViews = "PLAYER" | "ENEMY" | "CHAT";

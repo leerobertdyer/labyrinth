@@ -1,33 +1,41 @@
 import { useGameMachine } from "@/contexts/GameMachineContext";
 import Arena from "./Arena";
 import PlayerMenu from "./PlayerMenu";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import EnemyChat from "./EnemyChat";
+import { combatControlsHandler, eventKeyToControl } from "./controls";
+import { useSelector } from "@xstate/react";
+import { CombatViews } from "./types";
 
 export default function CombatView() {
   const [state] = useGameMachine();
-  const [selectedView, setSelectedView] = useState<"PLAYER" | "ENEMY" | "CHAT">(
-    "PLAYER",
+  const actor = state.children.combatActor;
+
+  if (!actor) return null;
+
+  return <CombatViewContent state={state} actor={actor} />;
+}
+
+function CombatViewContent({
+  state,
+  actor,
+}: {
+  state: ReturnType<typeof useGameMachine>[0];
+  actor: NonNullable<
+    ReturnType<typeof useGameMachine>[0]["children"]["combatActor"]
+  >;
+}) {
+  const playerTurn = useSelector(actor, (snapshot) =>
+    snapshot.matches("playerTurn"),
+  );
+  const selectedView = useSelector(
+    actor,
+    (snapshot) => (snapshot.context.selectedView ?? "PLAYER") as CombatViews,
   );
 
-
   useEffect(() => {
-    window.addEventListener("keydown", (event) => {
-      if (selectedView === "CHAT") return;
-      const key = event.key.toUpperCase();
-      switch (key) {
-        case "A":
-          if (selectedView === "PLAYER") setSelectedView("ENEMY");
-          break;
-        case "D":
-          if (selectedView === "ENEMY") setSelectedView("PLAYER");
-          break;
-        case "Escape":
-          setSelectedView("PLAYER");
-          break;
-      }
-      console.log("Key pressed:", event.key);
-    });
+    window.addEventListener("keydown", (event) => combatControlsHandler(event, selectedView));
+    return () => window.removeEventListener("keydown", (event) => combatControlsHandler(event, selectedView));
   }, []);
 
   return (
@@ -39,7 +47,7 @@ export default function CombatView() {
           selectedView={selectedView}
         />
 
-        <PlayerMenu />
+        <PlayerMenu isPlayersTurn={playerTurn} />
 
         <EnemyChat selectedView={selectedView} />
       </div>
