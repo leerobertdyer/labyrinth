@@ -28,7 +28,7 @@ export default function PlayerMenu({ isPlayersTurn }: PlayerMenuProps) {
 
   const handleAttack = () => {
     combatActor?.send({ type: "SET_VIEW", view: "ENEMY" });
-    console.log("Attacked enemy:", combatActor?.getSnapshot().context);
+    console.log("Set View To ENEMY from player menu:", combatActor?.getSnapshot().context);
   };
 
   const handleRun = () => {

@@ -3,7 +3,7 @@ import Arena from "./Arena";
 import PlayerMenu from "./PlayerMenu";
 import { useEffect } from "react";
 import EnemyChat from "./EnemyChat";
-import { combatControlsHandler, eventKeyToControl } from "./controls";
+import { combatControlsHandler } from "./controls";
 import { useSelector } from "@xstate/react";
 import { CombatViews } from "./types";
 

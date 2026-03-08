@@ -19,7 +19,6 @@ export function eventKeyToControl(event: KeyboardEvent) {
 }
 
 export const combatControlsHandler = (event: KeyboardEvent, selectedView: CombatViews) => {
-    const key = event.key;
     const action = eventKeyToControl(event);
     console.log("Action:", action, "Selected View:", selectedView);
     if (action) {

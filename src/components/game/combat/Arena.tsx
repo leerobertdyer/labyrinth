@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import Combatant from "./Combatant";
 import { type Enemy } from "./types";
+import { useGameMachine } from "@/contexts/GameMachineContext";
+import { useSelector } from "@xstate/react";
 
 interface ArenaProps {
   enemies: Enemy[];
@@ -14,6 +16,12 @@ export default function Arena({
   selectedView,
 }: ArenaProps) {
 
+  const [state] = useGameMachine();
+  const actor = state.children.combatActor;
+  if (!actor) return null;
+
+  const selectedEnemyId = useSelector(actor, (snapshot) => snapshot.context.selectedEnemyId);
+
   return (
     <div
       className={`col-span-4 row-span-4 border-2
@@ -26,7 +34,7 @@ export default function Arena({
       }}
     >
       {enemies.map((enemy) => (
-        <Combatant key={enemy.id} combatant={enemy} />
+        <Combatant key={enemy.id} combatant={enemy} isSelected={selectedEnemyId === enemy.id} />
       ))}
     </div>
   );
