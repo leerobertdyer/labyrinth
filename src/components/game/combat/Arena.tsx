@@ -1,5 +1,5 @@
 import Combatant from "./Combatant";
-import { type Combatant as Enemy } from "./types";
+import { type Enemy } from "./types";
 
 interface ArenaProps {
   enemies: Enemy[];

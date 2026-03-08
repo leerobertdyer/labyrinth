@@ -1,7 +1,7 @@
-import { type Combatant } from "./types";
+import { type Enemy } from "./types";
 
 interface CombatantProps {
-  combatant: Combatant;
+  combatant: Enemy;
 }
 
 function StatView({ label, value }: { label: string; value: string }) {

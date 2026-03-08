@@ -1,11 +1,7 @@
-
-export interface Combatant {
-    id: string;
-    image: string;
-    name: string;
+export interface BattleStats {
     health: number;
     maxHealth: number;
-    experience: number;
+    experience: number; // player - how much they have | enemy - how much they give
     attack: number;
     //   defense: number;
     //   speed: number;
@@ -15,5 +11,36 @@ export interface Combatant {
     //   criticalMultiplier: number;
     //   criticalChance: number;
     //   statusEffects: StatusEffect[];
+    //   items: Item[];
+    //   equipment: Equipment[];
+    //   skills: Skill[];
+    //   spells: Spell[];
+    //   abilities: Ability[];
+    //   traits: Trait[];
+    //   background: Background[];
 }
 
+export interface Enemy extends BattleStats {
+    id: string;
+    image: string;
+    name: string;
+}
+
+export interface Player extends BattleStats {
+    image: string;
+    // inventory: Item[];
+}
+
+export interface Item {
+    id: string;
+    name: string;
+    description: string;
+    image: string;
+    type: 'weapon' | 'armor' | 'consumable' | 'quest' | 'other';
+    value: number;
+    weight: number;
+    quantity: number;
+    effects: {
+        [key: string]: number;
+    }[];
+}

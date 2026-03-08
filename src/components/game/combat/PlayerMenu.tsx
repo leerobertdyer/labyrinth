@@ -1,4 +1,22 @@
+import { useGameMachine } from "@/contexts/GameMachineContext";
+
+function ActionButton({ label, onClick }: { label: string, onClick: () => void }) {
+  return (
+    <button className="w-full bg-gray-400 border-2 border-black cursor-pointer hover:bg-gray-500 transition-all duration-300" onClick={onClick}>
+      {label}
+    </button>
+  );
+}
+
 export default function PlayerMenu() {
+    const [state] = useGameMachine();
+  
+    const combatActor = state.children.combatActor;
+  
+    const handleAttack = () => {
+      combatActor?.send({ type: 'ATTACK' });
+    };
+
   return (
     <div className="col-span-2 row-span-6 bg-white rounded-xs w-full flex flex-col items-center justify-start pt-4 gap-4">
       <div
@@ -9,12 +27,12 @@ export default function PlayerMenu() {
           backgroundPosition: "center",
         }}
       ></div>
-      <div className="flex flex-col items-center justify-center bg-gray-200 rounded-md p-4">
+      <div className="flex flex-col items-center justify-center bg-gray-200 rounded-md p-4 gap-[2px]">
         <h1 className="text-black text-lg font-bold border-b-2 border-black mb-2">XXX's Actions</h1>
-        <button className="w-full bg-blue-500 text-white rounded-md p-2">Attack</button>
-        <button className="w-full bg-blue-500 text-white rounded-md p-2">Defend</button>
-        <button className="w-full bg-blue-500 text-white rounded-md p-2">Item</button>
-        <button className="w-full bg-blue-500 text-white rounded-md p-2">Run</button>
+        <ActionButton label="Attack" onClick={() => {}} />
+        <ActionButton label="Defend" onClick={() => {}} />
+        <ActionButton label="Item" onClick={() => {}} />
+        <ActionButton label="Run" onClick={() => {}} />
       </div>
     </div>
   );
