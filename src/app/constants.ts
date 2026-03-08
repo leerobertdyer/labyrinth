@@ -20,4 +20,4 @@ export const JUMP_STRENGTH = 8;
 export const GROUND_RAY_LENGTH = 0.35;
 export const GROUND_RAY_ORIGIN_OFFSET = 0.05;
 
-export const MOVEMENT_DISABLED_STATES = ["paused", "dead"];
+export const MOVEMENT_DISABLED_STATES = ["paused", "dead", "combat"];

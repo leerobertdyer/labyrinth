@@ -1,5 +1,5 @@
 import Arena from "./Arena";
-import { skeleton1 } from "./enemies";
+import { skeleton1, skeleton2, skeleton3 } from "./enemies";
 import PlayerMenu from "./PlayerMenu";
 
 export default function CombatView() {
@@ -9,8 +9,8 @@ export default function CombatView() {
         <Arena
           enemies={[
           skeleton1,
-          skeleton1,
-          skeleton1,
+          skeleton2,
+          skeleton3,
           ]}
         />
 
