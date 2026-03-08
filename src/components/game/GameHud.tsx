@@ -6,7 +6,6 @@ const HIT_FLASH_DURATION_MS = 250;
 export default function GameHUD() {
   const [state, send, actor] = useGameMachine();
   const [showHitFlash, setShowHitFlash] = useState(false);
-  const prevHealthRef = useRef<number | null>(null);
 
   useEffect(() => {
     const subscription = actor.on('SEE_RED', (event) => {
@@ -29,7 +28,7 @@ export default function GameHUD() {
           className="animate-hit-flash absolute inset-0 bg-red-500 bg-opacity-50 pointer-events-none z-999"
         />
       )}
-      {state.matches("paused") && (
+      {state.matches({ playing: "paused" }) && (
         <div
           style={{
             position: "absolute",
@@ -56,7 +55,7 @@ export default function GameHUD() {
         HP: {state.context.health}
       </div>
       
-      {state.matches("dead") && (
+      {state.matches({ playing: "dead" }) && (
         <div className="absolute top-5 left-10 text-white bg-black/50 p-2 rounded-md rounded-md z-1000">
           You are dead.
         </div>
