@@ -21,7 +21,7 @@ export default function Player() {
 
   useFrame((_, delta) => {
     if (!ref.current || !meshRef.current) return;
-    if (MOVEMENT_DISABLED_STATES.includes(state.value as string)) return;
+    if (MOVEMENT_DISABLED_STATES.includes(state.value.playing as string)) return;
     updateMovement({
       body: ref.current,
       mesh: meshRef.current,

@@ -8,6 +8,7 @@ import {
 import Scene from "./Scene";
 import { controls } from "./constants";
 import GameHUD from "@/components/game/GameHud";
+import CombatView from "@/components/game/combat/CombatView";
 
 
 export default function GamePage() {
@@ -15,6 +16,7 @@ export default function GamePage() {
     <GameMachineProvider>
       <KeyboardControls map={controls}>
         <GameHUD />
+        <CombatView />
         <Canvas
           style={{ width: "100vw", height: "100vh", backgroundColor: "black" }}
           camera={{ position: [0, 5, 10], fov: 60 }}

@@ -79,3 +79,6 @@ Single room vertical slice:
 * Amnesia threshold crossed — visual post-processing shifts
 * Map updates to reflect new state
 Nail this loop completely before building outward.
+
+
+<a href="https://www.freepik.com/free-vector/game-icons-with-viking-helmet-sword-potion-ship_29156757.htm">Image by upklyak on Freepik</a>

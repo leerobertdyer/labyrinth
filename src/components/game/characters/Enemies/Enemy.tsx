@@ -31,7 +31,7 @@ export default function Enemy(props: EnemyProps) {
         if (!isPlayer) return;
         if (!isInContactRef.current) {
           isInContactRef.current = true;
-          send({ type: "PLAYER_HIT", damage: 10 });
+          send({ type: "ENTER_COMBAT"});
         }
       }}
       onCollisionExit={({ other }) => {
