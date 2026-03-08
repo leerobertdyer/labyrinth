@@ -1,5 +1,6 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { Physics } from "@react-three/rapier";
 import * as THREE from "three";
@@ -8,9 +9,11 @@ import Player from "@/components/game/characters/Player/Player";
 import Room, { WallEdge } from "@/components/game/structure/Room";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
 import { Vector3 } from "three";
+import { useGameMachine } from "@/contexts/GameMachineContext";
 
 export default function Scene() {
   const playerPos = useRef<THREE.Vector3>(new THREE.Vector3());
+  const [state, send] = useGameMachine();
   const orbitRef = useRef<OrbitControlsImpl>(null);
   const roomSize = 40;
   const wallEdgesSouth: WallEdge = {
@@ -33,6 +36,7 @@ export default function Scene() {
     slots: Array(roomSize).fill("wall"),
   };
 
+
   useFrame(() => {
     if (orbitRef.current) {
       orbitRef.current.target.copy(playerPos.current);
@@ -44,6 +48,7 @@ export default function Scene() {
   const barrel3= { ...barrel1, pos: new Vector3(roomSize/2-1, .1, 6)}
   const barrel4= { ...barrel1, pos: new Vector3(roomSize/2-1, .1, -3)}
   const barrels = [barrel1, barrel2, barrel3, barrel4]
+
   return (
     <Physics gravity={[0, -10, 0]} debug>
       <axesHelper scale={13} position={[0, 1, 0]} />
