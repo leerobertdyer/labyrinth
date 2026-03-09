@@ -20,6 +20,7 @@ export default function Arena({
 }: ArenaProps) {
   const [state] = useGameMachine();
   const actor = state.children.combatActor;
+  const isArenaView = selectedView === "ENEMY"
 
   const selectedEnemyId = useSelector(actor, (snapshot) => snapshot?.context.selectedEnemyId ?? null);
 
@@ -64,6 +65,10 @@ export default function Arena({
 
   if (!actor) return null;
 
+  function showSelected(id: string){
+    return selectedEnemyId === id && isPlayerTurn && isArenaView
+  }
+
   return (
     <div
       className={`col-span-4 row-span-4 border-2
@@ -76,7 +81,8 @@ export default function Arena({
       }}
     >
       {enemies.map((enemy) => (
-        <Combatant key={enemy.id} combatant={enemy} isSelected={selectedEnemyId === enemy.id} />
+        
+        <Combatant key={enemy.id} combatant={enemy} isSelected={showSelected(enemy.id)} />
       ))}
     </div>
   );
