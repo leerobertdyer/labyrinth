@@ -45,6 +45,7 @@ export default function PlayerMenu({
   selectedMenuIndexRef.current = selectedMenuIndex;
 
   const combatActor = state.children.combatActor;
+  const playerViewActive = selectedView === "PLAYER";
 
   useEffect(() => {
     if (selectedView !== "PLAYER") return;
@@ -110,8 +111,10 @@ export default function PlayerMenu({
     <div
       className={`col-span-2 row-span-6 border-2 bg-black
         ${isPlayersTurn ? "border-green-800" : "border-white"}
-         rounded-xs w-full flex flex-col items-center justify-start pt-4 gap-4`}
+         rounded-xs w-full flex flex-col items-center justify-start pt-4 gap-4 relative`}
     >
+      {!playerViewActive && <div className="absolute inset-0 bg-black/35 w-full h-full z-200"></div>}
+
       <div
         className="rounded-md border-2 border-black p-4 h-60 w-37.5"
         style={{

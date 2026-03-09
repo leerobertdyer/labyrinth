@@ -15,7 +15,6 @@ export default function CombatView() {
 }
 
 function CombatViewContent({
-  state,
   actor,
 }: {
   state: ReturnType<typeof useGameMachine>[0];

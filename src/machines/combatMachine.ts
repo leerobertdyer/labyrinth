@@ -24,7 +24,7 @@ export const combatMachine = setup({
   actors: {
     enemyAI: fromPromise(
       async ({ input }: { input: { enemy: Enemy | undefined } }) => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 500));
         return { damage: input?.enemy?.attack };
       },
     ),
@@ -82,6 +82,7 @@ export const combatMachine = setup({
   },
   states: {
     playerTurn: {
+      entry: assign({ selectedView: () => "PLAYER" }),
       on: {
         SELECT_ENEMY: {
           actions: [assign({ selectedEnemyId: ({ event }) => event.enemyId })],
@@ -115,13 +116,17 @@ export const combatMachine = setup({
       }),
       always: { target: "enemyAttack" },
     },
-    enemyAttack: {
+    enemyAttackQueue: {
+      // new routing state
       always: [
         {
           guard: ({ context }) => context.enemyAttackQueue.length === 0,
           target: "checkPlayer",
         },
+        { target: "enemyAttack" },
       ],
+    },
+    enemyAttack: {
       invoke: {
         src: "enemyAI",
         input: ({ context }) => ({
@@ -130,7 +135,7 @@ export const combatMachine = setup({
           ),
         }),
         onDone: {
-          target: "enemyTurn",
+          target: "enemyAttackQueue", // ← route through the check state
           actions: [
             "applyEnemyDamage",
             assign({
