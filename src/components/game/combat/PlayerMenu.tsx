@@ -1,7 +1,7 @@
 import { useGameMachine } from "@/contexts/GameMachineContext";
 import { useEffect, useRef, useState } from "react";
 import { eventKeyToControl } from "./combatControls";
-import type { CombatViews } from "./types";
+import type { CombatViews} from "./types";
 
 const MENU_ACTION_COUNT = 4;
 
@@ -40,6 +40,8 @@ export default function PlayerMenu({
   const [state] = useGameMachine();
   const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
   const selectedMenuIndexRef = useRef(selectedMenuIndex);
+  // @todo fix this:
+  // eslint-disable-next-line react-hooks/refs
   selectedMenuIndexRef.current = selectedMenuIndex;
 
   const combatActor = state.children.combatActor;
@@ -76,7 +78,8 @@ export default function PlayerMenu({
   }, [selectedView, isPlayersTurn, combatActor]);
 
   const handleAttack = () => {
-    combatActor?.send({ type: "SET_VIEW", view: "ENEMY" });
+    if (!combatActor) return;
+    combatActor.send({ type: "SET_VIEW", view: "ENEMY" });
   };
 
   const handleRun = () => {
@@ -110,16 +113,16 @@ export default function PlayerMenu({
          rounded-xs w-full flex flex-col items-center justify-start pt-4 gap-4`}
     >
       <div
-        className="rounded-md border-2 border-black p-4 h-[240px] w-[150px]"
+        className="rounded-md border-2 border-black p-4 h-60 w-37.5"
         style={{
           backgroundImage: `url(/sprites/Hero.png)`,
           backgroundSize: "contain",
           backgroundPosition: "center",
         }}
       ></div>
-      <div className="flex flex-col items-center justify-center bg-gray-200 rounded-md p-4 gap-[2px]">
+      <div className="flex flex-col items-center justify-center bg-gray-200 rounded-md p-4 gap-0.5">
         <h1 className="text-black text-lg font-bold border-b-2 border-black mb-2">
-          XXX's Actions
+          Player Actions
         </h1>
         <ActionButton
           label="Attack"
@@ -142,7 +145,7 @@ export default function PlayerMenu({
           isSelected={selectedMenuIndex === 3}
         />
       </div>
-      <div className="flex flex-col items-center justify-center bg-gray-200 rounded-md p-4 gap-[2px]">
+      <div className="flex flex-col items-center justify-center bg-gray-200 rounded-md p-4 gap-0.5">
         <h1 className="text-black text-lg font-bold border-b-2 border-black mb-2">
           Stats
         </h1>
