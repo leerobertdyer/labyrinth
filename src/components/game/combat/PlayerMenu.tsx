@@ -28,7 +28,6 @@ export default function PlayerMenu({ isPlayersTurn }: PlayerMenuProps) {
 
   const handleAttack = () => {
     combatActor?.send({ type: "SET_VIEW", view: "ENEMY" });
-    console.log("Set View To ENEMY from player menu:", combatActor?.getSnapshot().context);
   };
 
   const handleRun = () => {
@@ -40,8 +39,20 @@ export default function PlayerMenu({ isPlayersTurn }: PlayerMenuProps) {
   };
 
   const handleItem = () => {
-    combatActor?.send({ type: "USE_ITEM", itemId: "fake" });
+    combatActor?.send({ type: "USE_ITEM", itemId: "todo" });
   };
+
+  const player = combatActor?.getSnapshot().context.player;
+  if (!player) return null;
+
+  function StatView({ label, value }: { label: string; value: string }) {
+    return (
+      <div className="flex justify-between bg-black px-2 rounded-md text-xs text-white w-full text-center">
+        {label && <p>{label}</p>}
+        <p>{value}</p>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -65,6 +76,11 @@ export default function PlayerMenu({ isPlayersTurn }: PlayerMenuProps) {
         <ActionButton label="Defend" onClick={isPlayersTurn ? handleDefend : () => {}} />
         <ActionButton label="Item" onClick={isPlayersTurn ? handleItem : () => {}} />
         <ActionButton label="Run" onClick={isPlayersTurn ? handleRun : () => {}} />
+      </div>
+      <div className="flex flex-col items-center justify-center bg-gray-200 rounded-md p-4 gap-[2px]">
+        <h1 className="text-black text-lg font-bold border-b-2 border-black mb-2">Stats</h1>
+        <StatView label="HP" value={`${player.health} / ${player.maxHealth}`} />
+        <StatView label="Attack" value={`${player.attack}`} />
       </div>
     </div>
   );
