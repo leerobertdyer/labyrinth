@@ -3,8 +3,8 @@ export interface BattleStats {
     maxHealth: number;
     experience: number; // player - how much they have | enemy - how much they give
     attack: number;
+    speed: number;
     //   defense: number;
-    //   speed: number;
     //   accuracy: number;
     //   evasion: number;
     //   critical: number;

@@ -117,7 +117,6 @@ export const combatMachine = setup({
       always: { target: "enemyAttack" },
     },
     enemyAttackQueue: {
-      // new routing state
       always: [
         {
           guard: ({ context }) => context.enemyAttackQueue.length === 0,
@@ -135,7 +134,7 @@ export const combatMachine = setup({
           ),
         }),
         onDone: {
-          target: "enemyAttackQueue", // ← route through the check state
+          target: "enemyAttackQueue",
           actions: [
             "applyEnemyDamage",
             assign({
