@@ -1,8 +1,23 @@
+import { useEffect } from "react";
+import { eventKeyToControl } from "./combatControls";
+
 interface EnemyChatProps {
   selectedView: "PLAYER" | "ENEMY" | "CHAT";
 }
 
 export default function EnemyChat({ selectedView }: EnemyChatProps) {
+  useEffect(() => {
+    if (selectedView !== "CHAT") return;
+    const handler = (event: KeyboardEvent) => {
+      const action = eventKeyToControl(event);
+      if (action === "MENU_UP" || action === "MENU_DOWN") {
+        event.preventDefault();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [selectedView]);
+
   return (
     <div
       className={`

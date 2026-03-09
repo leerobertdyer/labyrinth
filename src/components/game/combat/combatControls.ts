@@ -1,3 +1,9 @@
+/**
+ * Battle keyboard bindings. Used only when playing.inCombat.
+ * Each view (PlayerMenu, Arena, EnemyChat) registers its own keydown listener when it is the active view;
+ * they use eventKeyToControl() to map key -> action and handle only the actions they care about.
+ * Exploration controls live in app/constants.ts and are consumed via drei KeyboardControls.
+ */
 import type { CombatViews } from "./types";
 import type { Enemy } from "./types";
 
@@ -9,90 +15,15 @@ export interface CombatActorRef {
 }
 
 export const combatControls = [
-    { name: "MOVE_UP", keys: ["w", "W"] },
-    { name: "MOVE_DOWN", keys: ["s", "S"] },
-    { name: "MOVE_LEFT", keys: ["a", "A"] },
-    { name: "MOVE_RIGHT", keys: ["d", "D"] },
-    { name: "MENU_LEFT", keys: ["ArrowLeft"] },
-    { name: "MOVE_RIGHT", keys: ["ArrowRight"] },
-    { name: "MOVE_UP", keys: ["ArrowUp"] },
-    { name: "MOVE_DOWN", keys: ["ArrowDown"] },
-    { name: "SELECT", keys: [" "] },
-    { name: "BACK", keys: ["Backspace"] }
+  { name: "MENU_UP", keys: ["ArrowUp", "w", "W"] },
+  { name: "MENU_LEFT", keys: ["ArrowLeft", "a", "A"] },
+  { name: "MENU_DOWN", keys: ["ArrowDown", "s", "S"] },
+  { name: "MENU_RIGHT", keys: ["ArrowRight", "d", "D"] },
+  { name: "SELECT", keys: [" "] },
+  { name: "BACK", keys: ["Backspace"] }
 ];
 
 export function eventKeyToControl(event: KeyboardEvent) {
-    const key = event.key
-    return combatControls.find(control => control.keys.includes(key))?.name;
-}
-
-export function combatControlsHandler(
-  event: KeyboardEvent,
-  selectedView: CombatViews,
-  actor: CombatActorRef
-) {
-  const action = eventKeyToControl(event);
-  if (!action) return;
-
-  switch (selectedView) {
-    case "PLAYER":
-      switch (action) {
-        case "MOVE_UP":
-          break;
-        case "MOVE_DOWN":
-          break;
-        case "SELECT":
-          break;
-        case "BACK":
-          break;
-        default:
-          break;
-      }
-      break;
-    case "ENEMY": {
-      const ctx = actor.getSnapshot().context;
-      const alive = ctx.enemies.filter((e) => e.health > 0);
-      if (alive.length === 0) break;
-
-      const currentIndex = ctx.selectedEnemyId
-        ? alive.findIndex((e) => e.id === ctx.selectedEnemyId)
-        : -1;
-      const index = currentIndex < 0 ? 0 : currentIndex;
-
-      switch (action) {
-        case "MOVE_LEFT":
-        case "MENU_LEFT": {
-          const prev = Math.max(0, index - 1);
-          actor.send({ type: "SELECT_ENEMY", enemyId: alive[prev].id });
-          break;
-        }
-        case "MOVE_RIGHT": {
-          const next = Math.min(alive.length - 1, index + 1);
-          actor.send({ type: "SELECT_ENEMY", enemyId: alive[next].id });
-          break;
-        }
-        case "SELECT":
-          actor.send({ type: "ATTACK" });
-          break;
-        case "BACK":
-          actor.send({ type: "SET_VIEW", view: "PLAYER" });
-          break;
-        default:
-          break;
-      }
-      break;
-    }
-    case "CHAT":
-      switch (action) {
-        case "MOVE_UP":
-          break;
-        case "MOVE_DOWN":
-          break;
-        default:
-          break;
-      }
-      break;
-    default:
-      break;
-  }
+  const key = event.key;
+  return combatControls.find((control) => control.keys.includes(key))?.name;
 }

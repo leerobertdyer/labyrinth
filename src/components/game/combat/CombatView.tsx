@@ -1,9 +1,7 @@
 import { useGameMachine } from "@/contexts/GameMachineContext";
 import Arena from "./Arena";
 import PlayerMenu from "./PlayerMenu";
-import { useEffect } from "react";
 import EnemyChat from "./EnemyChat";
-import { combatControlsHandler } from "./combatControls";
 import { useSelector } from "@xstate/react";
 import { CombatViews } from "./types";
 
@@ -32,24 +30,19 @@ function CombatViewContent({
     actor,
     (snapshot) => (snapshot.context.selectedView ?? "PLAYER") as CombatViews,
   );
-
-  useEffect(() => {
-    const handler = (event: KeyboardEvent) =>
-      combatControlsHandler(event, selectedView, actor);
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [selectedView, actor]);
+  const enemies = useSelector(actor, (snapshot) => snapshot.context.enemies);
 
   return (
-    <div className="absolute inset-0 bg-black/75 z-1000 flex flex-col items-center justify-center h-screen">
+    <div className="absolute inset-0 bg-black/75 z-100 flex flex-col items-center justify-center h-screen">
       <div className="grid grid-cols-6 grid-rows-6 gap-4 w-full h-full">
         <Arena
           background="/backgrounds/dungeon.png"
-          enemies={state.context.enemies}
+          enemies={enemies}
           selectedView={selectedView}
+          isPlayerTurn={playerTurn}
         />
 
-        <PlayerMenu isPlayersTurn={playerTurn} />
+        <PlayerMenu isPlayersTurn={playerTurn} selectedView={selectedView} />
 
         <EnemyChat selectedView={selectedView} />
       </div>
