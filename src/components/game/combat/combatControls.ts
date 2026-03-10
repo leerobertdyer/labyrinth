@@ -20,7 +20,7 @@ export const combatControls = [
   { name: "MENU_DOWN", keys: ["ArrowDown", "s", "S"] },
   { name: "MENU_RIGHT", keys: ["ArrowRight", "d", "D"] },
   { name: "SELECT", keys: [" "] },
-  { name: "BACK", keys: ["Backspace"] }
+  { name: "BACK", keys: ["Backspace", "q", "Q"] }
 ];
 
 export function eventKeyToControl(event: KeyboardEvent) {

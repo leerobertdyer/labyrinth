@@ -49,8 +49,8 @@ export default function Scene() {
   const barrels = [barrel1, barrel2, barrel3, barrel4]
 
   return (
-    <Physics gravity={[0, -10, 0]} debug>
-      <axesHelper scale={13} position={[0, 1, 0]} />
+    <Physics gravity={[0, -10, 0]} debug={false}>
+      {/* <axesHelper scale={13} position={[0, 1, 0]} />  */}
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 5]} intensity={1} />
       <Player />

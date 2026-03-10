@@ -73,7 +73,7 @@ Core Loop
 
 First Milestone
 Single room vertical slice:
-* Player moves
+* Player moves ✔
 * One enemy encounter that raises amnesia through specific action
 * One NPC with generative dialogue that can shift the gauge
 * Amnesia threshold crossed — visual post-processing shifts
