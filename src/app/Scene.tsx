@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
@@ -9,12 +9,10 @@ import Player from "@/components/game/characters/Player/Player";
 import Room, { WallEdge } from "@/components/game/structure/Room";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
 import { Vector3 } from "three";
-import { useGameMachine } from "@/contexts/GameMachineContext";
 import { skeleton1, skeleton2, skeleton3 } from "@/components/game/combat/enemies";
 
 export default function Scene() {
   const playerPos = useRef<THREE.Vector3>(new THREE.Vector3());
-  const [state, send] = useGameMachine();
   const orbitRef = useRef<OrbitControlsImpl>(null);
   const roomSize = 40;
   const wallEdgesSouth: WallEdge = {

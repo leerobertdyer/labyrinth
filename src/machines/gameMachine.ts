@@ -10,6 +10,7 @@ const gameSetup = setup({
         health: number;
         amnesia: number;
         speed: number;
+        defense: number
       };
       room: string;
       enemies: Enemy[];
@@ -44,6 +45,7 @@ export const gameMachine = gameSetup.createMachine({
       health: 100,
       amnesia: 0,
       speed: 5,
+      defense: 5
     },
     room: "start",
     enemies: [],
@@ -104,6 +106,7 @@ export const gameMachine = gameSetup.createMachine({
                 maxHealth: 100,
                 experience: 0,
                 speed: context.player.speed,
+                defense: context.player.defense
               },
               enemies: context.enemies,
             }),

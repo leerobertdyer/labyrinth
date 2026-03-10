@@ -25,7 +25,8 @@ export const combatMachine = setup({
     enemyAI: fromPromise(
       async ({ input }: { input: { enemy: Enemy | undefined } }) => {
         await new Promise((resolve) => setTimeout(resolve, 500));
-        return { damage: input?.enemy?.attack };
+        const damage = Math.ceil(Math.random() * (input?.enemy?.attack ?? 1))
+        return { damage };
       },
     ),
   },
