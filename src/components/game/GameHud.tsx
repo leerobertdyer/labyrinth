@@ -52,7 +52,7 @@ export default function GameHUD() {
 
       {/* Example: Display Health HUD */}
       <div className="absolute top-5 left-10 text-white bg-black/50 p-2 rounded-md rounded-md z-100">
-        HP: {state.context.health}
+        HP: {state.context.player.health}
       </div>
       
       {state.matches({ playing: "dead" }) && (

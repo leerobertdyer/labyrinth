@@ -1,16 +1,27 @@
-export const skeleton1 = generateEnemy("Skeleton", "Skeleton1.png", 100, 10, 100);
-export const skeleton2 = generateEnemy("Skeleton", "Skeleton1.png", 100, 10, 100);
-export const skeleton3 = generateEnemy("Skeleton", "Skeleton1.png", 100, 10, 100);
+export const skeleton1 = generateEnemy({name: "Skeleton", image: "Skeleton1.png", maxHealth: 100, minHealth: 35, attack:  8, experience: 100, speed: 3});
+export const skeleton2 = generateEnemy({name: "Skeleton", image: "Skeleton1.png", maxHealth: 100, minHealth: 35, attack:  8, experience: 100, speed: 3});
+export const skeleton3 = generateEnemy({name: "Skeleton", image: "Skeleton1.png", maxHealth: 100, minHealth: 35, attack:  8, experience: 100, speed: 3});
 
-function generateEnemy(name: string, image: string, maxHealth: number, attack: number, experience: number) {
+interface IGenerateEnemy {
+    name: string;
+    image: string;
+    maxHealth: number;
+    minHealth: number;
+    attack: number;
+    experience: number;
+    speed: number;
+}
+function generateEnemy({name, image, minHealth, maxHealth, attack, experience, speed}: IGenerateEnemy) {
+    const randomMaxHealth = Math.ceil(Math.max(minHealth, Math.random() * maxHealth))
     return {
         id: crypto.randomUUID(),
         image: image,
         name: name,
-        health: maxHealth,
-        maxHealth: maxHealth,
+        health: randomMaxHealth,
+        maxHealth: randomMaxHealth,
         experience: experience,
         attack: attack,
         selected: false,
+
     }
 }
