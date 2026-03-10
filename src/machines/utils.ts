@@ -1,10 +1,18 @@
 import { Player } from "@/components/game/combat/types";
 
-export function calculateIncomingDamage(
-  player: Player,
-  isPlayerActivelyDefending: boolean,
-  rawDamage: number,
-): number {
-  const defenseBuffer = player.defense * (isPlayerActivelyDefending ? 2 : 1);
+interface ICalculateDamage {
+  player: Player;
+  isPlayerDefending: boolean;
+  rawDamage: number;
+}
+
+export function calculateIncomingDamage({
+  player,
+  isPlayerDefending,
+  rawDamage,
+}: ICalculateDamage): number {
+  const defenseMultiplier = 4;
+  const defenseBuffer =
+    player.defense * (isPlayerDefending ? defenseMultiplier : 1);
   return Math.max(0, rawDamage - defenseBuffer);
 }

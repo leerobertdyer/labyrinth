@@ -45,7 +45,7 @@ export const gameMachine = gameSetup.createMachine({
       health: 100,
       amnesia: 0,
       speed: 5,
-      defense: 5
+      defense: 1
     },
     room: "start",
     enemies: [],

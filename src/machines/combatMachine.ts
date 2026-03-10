@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Player, type Enemy } from "@/components/game/combat/types";
+import { calculateIncomingDamage } from "@/machines/utils";
 import { assign, fromPromise, sendParent, setup } from "xstate";
 
 export const combatMachine = setup({
@@ -25,7 +25,7 @@ export const combatMachine = setup({
     enemyAI: fromPromise(
       async ({ input }: { input: { enemy: Enemy | undefined } }) => {
         await new Promise((resolve) => setTimeout(resolve, 500));
-        const damage = Math.ceil(Math.random() * (input?.enemy?.attack ?? 1))
+        const damage = Math.ceil(Math.random() * (input?.enemy?.attack ?? 1));
         return { damage };
       },
     ),
@@ -43,15 +43,6 @@ export const combatMachine = setup({
             : enemy,
         );
       },
-    }),
-    applyEnemyDamage: assign({
-      player: ({ context, event }) => ({
-        ...context.player,
-        health: Math.max(
-          0,
-          context.player.health - (event as any).output.damage, // @todo: fix any
-        ),
-      }),
     }),
   },
 
@@ -137,7 +128,18 @@ export const combatMachine = setup({
         onDone: {
           target: "enemyAttackQueue",
           actions: [
-            "applyEnemyDamage",
+            assign({
+              player: ({ context, event }) => ({
+                ...context.player,
+                health:
+                  context.player.health -
+                  calculateIncomingDamage({
+                    rawDamage: event.output.damage,
+                    isPlayerDefending: false,
+                    player: context.player,
+                  }),
+              }),
+            }),
             assign({
               enemyAttackQueue: ({ context }) =>
                 context.enemyAttackQueue.slice(1),
