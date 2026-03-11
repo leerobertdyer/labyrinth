@@ -21,7 +21,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UcolumnUdamaged(props: React.ComponentProps<'group'>) {
+export function ColumnDamaged(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/column-damaged.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

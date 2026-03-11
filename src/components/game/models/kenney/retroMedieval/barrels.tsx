@@ -22,11 +22,6 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]; 
 };
 
-interface iBarrels {
-  groupProps: React.ComponentProps<"group">
-  rigidBodyType: "fixed" | "dynamic" | "kinematic"
-}
-
 export function Barrels(props: React.ComponentProps<"group">) {
   const { nodes, materials } = useGLTF(
     "/models/kenney/retroMedieval/barrels.glb",

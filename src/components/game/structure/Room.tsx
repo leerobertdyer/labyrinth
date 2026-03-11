@@ -1,35 +1,11 @@
 import { WoodFloor } from "@/components/game/models/kenney/retroMedieval/wood-floor";
 import FloorCeilingGrid from "@/components/game/structure/FloorCeilingGrid";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
-import { ComponentType } from "react";
-import { Euler, Vector3 } from "three";
+import {  Vector3 } from "three";
 import { Roof } from "@/components/game/models/kenney/retroMedieval/roof";
 import { WallBDetailPainted } from "../models/kenney/retroUrban/wall-b-detail-painted";
 import { WallBDetailPaintedFortifiedGate } from "../models/kenney/retroMedieval/wall-fortified-gate";
-
-type SlotType = "wall" | "gate" | "empty";
-
-export interface WallEdge {
-  direction: "north" | "south" | "east" | "west";
-  slots: SlotType[]; // length = number of tiles along that edge
-}
-
-interface IDebris {
-  pos: Vector3;
-  scale: Vector3;
-  rotation: Euler;
-  Model: ComponentType<{ position: Vector3; scale?: Vector3; rotation: Euler }>;
-  onColide?: () => void;
-}
-
-interface IRoom {
-  size: number; // floor grid size
-  tileSize: number; // individual tile size
-  edges?: WallEdge[]; // optional — default to all walls if omitted
-  scale?: Vector3; // optional scale for walls/doors/ceiling height
-  roof?: boolean; // optional flag to show sky or not
-  debris?: IDebris[]; // optional objects in room
-}
+import { IRoom, SlotType, WallEdge } from "@/components/types";
 
 const EDGE_ROTATIONS: Record<string, [number, number, number]> = {
   north: [0, 0, 0],
@@ -68,7 +44,6 @@ export default function Room({
   tileSize = 1,
   edges,
   scale = DEFAULT_SCALE,
-  debris,
 }: IRoom) {
   const defaultEdges: WallEdge[] = ["north", "south", "east", "west"].map(
     (dir) => ({
@@ -128,19 +103,6 @@ export default function Room({
         height={scale.y}
       />
 
-      {/* Debris */}
-      {debris &&
-        debris.map((d: IDebris, i) => {
-          const Model = d.Model;
-          return (
-            <Model
-              key={i}
-              position={d.pos}
-              scale={d.scale}
-              rotation={d.rotation}
-            />
-          );
-        })}
 
       {/* Visual Wall Runs */}
       {resolvedEdges.map((edge) =>

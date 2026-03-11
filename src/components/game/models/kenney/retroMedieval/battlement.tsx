@@ -21,7 +21,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function Ubattlement(props: React.ComponentProps<'group'>) {
+export function Battlement(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/battlement.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

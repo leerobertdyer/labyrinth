@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UtreeUcrooked(props: React.ComponentProps<'group'>) {
+export function TreeCrooked(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/fantasyTown/tree-crooked.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

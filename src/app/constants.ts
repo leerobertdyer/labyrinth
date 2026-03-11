@@ -3,10 +3,10 @@ export const explorationControls = [
     { name: "moveBackward", keys: ["s", "S"] },
     { name: "strafeLeft", keys: ["a", "A"] },
     { name: "strafeRight", keys: ["d", "D"] },
-    { name: "rotateLeft", keys: ["ArrowLeft"] },
-    { name: "rotateRight", keys: ["ArrowRight"] },
-    { name: "camUp", keys: ["ArrowUp"] },
-    { name: "camDown", keys: ["ArrowDown"] },
+    { name: "rotateLeft", keys: ["ArrowLeft", "j", "J"] },
+    { name: "rotateRight", keys: ["ArrowRight", "l", "L"] },
+    { name: "camUp", keys: ["ArrowUp", "i", "I"] },
+    { name: "camDown", keys: ["ArrowDown", "k", "K"] },
     { name: "jump", keys: ["Space"] },
     { name: "pause", keys: ["p", "P"] }
 ];

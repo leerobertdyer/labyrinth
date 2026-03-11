@@ -3,7 +3,7 @@ import { useGameMachine } from "@/contexts/GameMachineContext";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { Enemy } from "../../combat/types";
 
-type EnemyEncounterProps = React.ComponentProps<"group"> & {
+export type EnemyEncounterProps = React.ComponentProps<"group"> & {
   encounterEnemies: Enemy[];
 };
 

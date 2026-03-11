@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UtreeUhigh(props: React.ComponentProps<'group'>) {
+export function TreeHigh(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/fantasyTown/tree-high.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

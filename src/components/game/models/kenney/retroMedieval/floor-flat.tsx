@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UfloorUflat(props: React.ComponentProps<'group'>) {
+export function FloorFlat(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/floor-flat.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UstallUbench(props: React.ComponentProps<'group'>) {
+export function StallBench(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/fantasyTown/stall-bench.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

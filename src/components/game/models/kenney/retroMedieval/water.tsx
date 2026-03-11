@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function Uwater(props: React.ComponentProps<'group'>) {
+export function Water(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/water.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

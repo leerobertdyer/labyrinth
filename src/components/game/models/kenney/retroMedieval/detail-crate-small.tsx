@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UdetailUcrateUsmall(props: React.ComponentProps<'group'>) {
+export function DetailCrateSmall(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/detail-crate-small.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

@@ -21,7 +21,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UdockUside(props: React.ComponentProps<'group'>) {
+export function DockSide(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/dock-side.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

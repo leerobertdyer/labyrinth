@@ -21,7 +21,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UdetailUbench(props: React.ComponentProps<'group'>) {
+export function DetailBench(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroUrban/detail-bench.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

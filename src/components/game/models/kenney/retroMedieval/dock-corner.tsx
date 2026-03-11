@@ -21,7 +21,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UdockUcorner(props: React.ComponentProps<'group'>) {
+export function DockCorner(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/dock-corner.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

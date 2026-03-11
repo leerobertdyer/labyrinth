@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UtreeUshrub(props: React.ComponentProps<'group'>) {
+export function MedievalTreeShrub(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/tree-shrub.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

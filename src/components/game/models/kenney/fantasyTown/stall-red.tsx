@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UstallUred(props: React.ComponentProps<'group'>) {
+export function StallRed(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/fantasyTown/stall-red.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

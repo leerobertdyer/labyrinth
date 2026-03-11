@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UtreeUlarge(props: React.ComponentProps<'group'>) {
+export function MedievalTree(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/tree-large.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

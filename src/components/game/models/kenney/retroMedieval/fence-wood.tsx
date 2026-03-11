@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UfenceUwood(props: React.ComponentProps<'group'>) {
+export function FenceWood(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/fence-wood.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>

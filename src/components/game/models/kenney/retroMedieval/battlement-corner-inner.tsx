@@ -21,7 +21,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UbattlementUcornerUinner(props: React.ComponentProps<'group'>) {
+export function BattlementCornerInner(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/retroMedieval/battlement-corner-inner.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>
