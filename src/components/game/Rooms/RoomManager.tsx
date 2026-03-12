@@ -29,7 +29,7 @@ export default function RoomManager({ roomId }: IRoomManager) {
         tileSize={room.tileSize ?? 1}
         edges={edges}
       />
-      <EnemyEncounter encounterEnemies={room.enemies} position={[0, 0, 4]} />
+      <EnemyEncounter encounterEnemies={room.enemies} position={[-5, 0, 7]} />
       {roomObjects &&
         roomObjects.map((o: IRoomObjects, i) => {
           const Model = o.Model;

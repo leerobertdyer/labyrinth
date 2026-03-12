@@ -1,9 +1,9 @@
 import { useGameMachine } from "@/contexts/GameMachineContext";
 import { useEffect, useRef, useState } from "react";
 import { eventKeyToControl } from "./combatControls";
-import type { CombatViews} from "./types";
+import type { CombatViews } from "./types";
 
-const MENU_ACTION_COUNT = 4;
+const MENU_ACTION_COUNT = 5;
 
 function ActionButton({
   label,
@@ -95,6 +95,10 @@ export default function PlayerMenu({
     combatActor?.send({ type: "USE_ITEM", itemId: "todo" });
   };
 
+  const handleChat = () => {
+    combatActor?.send({ type: "SET_VIEW", view: "CHAT"})
+  }
+
   const player = combatActor?.getSnapshot().context.player;
   if (!player) return null;
 
@@ -113,7 +117,9 @@ export default function PlayerMenu({
         ${isPlayersTurn ? "border-green-800" : "border-white"}
          rounded-xs w-full flex flex-col items-center justify-start pt-4 gap-4 relative`}
     >
-      {!playerViewActive && <div className="absolute inset-0 bg-black/35 w-full h-full z-200"></div>}
+      {!playerViewActive && (
+        <div className="absolute inset-0 bg-black/35 w-full h-full z-200"></div>
+      )}
 
       <div
         className="rounded-md border-2 border-black p-4 h-60 w-37.5"
@@ -146,6 +152,11 @@ export default function PlayerMenu({
           label="Run"
           onClick={isPlayersTurn ? handleRun : () => {}}
           isSelected={selectedMenuIndex === 3}
+        />
+        <ActionButton
+          label="Chat"
+          onClick={isPlayersTurn ? handleChat : () => {}}
+          isSelected={selectedMenuIndex === 4}
         />
       </div>
       <div className="flex flex-col items-center justify-center bg-gray-200 rounded-md p-4 gap-0.5">
