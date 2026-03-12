@@ -1,3 +1,5 @@
+// General Game Types
+
 import { Enemy } from '@/components/game/combat/types';
 import { ComponentType } from 'react';
 import { AnimationClip, Euler, Vector3 } from 'three'
@@ -37,11 +39,24 @@ export interface RoomConfig {
   edges: { north: WallEdge, south: WallEdge, east: WallEdge, west: WallEdge },
   roomObjects: IRoomObjects[],
   enemies: Enemy[],
-  // npcs: type needs implementation
+  npcs: NPC[],
   connections: {
     north?: string;   // what room each gate leads to eg "northern-starting-hall"
     south?: string;   
     east?: string;  
     west?: string;
   }
+}
+
+export interface NPC {
+  id: string;
+  position: Vector3;
+  rotation: Vector3;
+  modelScale: number;
+  Model: ComponentType<{ position: Vector3, rotation: [number, number, number], scale: number }>
+  // name
+  // prompt: NPCPrompt // the initial prompt for conversation injection
+  // alignment: Alignment // Whether they are friend foe or confused 
+  // amnesia: number // may be cool to have the same amnesia status that main character does
+  // stats: NPCStats // should the npcs be Fightable!??  INpcStats could extend BattleStats
 }

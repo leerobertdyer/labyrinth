@@ -1,3 +1,5 @@
+// Combat Specific Types
+
 export interface BattleStats {
   health: number;
   maxHealth: number;

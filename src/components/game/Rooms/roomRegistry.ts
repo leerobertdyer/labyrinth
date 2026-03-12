@@ -1,5 +1,5 @@
 import { startingRoom } from "@/components/game/Rooms/roomConfigs/startingRoom";
-import { IRoomObjects, RoomConfig, SlotType } from "@/components/types";
+import { IRoomObjects, RoomConfig, SlotType } from "@/components/game/types";
 import { Vector3 } from "three";
 
 export function allWalls(n: number): SlotType[] {

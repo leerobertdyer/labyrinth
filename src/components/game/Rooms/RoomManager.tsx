@@ -1,11 +1,10 @@
 import EnemyEncounter from "@/components/game/characters/Enemies/EnemyEncounter";
 import { ROOMS } from "@/components/game/Rooms/roomRegistry";
 import Room from "@/components/game/structure/Room";
-import { IRoomObjects } from "@/components/types";
+import { IRoomObjects } from "@/components/game/types";
 
 interface IRoomManager {
   roomId: string;
-  //npc: needType[]
 }
 
 export default function RoomManager({ roomId }: IRoomManager) {
@@ -19,7 +18,9 @@ export default function RoomManager({ roomId }: IRoomManager) {
     room.edges.west,
   ];
 
-  const roomObjects = room.roomObjects
+  const roomObjects = room.roomObjects;
+  const npcs = room.npcs;
+
   return (
     <group>
       <Room
@@ -28,7 +29,7 @@ export default function RoomManager({ roomId }: IRoomManager) {
         tileSize={room.tileSize ?? 1}
         edges={edges}
       />
-      <EnemyEncounter encounterEnemies={room.enemies} position={[0, 0, 4]}/>
+      <EnemyEncounter encounterEnemies={room.enemies} position={[0, 0, 4]} />
       {roomObjects &&
         roomObjects.map((o: IRoomObjects, i) => {
           const Model = o.Model;
@@ -38,6 +39,18 @@ export default function RoomManager({ roomId }: IRoomManager) {
               position={o.pos}
               scale={o.scale}
               rotation={o.rotation}
+            />
+          );
+        })}
+      {npcs &&
+        npcs.map((n, i) => {
+          const Model = n.Model;
+          return (
+            <Model
+              key={i}
+              position={n.position}
+              rotation={[n.rotation.x, n.rotation.y, n.rotation.z]}
+              scale={n.modelScale}
             />
           );
         })}

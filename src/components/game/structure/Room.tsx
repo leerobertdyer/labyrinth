@@ -5,7 +5,7 @@ import {  Vector3 } from "three";
 import { Roof } from "@/components/game/models/kenney/retroMedieval/roof";
 import { WallBDetailPainted } from "../models/kenney/retroUrban/wall-b-detail-painted";
 import { WallBDetailPaintedFortifiedGate } from "../models/kenney/retroMedieval/wall-fortified-gate";
-import { IRoom, SlotType, WallEdge } from "@/components/types";
+import { IRoom, SlotType, WallEdge } from "@/components/game/types";
 
 const EDGE_ROTATIONS: Record<string, [number, number, number]> = {
   north: [0, 0, 0],

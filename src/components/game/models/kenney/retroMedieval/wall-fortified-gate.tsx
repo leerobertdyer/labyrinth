@@ -7,7 +7,7 @@ import * as THREE from "three";
 import React, { useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import { GLTFAction } from "@/components/types";
+import { GLTFAction } from "@/components/game/types";
 import {
   CuboidCollider,
   RigidBody,

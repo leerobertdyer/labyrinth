@@ -1,9 +1,9 @@
-import { CapsuleCollider, RigidBody } from "@react-three/rapier";
+import { CapsuleCollider, CuboidCollider, RigidBody } from "@react-three/rapier";
 import { ShopkeeperModel } from "../../models/mixamo/Shopkeeper";
-import { Euler, Vector3 } from "three";
+import { Vector3 } from "three";
 
 export default function Shopkeeper({
-  scale,
+  scale=2,
   position,
   rotation
 }: {
@@ -22,11 +22,12 @@ export default function Shopkeeper({
       position={position}
       rotation={rotation}
       >
-      <CapsuleCollider
-        args={[0.5, 0.4]} // [half-height, radius]
+      <CuboidCollider
+        args={[0.75, 2, .5]} // [half-height, radius]
         position={[0, 0.9, 0]}
         restitution={0}
         friction={0}
+        scale={1}
         />
       <ShopkeeperModel />
         
