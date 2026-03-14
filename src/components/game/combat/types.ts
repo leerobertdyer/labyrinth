@@ -7,7 +7,6 @@ export type BattleStats = {
   attack: number;
   speed: number;
   defense: number;
-  chattiness: number;
   //   accuracy: number;
   //   evasion: number;
   //   critical: number;
@@ -23,15 +22,16 @@ export type BattleStats = {
   //   background: Background[];
 }
 
-export type Enemy = extends BattleStats {
+export type Enemy = BattleStats & {
   id: string;
   image: string;
   name: string;
   selected: boolean;
   enemyType: string;
+  chattiness: number;
 }
 
-export type Player = extends BattleStats {
+export type Player = BattleStats & {
   image: string;
   // inventory: Item[];
 }
