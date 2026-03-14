@@ -1,6 +1,6 @@
 import { type Enemy } from "./types";
 
-interface CombatantProps {
+type CombatantProps = {
   combatant: Enemy;
   isSelected: boolean;
 }

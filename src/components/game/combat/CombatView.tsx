@@ -7,29 +7,29 @@ import { CombatViews } from "./types";
 
 export default function CombatView() {
   const [state] = useGameMachine();
-  const actor = state.children.combatActor;
+  const combatActor = state.children.combatActor;
 
-  if (!actor) return null;
+  if (!combatActor) return null;
 
-  return <CombatViewContent state={state} actor={actor} />;
+  return <CombatViewContent state={state} combatActor={combatActor} />;
 }
 
 function CombatViewContent({
-  actor,
+  combatActor,
 }: {
   state: ReturnType<typeof useGameMachine>[0];
-  actor: NonNullable<
+  combatActor: NonNullable<
     ReturnType<typeof useGameMachine>[0]["children"]["combatActor"]
   >;
 }) {
-  const playerTurn = useSelector(actor, (snapshot) =>
+  const playerTurn = useSelector(combatActor, (snapshot) =>
     snapshot.matches("playerTurn"),
   );
   const selectedView = useSelector(
-    actor,
+    combatActor,
     (snapshot) => (snapshot.context.selectedView ?? "PLAYER") as CombatViews,
   );
-  const enemies = useSelector(actor, (snapshot) => snapshot.context.enemies);
+  const enemies = useSelector(combatActor, (snapshot) => snapshot.context.enemies);
 
   return (
     <div className="absolute inset-0 bg-black/75 z-100 flex flex-col items-center justify-center h-screen">
@@ -41,9 +41,9 @@ function CombatViewContent({
           isPlayerTurn={playerTurn}
         />
 
-        <PlayerMenu isPlayersTurn={playerTurn} selectedView={selectedView} />
+        <PlayerMenu isPlayersTurn={playerTurn} selectedView={selectedView} combatActor={combatActor}/>
 
-        <EnemyChat selectedView={selectedView} />
+        <EnemyChat selectedView={selectedView} enemies={enemies} combatActor={combatActor} />
       </div>
     </div>
   );

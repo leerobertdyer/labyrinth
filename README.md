@@ -82,3 +82,20 @@ Nail this loop completely before building outward.
 
 
 <a href="https://www.freepik.com/free-vector/game-icons-with-viking-helmet-sword-potion-ship_29156757.htm">Image by upklyak on Freepik</a>
+
+
+Ideas on chat portion:
+- A demon who stops attacking if you speak its true name.
+- A possibility to "wake" an enemy when amnesia is high if the right thing is said
+- Possible hints at places to go/paths to take
+- Actual lies from devious (intelligent) enemies that lead you to traps
+- Secrets traded to spare enemies (no loot in lieu of some information)
+- Ability for the enemy to add to your amnesia meter by saying something insane
+- Plot shifts based on what characters say.
+
+Mechanics of chat
+- Perhaps a chance roll at the beginning that applies to specific types of enemies to determine what type of effect the convo may have
+- Then another chance for that effect to work
+- Same from player to enemy, but the player maybe has more control over what to chase after
+- Maybe a timer where if you talk too long and it isn't going well you lose your turn and enemy attacks
+- Ability to voice chat while taking your turn would be nice.

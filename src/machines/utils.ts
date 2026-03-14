@@ -1,6 +1,6 @@
 import { Player } from "@/components/game/combat/types";
 
-interface ICalculateDamage {
+type ICalculateDamage = {
   player: Player;
   isPlayerDefending: boolean;
   rawDamage: number;

@@ -1,67 +1,39 @@
-export const skeleton1 = generateEnemy({
-  name: "Skeleton",
-  image: "Skeleton1.png",
-  maxHealth: 100,
-  minHealth: 35,
-  attack: 8,
-  experience: 100,
-  speed: 3,
-  defense: 2
-});
-export const skeleton2 = generateEnemy({
-  name: "Skeleton",
-  image: "Skeleton1.png",
-  maxHealth: 100,
-  minHealth: 35,
-  attack: 8,
-  experience: 100,
-  speed: 3,
-  defense: 2
-});
-export const skeleton3 = generateEnemy({
-  name: "Skeleton",
-  image: "Skeleton1.png",
-  maxHealth: 100,
-  minHealth: 35,
-  attack: 8,
-  experience: 100,
-  speed: 3,
-  defense: 2
-});
+import { Enemy } from "@/components/game/combat/types";
 
-interface IGenerateEnemy {
-  name: string;
-  image: string;
-  maxHealth: number;
+export const skeleton = {
+  name: "Skeleton",
+  image: "Skeleton1.png",
+  maxHealth: 100,
+  minHealth: 35,
+  attack: 8,
+  experience: 100,
+  speed: 3,
+  defense: 2,
+  enemyType: "Skeleton",
+  chattiness: 100
+};
+
+type IGenerateEnemy = Omit<Enemy, "id" | "selected" | "health" | "maxHealth"> & {
   minHealth: number;
-  attack: number;
-  experience: number;
-  speed: number;
-  defense: number;
+  maxHealth: number;
 }
-function generateEnemy({
-  name,
-  image,
-  minHealth,
-  maxHealth,
-  attack,
-  experience,
-  speed,
-  defense
-}: IGenerateEnemy) {
+
+export function generateEnemy(template: IGenerateEnemy): Enemy {
   const randomMaxHealth = Math.ceil(
-    Math.max(minHealth, Math.random() * maxHealth),
+    Math.max(template.minHealth, Math.random() * template.maxHealth),
   );
   return {
     id: crypto.randomUUID(),
-    image: image,
-    name: name,
+    image: template.image,
+    name: template.name,
     health: randomMaxHealth,
     maxHealth: randomMaxHealth,
-    experience: experience,
-    attack: attack,
+    experience: template.experience,
+    attack: template.attack,
     selected: false,
-    speed,
-    defense
+    speed: template.speed,
+    defense: template.speed,
+    enemyType: template.enemyType,
+    chattiness: template.chattiness
   };
 }

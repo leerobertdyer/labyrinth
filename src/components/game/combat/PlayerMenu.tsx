@@ -28,30 +28,33 @@ function ActionButton({
   );
 }
 
-interface PlayerMenuProps {
+type PlayerMenuProps = {
   isPlayersTurn: boolean;
   selectedView: CombatViews;
+  combatActor: NonNullable<
+    ReturnType<typeof useGameMachine>[0]["children"]["combatActor"]
+  >;
 }
 
 export default function PlayerMenu({
   isPlayersTurn,
   selectedView,
+  combatActor,
 }: PlayerMenuProps) {
-  const [state] = useGameMachine();
   const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
   const selectedMenuIndexRef = useRef(selectedMenuIndex);
   // @todo fix this:
   // eslint-disable-next-line react-hooks/refs
   selectedMenuIndexRef.current = selectedMenuIndex;
 
-  const combatActor = state.children.combatActor;
   const playerViewActive = selectedView === "PLAYER";
 
   useEffect(() => {
-    if (selectedView !== "PLAYER") return;
+    console.log("Entering useEffect in playerMenu: ", { combatActor });
     const handler = (event: KeyboardEvent) => {
+      if (selectedView !== "PLAYER") return;
       const action = eventKeyToControl(event);
-      if (!action) return;
+      if (!action || !combatActor || !isPlayersTurn) return;
       switch (action) {
         case "MENU_UP":
           setSelectedMenuIndex((i) => Math.max(0, i - 1));
@@ -60,7 +63,6 @@ export default function PlayerMenu({
           setSelectedMenuIndex((i) => Math.min(MENU_ACTION_COUNT - 1, i + 1));
           break;
         case "SELECT":
-          if (!combatActor || !isPlayersTurn) break;
           const idx = selectedMenuIndexRef.current;
           if (idx === 0) combatActor.send({ type: "SET_VIEW", view: "ENEMY" });
           else if (idx === 1) combatActor.send({ type: "DEFEND" });
@@ -96,8 +98,9 @@ export default function PlayerMenu({
   };
 
   const handleChat = () => {
-    combatActor?.send({ type: "SET_VIEW", view: "CHAT"})
-  }
+    console.log("handleChat before: ", { combatActor, selectedView})
+    combatActor?.send({ type: "SET_VIEW", view: "CHAT" });
+  };
 
   const player = combatActor?.getSnapshot().context.player;
   if (!player) return null;

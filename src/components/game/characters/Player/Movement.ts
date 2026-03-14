@@ -12,7 +12,7 @@ import {
   playerSpeed,
 } from "@/app/constants";
 
-export interface MovementKeys {
+export type MovementKeys = {
   moveForward: boolean;
   moveBackward: boolean;
   strafeLeft: boolean;
@@ -24,7 +24,7 @@ export interface MovementKeys {
   jump: boolean;
 }
 
-export interface MovementContext {
+export type MovementContext = {
   body: RapierRigidBody;
   mesh: THREE.Group;
   keys: MovementKeys;
