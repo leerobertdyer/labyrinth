@@ -3,7 +3,7 @@ import { ROOMS } from "@/components/game/Rooms/roomRegistry";
 import Room from "@/components/game/structure/Room";
 import { IRoomObjects } from "@/components/game/types";
 
-interface IRoomManager {
+type IRoomManager = {
   roomId: string;
 }
 

@@ -1,6 +1,6 @@
 // Combat Specific Types
 
-export interface BattleStats {
+export type BattleStats = {
   health: number;
   maxHealth: number;
   experience: number; // player - how much they have | enemy - how much they give
@@ -22,19 +22,19 @@ export interface BattleStats {
   //   background: Background[];
 }
 
-export interface Enemy extends BattleStats {
+export type Enemy =  BattleStats & {
   id: string;
   image: string;
   name: string;
   selected: boolean;
 }
 
-export interface Player extends BattleStats {
+export type Player =  BattleStats & {
   image: string;
   // inventory: Item[];
 }
 
-export interface Item {
+export type Item = {
   id: string;
   name: string;
   description: string;

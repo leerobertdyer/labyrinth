@@ -5,7 +5,7 @@ import { useSelector } from "@xstate/react";
 import { useEffect } from "react";
 import { eventKeyToControl } from "./combatControls";
 
-interface ArenaProps {
+type ArenaProps = {
   enemies: Enemy[];
   background: string;
   selectedView: "PLAYER" | "ENEMY" | "CHAT";

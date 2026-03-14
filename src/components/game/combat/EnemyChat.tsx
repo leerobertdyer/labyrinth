@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { eventKeyToControl } from "./combatControls";
 import { sendNPCMessage } from "@/lib/Anthropic/client";
 
-interface EnemyChatProps {
+type EnemyChatProps = {
   selectedView: "PLAYER" | "ENEMY" | "CHAT";
 }
 

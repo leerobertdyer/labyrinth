@@ -8,7 +8,7 @@ export type GLTFAction = AnimationClip & {
   name: string
 }
 
-export interface IRoomObjects {
+export type IRoomObjects = {
   pos: Vector3;
   scale: Vector3;
   rotation: Euler;
@@ -16,7 +16,7 @@ export interface IRoomObjects {
   onColide?: () => void;
 }
 
-export interface IRoom {
+export type IRoom = {
   size: number; // floor grid size
   tileSize: number; // individual tile size
   edges?: WallEdge[]; // optional — default to all walls if omitted
@@ -24,14 +24,14 @@ export interface IRoom {
   roof?: boolean; // optional flag to show sky or not
 }
 
-export interface WallEdge {
+export type WallEdge = {
   direction: "north" | "south" | "east" | "west";
   slots: SlotType[]; // length = number of tiles along that edge
 }
 
 export type SlotType = "wall" | "gate" | "empty";
 
-export interface RoomConfig {
+export type RoomConfig = {
   id: string;
   size: number;
   tileSize?: number;
@@ -48,7 +48,7 @@ export interface RoomConfig {
   }
 }
 
-export interface NPC {
+export type NPC = {
   id: string;
   position: Vector3;
   rotation: Vector3;

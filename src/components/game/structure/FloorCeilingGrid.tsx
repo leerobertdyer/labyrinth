@@ -1,6 +1,6 @@
 import { ComponentType } from "react";
 
-interface IFloorCeilingGrid {
+type IFloorCeilingGrid = {
   size: number;
   tileSize: number;
   Model: ComponentType<{

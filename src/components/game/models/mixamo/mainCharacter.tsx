@@ -11,7 +11,7 @@ import { GLTF, SkeletonUtils } from 'three-stdlib'
 
 type ActionName = 'Armature|mixamo.com|Layer0'
 
-interface GLTFAction extends THREE.AnimationClip {
+type GLTFAction = THREE.AnimationClip & {
   name: ActionName
 }
 

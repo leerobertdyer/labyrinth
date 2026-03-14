@@ -29,7 +29,7 @@ export const skeleton3 = generateEnemy({
   defense: 2
 });
 
-interface IGenerateEnemy {
+type IGenerateEnemy = {
   name: string;
   image: string;
   maxHealth: number;

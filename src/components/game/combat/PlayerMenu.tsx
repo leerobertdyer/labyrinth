@@ -28,7 +28,7 @@ function ActionButton({
   );
 }
 
-interface PlayerMenuProps {
+type PlayerMenuProps = {
   isPlayersTurn: boolean;
   selectedView: CombatViews;
 }

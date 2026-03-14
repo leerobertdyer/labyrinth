@@ -7,7 +7,7 @@
 import type { CombatViews } from "./types";
 import type { Enemy } from "./types";
 
-export interface CombatActorRef {
+export type CombatActorRef  = {
   getSnapshot(): { context: { enemies: Enemy[]; selectedEnemyId: string | null } };
   send(
     event: { type: "SELECT_ENEMY"; enemyId: string } | { type: "SET_VIEW"; view: CombatViews } | { type: "ATTACK" }
