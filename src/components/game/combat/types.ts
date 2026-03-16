@@ -29,6 +29,7 @@ export type Enemy = BattleStats & {
   selected: boolean;
   enemyType: string;
   chattiness: number;
+  systemPrompt: string;
 }
 
 export type Player = BattleStats & {

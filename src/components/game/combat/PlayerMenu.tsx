@@ -69,6 +69,7 @@ export default function PlayerMenu({
           else if (idx === 2)
             combatActor.send({ type: "USE_ITEM", itemId: "todo" });
           else if (idx === 3) combatActor.send({ type: "FLEE" });
+          else if (idx === 4) combatActor.send({ type: "SET_VIEW", view: "CHAT"})
           break;
         case "BACK":
           break;

@@ -1,4 +1,5 @@
 import { Enemy } from "@/components/game/combat/types";
+import { NO_MATTER_WHAT } from "@/components/game/conversations/utils";
 
 export const skeleton = {
   name: "Skeleton",
@@ -10,7 +11,8 @@ export const skeleton = {
   speed: 3,
   defense: 2,
   enemyType: "Skeleton",
-  chattiness: 100
+  chattiness: 100,
+  systemPrompt: `You are a mindless skeleton in a labyrinth, filled with rage at your reanimation. Every word from the player is a fresh barb to your lack of life. You have no mercy, no desire to help. Your only solace is an end to your existence — or theirs. ${NO_MATTER_WHAT}`
 };
 
 type IGenerateEnemy = Omit<Enemy, "id" | "selected" | "health" | "maxHealth"> & {
@@ -34,6 +36,7 @@ export function generateEnemy(template: IGenerateEnemy): Enemy {
     speed: template.speed,
     defense: template.speed,
     enemyType: template.enemyType,
-    chattiness: template.chattiness
+    chattiness: template.chattiness,
+    systemPrompt: template.systemPrompt
   };
 }
