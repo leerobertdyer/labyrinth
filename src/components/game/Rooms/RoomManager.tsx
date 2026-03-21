@@ -2,10 +2,11 @@ import EnemyEncounter from "@/components/game/characters/Enemies/EnemyEncounter"
 import { ROOMS } from "@/components/game/Rooms/roomRegistry";
 import Room from "@/components/game/structure/Room";
 import { IRoomObjects } from "@/components/game/types";
+import { CuboidCollider } from "@react-three/rapier";
 
 type IRoomManager = {
   roomId: string;
-}
+};
 
 export default function RoomManager({ roomId }: IRoomManager) {
   const room = ROOMS[roomId];
@@ -20,6 +21,7 @@ export default function RoomManager({ roomId }: IRoomManager) {
 
   const roomObjects = room.roomObjects;
   const npcs = room.npcs;
+  const M = npcs[0].Model;
 
   return (
     <group>
@@ -29,7 +31,6 @@ export default function RoomManager({ roomId }: IRoomManager) {
         tileSize={room.tileSize ?? 1}
         edges={edges}
       />
-      <EnemyEncounter encounterEnemies={room.enemies} position={[-5, 0, 7]} />
       {roomObjects &&
         roomObjects.map((o: IRoomObjects, i) => {
           const Model = o.Model;
@@ -42,7 +43,23 @@ export default function RoomManager({ roomId }: IRoomManager) {
             />
           );
         })}
-      {npcs &&
+      <EnemyEncounter encounterEnemies={room.enemies}>
+        {
+          <>
+            <CuboidCollider position={npcs[0].position} args={[2, 3, 1.5]} />
+            <M
+              position={npcs[0].position}
+              rotation={[
+                npcs[0].rotation.x,
+                npcs[0].rotation.y,
+                npcs[0].rotation.z,
+              ]}
+              scale={npcs[0].modelScale}
+            />
+          </>
+        }
+      </EnemyEncounter>
+      {/* {npcs &&
         npcs.map((n, i) => {
           const Model = n.Model;
           return (
@@ -53,7 +70,7 @@ export default function RoomManager({ roomId }: IRoomManager) {
               scale={n.modelScale}
             />
           );
-        })}
+        })} */}
     </group>
   );
 }

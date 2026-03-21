@@ -1,6 +1,5 @@
 import Shopkeeper from "@/components/game/characters/Shopkeeper/Shopkeeper";
-import { generateEnemy, skeleton } from "@/components/game/combat/enemies";
-import { Enemy } from "@/components/game/combat/types";
+import { generateEnemy, ShopKeeperOne, skeleton } from "@/components/game/combat/enemies";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
 import {
   allWalls,
@@ -52,9 +51,8 @@ export const startingRoom: RoomConfig = {
     },
   },
   roomObjects: barrels,
-  enemies: Array.from({ length: amountOfSkeletons }, () =>
-    generateEnemy(skeleton),
-  ),
+  enemies: 
+    [generateEnemy(ShopKeeperOne)],
   npcs: [
     {
       id: "shopkeeper",

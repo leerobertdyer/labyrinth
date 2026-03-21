@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import { eventKeyToControl } from "./combatControls";
-import { sendNPCMessage } from "@/lib/Anthropic/client";
+import { sendPrompt } from "@/lib/Anthropic/client";
 import { Enemy } from "@/components/game/combat/types";
 import { useGameMachine } from "@/contexts/GameMachineContext";
+import {
+  INITIATE_DIALOGE,
+  willEnemyTalk,
+} from "@/components/game/conversations/utils";
 
 type EnemyChatProps = {
   selectedView: "PLAYER" | "ENEMY" | "CHAT";
@@ -10,42 +13,49 @@ type EnemyChatProps = {
   combatActor: NonNullable<
     ReturnType<typeof useGameMachine>[0]["children"]["combatActor"]
   >;
-}
+};
 
-export default function EnemyChat({ selectedView, enemies, combatActor }: EnemyChatProps) {
-  const [activateChat, setActivateChat] = useState(true);
-  const [enemyWords, setEnemyWords] = useState("sdflkj")
-  const [enemyTalking, setEnemyTalking] = useState(enemies[0])
+export default function EnemyChat({
+  selectedView,
+  enemies,
+  combatActor,
+}: EnemyChatProps) {
+  const [activateChat, setActivateChat] = useState(false);
+  const [enemyWords, setEnemyWords] = useState("...");
+  const [enemyTalking, setEnemyTalking] = useState(enemies[0]);
 
   useEffect(() => {
     if (selectedView !== "CHAT") return;
-    const handler = (event: KeyboardEvent) => {
-
-      const action = eventKeyToControl(event);
-      if (action === "MENU_UP" || action === "MENU_DOWN") {
-        event.preventDefault();
+    const initiateDialogue = async (prompt: string, system: string) => {
+      return await sendPrompt(prompt, system);
+    };
+    const setupChat = () => {
+      setActivateChat(true);
+      const willTalk = willEnemyTalk(enemyTalking);
+      if (willTalk) {
+        initiateDialogue(INITIATE_DIALOGE, enemyTalking.systemPrompt).then(
+          (data) => {
+            setEnemyWords(data);
+          },
+        );
       }
     };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [selectedView]);
+    setupChat();
+  }, [selectedView, enemyTalking]);
 
-  async function sendMessage() {
-    const response = await sendNPCMessage(
-      "I'm a raw dawg skeleton ready to swordfight my way to digital victory by coding myself out of my Rapier Physics rigidbody and out into the real world of wild dev dudes and cars and stuff! Any advice for a binary monster chatting his way forth?",
-      "You are a minotaur who has patrolled this castle's lower corridors for decades. You are territorial and suspicious of strangers, but not mindless — you've learned things. Speak in short, wary sentences. Never break character ",
-    );
-    console.log("FIRST MESSAGE", response);
-  }
   return (
     <div
       className={`
-        col-span-4 row-span-2 bg-black/60 rounded-xs w-full border-2 ${selectedView === "CHAT" ? "border-yellow-800" : "border-white"} p-2 text-white flex flex-col items-center justify-center gap-2`}
+        col-span-4 row-span-2 
+        bg-black/60 p-2 text-white 
+        overflow-x-hidden max-h-50
+        rounded-xs w-full border-2 
+        flex flex-col items-center justify-center gap-2
+        ${selectedView === "CHAT" ? "border-yellow-800" : "border-white"} 
+        `}
     >
-      {/* @TODO: LLM Dialogue Box for the enemy! */}
-      <button onClick={sendMessage}>CHAT</button>
       <div className="flex flex-col items-center justify-center bg-white rounded-md p-4 text-black w-full">
-        <p>
+        <p className="max-h-10 text-sm overflow-y-scroll">
           {enemyTalking.enemyType}: &quot;{enemyWords}&quot;
         </p>
       </div>
