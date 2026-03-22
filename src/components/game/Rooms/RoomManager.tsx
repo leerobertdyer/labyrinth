@@ -43,22 +43,30 @@ export default function RoomManager({ roomId }: IRoomManager) {
             />
           );
         })}
-      <EnemyEncounter encounterEnemies={room.enemies}>
-        {
-          <>
-            <CuboidCollider position={npcs[0].position} args={[2, 3, 1.5]} />
-            <M
-              position={npcs[0].position}
-              rotation={[
-                npcs[0].rotation.x,
-                npcs[0].rotation.y,
-                npcs[0].rotation.z,
-              ]}
-              scale={npcs[0].modelScale}
-            />
-          </>
-        }
-      </EnemyEncounter>
+      {room.encounters.map((e, i) => {
+        const encounterNpcs = room.npcs?.filter((n) => e.npcIds.includes(n.id));
+        console.log("Encounter: ", e)
+        return (
+          <EnemyEncounter
+            key={i}
+            encounterEnemies={e.encounterEnemies}
+          >
+            {encounterNpcs?.map((npc, j) => {
+              const NpcModel = npc.Model;
+              return (
+                <group key={j}>
+                  <CuboidCollider position={npc.position} args={[2, 3, 1.5]} />
+                  <NpcModel
+                    position={npc.position}
+                    rotation={[npc.rotation.x, npc.rotation.y, npc.rotation.z]}
+                    scale={npc.modelScale}
+                  />
+                </group>
+              );
+            })}
+          </EnemyEncounter>
+        );
+      })}
       {/* {npcs &&
         npcs.map((n, i) => {
           const Model = n.Model;

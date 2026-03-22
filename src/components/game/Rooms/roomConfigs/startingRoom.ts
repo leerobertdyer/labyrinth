@@ -1,5 +1,5 @@
 import Shopkeeper from "@/components/game/characters/Shopkeeper/Shopkeeper";
-import { generateEnemy, ShopKeeperOne, skeleton } from "@/components/game/combat/enemies";
+import { generateEnemy, ShopKeeperOne } from "@/components/game/combat/enemies";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
 import {
   allWalls,
@@ -7,6 +7,7 @@ import {
   wallsWithGate,
 } from "@/components/game/Rooms/roomRegistry";
 import { RoomConfig } from "@/components/game/types";
+import React from "react";
 import { Euler, Vector3 } from "three";
 
 const roomSize = 40;
@@ -24,8 +25,8 @@ const barrels = placeObjects(
     new Vector3(roomSize / 2 - 1, 0.1, -3),
   ],
 );
-
-const amountOfSkeletons = Math.ceil(Math.random() * 10);
+const shopkeeperStartingPos = new Vector3(1, 0, 17);
+const shopkeeperStartingRot = new Vector3(0, Math.PI, 0);
 
 export const startingRoom: RoomConfig = {
   id: "entrance",
@@ -51,13 +52,19 @@ export const startingRoom: RoomConfig = {
     },
   },
   roomObjects: barrels,
-  enemies: 
-    [generateEnemy(ShopKeeperOne)],
+  encounters: [
+    {
+      encounterEnemies: [generateEnemy(ShopKeeperOne)],
+      position: [shopkeeperStartingPos.x, shopkeeperStartingPos.y, shopkeeperStartingPos.z],
+      rotation: [shopkeeperStartingRot.x, shopkeeperStartingRot.y, shopkeeperStartingRot.z],
+      npcIds: ["shopkeeper"]
+    }
+  ],
   npcs: [
     {
       id: "shopkeeper",
-      position: new Vector3(1, 0, 17),
-      rotation: new Vector3(0, Math.PI, 0),
+      position: shopkeeperStartingPos,
+      rotation: shopkeeperStartingRot,
       modelScale: 2.5,
       Model: Shopkeeper,
     },
