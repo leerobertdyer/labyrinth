@@ -7,7 +7,6 @@ import {
   wallsWithGate,
 } from "@/components/game/Rooms/roomRegistry";
 import { RoomConfig } from "@/components/game/types";
-import React from "react";
 import { Euler, Vector3 } from "three";
 
 const roomSize = 40;
@@ -72,13 +71,6 @@ export const startingRoom: RoomConfig = {
     {
       id: "shopkeeper",
       position: shopkeeperStartingPos,
-      rotation: shopkeeperStartingRot,
-      modelScale: 2.5,
-      Model: Shopkeeper,
-    },
-    {
-      id: "shopkeeper2",
-      position: new Vector3(2, 2, 2),
       rotation: shopkeeperStartingRot,
       modelScale: 2.5,
       Model: Shopkeeper,

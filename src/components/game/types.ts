@@ -63,8 +63,8 @@ export type Entities = {
   modelScale: number;
   Model: ComponentType<{ position: Vector3, rotation: [number, number, number], scale: number }>
   // name
-  // prompt: EntitiesPrompt // the initial prompt for conversation injection
+  // prompt: EntityPrompt // the initial prompt for conversation injection
   // alignment: Alignment // Whether they are friend foe or confused 
   // amnesia: number // may be cool to have the same amnesia status that main character does
-  // stats: EntitiesStats // should the entities be Fightable!??  INpcStats could extend BattleStats
+  // stats: CombatStats 
 }
