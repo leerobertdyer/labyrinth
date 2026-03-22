@@ -35,7 +35,7 @@ function CombatViewContent({
     <div className="absolute inset-0 bg-black/75 z-100 flex flex-col items-center justify-center h-screen">
       <div className="grid grid-cols-6 grid-rows-6 gap-4 w-full h-full">
         <Arena
-          background="/backgrounds/dungeon.png"
+          background="/images/backgrounds/dungeon.png"
           enemies={enemies}
           selectedView={selectedView}
           isPlayerTurn={playerTurn}

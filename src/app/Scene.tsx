@@ -7,7 +7,6 @@ import Player from "@/components/game/characters/Player/Player";
 import RoomManager from "@/components/game/Rooms/RoomManager";
 
 export default function Scene() {
-  // const [currentRoomId, setCurrentRoomId] = useState("startingRoom")
 
   const playerPos = useRef<THREE.Vector3>(new THREE.Vector3());
   const orbitRef = useRef<OrbitControlsImpl>(null);
@@ -20,7 +19,7 @@ export default function Scene() {
   });
 
   return (
-    <Physics gravity={[0, -10, 0]} debug={true}>
+    <Physics gravity={[0, -10, 0]} debug={false}>
       {/* <axesHelper scale={13} position={[0, 1, 0]} />  */}
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 5]} intensity={1} />

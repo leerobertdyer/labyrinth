@@ -134,6 +134,8 @@ Don't do this until gameplay is solid. Visuals are expensive and you'll redo the
 
 ---
 
-## Suggested next session
-
-**Start with 1.1 (death screen) and 1.3 (XState win/loss transitions).** They're self-contained, unblock the rest of Phase 1, and give you something satisfying to show quickly.
+## Not yet covered:
+- mcp implementation
+- npc manipulation of game
+- amnesia stat what it does how it works
+- filtering scene look and feel based on amnesia scale

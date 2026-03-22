@@ -10,13 +10,14 @@ const gameSetup = setup({
         health: number;
         amnesia: number;
         speed: number;
-        defense: number
+        defense: number;
       };
       room: string;
       enemies: Enemy[];
     },
     // Define what events the machine can RECEIVE (for your UI events)
     events: {} as
+      | { type: "START_GAME"}
       | { type: "PLAYER_HIT"; damage: number }
       | { type: "SET_ENCOUNTER_ENEMIES"; encounterEnemies: Enemy[] }
       | { type: "ENTER_COMBAT" }
@@ -45,13 +46,34 @@ export const gameMachine = gameSetup.createMachine({
       health: 100,
       amnesia: 0,
       speed: 5,
-      defense: 1
+      defense: 1,
     },
     room: "start",
     enemies: [],
   },
-  initial: "playing",
+  initial: "startScreen",
   states: {
+    startScreen: {
+      initial: "idle",
+      states: {
+        "idle": {}
+      },
+      on: {
+        START_GAME: {
+          target: "playing",
+          actions: assign({
+            player: () => ({
+              maxHealth: 100,
+              health: 100,
+              amnesia: 0,
+              speed: 5,
+              defense: 1,
+            }),
+            room: () => "entrance",
+          }),
+        },
+      },
+    },
     playing: {
       initial: "exploring",
       // Any event here is inherited by EVERY child (exploring, inCombat, etc.)
@@ -106,7 +128,7 @@ export const gameMachine = gameSetup.createMachine({
                 maxHealth: 100,
                 experience: 0,
                 speed: context.player.speed,
-                defense: context.player.defense
+                defense: context.player.defense,
               },
               enemies: context.enemies,
             }),

@@ -1,14 +1,16 @@
 import { useGameMachine } from "@/contexts/GameMachineContext";
-import { useEffect, useRef, useState } from "react";
+import { useDebugStore } from "@/stores/useDebugStore";
+import { useEffect, useState } from "react";
 
 const HIT_FLASH_DURATION_MS = 250;
 
 export default function GameHUD() {
   const [state, send, actor] = useGameMachine();
   const [showHitFlash, setShowHitFlash] = useState(false);
+  const { playerPos } = useDebugStore();
 
   useEffect(() => {
-    const subscription = actor.on('SEE_RED', (event) => {
+    const subscription = actor.on("SEE_RED", () => {
       setShowHitFlash(true);
       setTimeout(() => setShowHitFlash(false), 100);
     });
@@ -24,9 +26,7 @@ export default function GameHUD() {
   return (
     <>
       {showHitFlash && (
-        <div
-          className="animate-hit-flash absolute inset-0 bg-red-500 bg-opacity-50 pointer-events-none z-999"
-        />
+        <div className="animate-hit-flash absolute inset-0 bg-red-500 bg-opacity-50 pointer-events-none z-999" />
       )}
       {state.matches({ playing: "paused" }) && (
         <div
@@ -50,16 +50,15 @@ export default function GameHUD() {
         </div>
       )}
 
-      {/* Example: Display Health HUD */}
-      <div className="absolute top-5 left-10 text-white bg-black/50 p-2 rounded-md rounded-md z-100">
+      <div className="absolute top-5 left-10 text-white bg-black/50 p-2 rounded-md z-100">
         HP: {state.context.player.health}
       </div>
-      
-      {state.matches({ playing: "dead" }) && (
-        <div className="absolute top-5 left-10 text-white bg-black/50 p-2 rounded-md rounded-md z-100">
-          You are dead.
-        </div>
-      )}
+
+      <div className="absolute top-5 right-10 text-white bg-black/50 rounded-md z-100 w-fit flex gap-4 items-start p-3">
+        <p className="flex justify-between w-full gap-1"><span>x</span> {playerPos.x}</p>
+        <p className="flex justify-between w-full gap-1"><span>y</span> {playerPos.y}</p>
+        <p className="flex justify-between w-full gap-1"><span>z</span> {playerPos.z}</p>
+      </div>
     </>
   );
 }
