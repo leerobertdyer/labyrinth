@@ -36,7 +36,7 @@ export type EncounterConfig = {
   encounterEnemies: Enemy[];
   position: [number, number, number];
   rotation: [number, number, number];
-  npcIds: string[];
+  entityId: string;
 };
 
 export type RoomConfig = {
@@ -47,7 +47,7 @@ export type RoomConfig = {
   edges: { north: WallEdge, south: WallEdge, east: WallEdge, west: WallEdge },
   roomObjects: IRoomObjects[],
   encounters: EncounterConfig[],
-  npcs: NPC[],
+  entities: Entities[], // Npcs | Enemies | Encounter Objects | Models
   connections: {
     north?: string;   // what room each gate leads to eg "northern-starting-hall"
     south?: string;   
@@ -56,15 +56,15 @@ export type RoomConfig = {
   }
 }
 
-export type NPC = {
+export type Entities = {
   id: string;
   position: Vector3;
   rotation: Vector3;
   modelScale: number;
   Model: ComponentType<{ position: Vector3, rotation: [number, number, number], scale: number }>
   // name
-  // prompt: NPCPrompt // the initial prompt for conversation injection
+  // prompt: EntitiesPrompt // the initial prompt for conversation injection
   // alignment: Alignment // Whether they are friend foe or confused 
   // amnesia: number // may be cool to have the same amnesia status that main character does
-  // stats: NPCStats // should the npcs be Fightable!??  INpcStats could extend BattleStats
+  // stats: EntitiesStats // should the entities be Fightable!??  INpcStats could extend BattleStats
 }

@@ -20,9 +20,13 @@ export default function RoomManager({ roomId }: IRoomManager) {
   ];
 
   const roomObjects = room.roomObjects;
-  const npcs = room.npcs;
-  const M = npcs[0].Model;
 
+  const encounterIds = room.encounters.map((e) => e.entityId);
+  const nonEncounterEntities = room.entities.filter(
+    (e) => !encounterIds.includes(e.id),
+  );
+
+  console.log("Non encounter", nonEncounterEntities)
   return (
     <group>
       <Room
@@ -44,41 +48,42 @@ export default function RoomManager({ roomId }: IRoomManager) {
           );
         })}
       {room.encounters.map((e, i) => {
-        const encounterNpcs = room.npcs?.filter((n) => e.npcIds.includes(n.id));
-        console.log("Encounter: ", e)
+        const entity = room.entities.find(
+          (roomEntity) => (roomEntity.id = e.entityId),
+        );
+        const Model = entity?.Model;
+        if (!Model) return;
         return (
-          <EnemyEncounter
-            key={i}
-            encounterEnemies={e.encounterEnemies}
-          >
-            {encounterNpcs?.map((npc, j) => {
-              const NpcModel = npc.Model;
-              return (
-                <group key={j}>
-                  <CuboidCollider position={npc.position} args={[2, 3, 1.5]} />
-                  <NpcModel
-                    position={npc.position}
-                    rotation={[npc.rotation.x, npc.rotation.y, npc.rotation.z]}
-                    scale={npc.modelScale}
-                  />
-                </group>
-              );
-            })}
+          <EnemyEncounter key={i} encounterEnemies={e.encounterEnemies}>
+            <CuboidCollider position={entity.position} args={[2, 3, 1.5]} />
+            <Model
+              position={entity.position}
+              rotation={[
+                entity.rotation.x,
+                entity.rotation.y,
+                entity.rotation.z,
+              ]}
+              scale={entity.modelScale}
+            />
           </EnemyEncounter>
         );
       })}
-      {/* {npcs &&
-        npcs.map((n, i) => {
-          const Model = n.Model;
+      {nonEncounterEntities &&
+        nonEncounterEntities.map((entity, i) => {
+          const Model = entity.Model;
           return (
             <Model
               key={i}
-              position={n.position}
-              rotation={[n.rotation.x, n.rotation.y, n.rotation.z]}
-              scale={n.modelScale}
+              position={entity.position}
+              rotation={[
+                entity.rotation.x,
+                entity.rotation.y,
+                entity.rotation.z,
+              ]}
+              scale={entity.modelScale}
             />
           );
-        })} */}
+        })}
     </group>
   );
 }

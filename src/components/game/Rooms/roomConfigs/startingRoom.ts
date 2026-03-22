@@ -55,15 +55,30 @@ export const startingRoom: RoomConfig = {
   encounters: [
     {
       encounterEnemies: [generateEnemy(ShopKeeperOne)],
-      position: [shopkeeperStartingPos.x, shopkeeperStartingPos.y, shopkeeperStartingPos.z],
-      rotation: [shopkeeperStartingRot.x, shopkeeperStartingRot.y, shopkeeperStartingRot.z],
-      npcIds: ["shopkeeper"]
-    }
+      position: [
+        shopkeeperStartingPos.x,
+        shopkeeperStartingPos.y,
+        shopkeeperStartingPos.z,
+      ],
+      rotation: [
+        shopkeeperStartingRot.x,
+        shopkeeperStartingRot.y,
+        shopkeeperStartingRot.z,
+      ],
+      entityId: "shopkeeper",
+    },
   ],
-  npcs: [
+  entities: [
     {
       id: "shopkeeper",
       position: shopkeeperStartingPos,
+      rotation: shopkeeperStartingRot,
+      modelScale: 2.5,
+      Model: Shopkeeper,
+    },
+    {
+      id: "shopkeeper2",
+      position: new Vector3(2, 2, 2),
       rotation: shopkeeperStartingRot,
       modelScale: 2.5,
       Model: Shopkeeper,
