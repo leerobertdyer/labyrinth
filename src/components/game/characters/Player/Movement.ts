@@ -66,10 +66,7 @@ export function updateMovement(ctx: MovementContext): void {
   const playerPos = body.translation();
 
   // --- Vertical camera orbit ---
-  const floorY = 0.5;
-  const ratio = (floorY - playerPos.y) / playerCamRadius;
-  const phiMax =
-    ratio >= 1 ? 0.1 : ratio <= -1 ? Math.PI - 0.1 : Math.acos(ratio);
+  const phiMax = 2.5
 
   if (camUp) cameraAngleRef.current.phi -= playerCamRotateSpeed * delta;
   if (camDown) cameraAngleRef.current.phi += playerCamRotateSpeed * delta;
@@ -151,13 +148,16 @@ export function updateMovement(ctx: MovementContext): void {
   cameraAngleRef.current.theta += diff * 5 * delta;
 
   // --- Update camera position ---
-  const { theta, phi } = cameraAngleRef.current;
+  const { 
+    theta, // longitude (horizontal rotation)
+    phi // latitude (vertical angle from top)
+  } = cameraAngleRef.current;
 
   camera.position.set(
     playerPos.x + playerCamRadius * Math.sin(phi) * Math.sin(theta),
-    playerPos.y + playerCamRadius * Math.cos(phi),
+    playerPos.y + playerCamRadius * Math.cos(phi*.5),
     playerPos.z + playerCamRadius * Math.sin(phi) * Math.cos(theta),
   );
 
-  camera.lookAt(playerPos.x, playerPos.y, playerPos.z);
+  camera.lookAt(playerPos.x, playerPos.y+2, playerPos.z);
 }

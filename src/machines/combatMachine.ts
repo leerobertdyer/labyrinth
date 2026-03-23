@@ -172,6 +172,14 @@ export const combatMachine = combatSetup.createMachine({
     },
     victory: {
       entry: [
+        assign({
+          player: ({ context }) => ({
+            ...context.player,
+            experience:
+              context.player.experience +
+              context.enemies.reduce((acc, e) => acc + e.experience, 0),
+          }),
+        }),
         sendParent(({ context }) => ({
           type: "VICTORY",
           player: context.player,

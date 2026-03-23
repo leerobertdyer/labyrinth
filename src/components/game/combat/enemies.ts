@@ -18,8 +18,8 @@ export const skeleton = {
 export const ShopKeeperOne = {
   name: "Shop Keeper",
   image: "shopkeeper.png",
-  maxHealth: 1000,
-  minHealth: 999,
+  maxHealth: 20,
+  minHealth: 20,
   attack: 100,
   experience: 10000,
   speed: 10,

@@ -16,7 +16,7 @@ export const explorationControls = [
 export const playerSpeed = 8;
 export const playerRotateSpeed = 2;
 export const playerCamRotateSpeed = 1.5;
-export const playerCamRadius = 8;
+export const playerCamRadius = 6;
 
 export const JUMP_STRENGTH = 8;
 export const GROUND_RAY_LENGTH = 0.35;
