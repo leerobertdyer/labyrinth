@@ -1,31 +1,29 @@
-import { setup, assign } from "xstate";
+import { setup, assign, emit } from "xstate";
 import { combatMachine } from "./combatMachine";
-import { Enemy } from "@/components/game/combat/types";
+import { Enemy, Player } from "@/components/game/combat/types";
+import { defaultPlayer } from "@/app/constants";
 
 const gameSetup = setup({
   types: {
+    input: {} as { player: Player },
     context: {} as {
-      player: {
-        maxHealth: number;
-        health: number;
-        amnesia: number;
-        speed: number;
-        defense: number;
-      };
+      player: Player;
       room: string;
       enemies: Enemy[];
     },
     // Define what events the machine can RECEIVE (for your UI events)
     events: {} as
-      | { type: "START_GAME"}
+      | { type: "START_GAME" }
       | { type: "PLAYER_HIT"; damage: number }
       | { type: "SET_ENCOUNTER_ENEMIES"; encounterEnemies: Enemy[] }
       | { type: "ENTER_COMBAT" }
       | { type: "LEAVE_COMBAT" }
-      | { type: "VICTORY" }
+      | { type: "VICTORY"; player: Player }
       | { type: "PAUSE" }
       | { type: "UNPAUSE" }
-      | { type: "RESPAWN"; room: string },
+      | { type: "RESPAWN"; room: string }
+      | { type: "SEE_RED"; intensity: number }
+      | { type: "COMBAT_LOST" },
     // Define what events the machine can EMIT (for your UI listeners)
     emitted: {} as
       | { type: "SEE_RED"; intensity: number }
@@ -34,41 +32,30 @@ const gameSetup = setup({
   actors: {
     combatMachine: combatMachine,
   },
-  // Actions would go here but need more time to figure it out.
-  // actions: {}
+  actions: {
+    resetPlayer: assign({ player: defaultPlayer }),
+  },
 });
 
 export const gameMachine = gameSetup.createMachine({
   id: "game",
-  context: {
-    player: {
-      maxHealth: 100,
-      health: 100,
-      amnesia: 0,
-      speed: 5,
-      defense: 1,
-    },
+  context: ({ input }) => ({
+    player: input?.player,
     room: "start",
     enemies: [],
-  },
+  }),
   initial: "startScreen",
   states: {
     startScreen: {
       initial: "idle",
       states: {
-        "idle": {}
+        idle: {},
       },
       on: {
         START_GAME: {
           target: "playing",
           actions: assign({
-            player: () => ({
-              maxHealth: 100,
-              health: 100,
-              amnesia: 0,
-              speed: 5,
-              defense: 1,
-            }),
+            player: () => defaultPlayer, // TODO - load real player stats from db
             room: () => "entrance",
           }),
         },
@@ -76,8 +63,13 @@ export const gameMachine = gameSetup.createMachine({
     },
     playing: {
       initial: "exploring",
-      // Any event here is inherited by EVERY child (exploring, inCombat, etc.)
       on: {
+        SEE_RED: {
+          actions: emit(({ event }) => ({
+            type: "SEE_RED",
+            intensity: event.intensity,
+          })),
+        },
         PLAYER_HIT: [
           {
             guard: ({ context, event }) =>
@@ -89,9 +81,9 @@ export const gameMachine = gameSetup.createMachine({
                   health: 0,
                 }),
               }),
-              gameSetup.emit({ type: "SEE_RED", intensity: 1 }),
+              emit({ type: "SEE_RED", intensity: 1 }),
             ],
-            target: ".dead", // Correct: Moves to playing.dead
+            target: ".dead",
           },
           {
             actions: [
@@ -101,19 +93,19 @@ export const gameMachine = gameSetup.createMachine({
                   health: context.player.health - event.damage,
                 }),
               }),
-              gameSetup.emit({ type: "SEE_RED", intensity: 0.5 }),
+              emit({ type: "SEE_RED", intensity: 0.5 }),
             ],
           },
         ],
         SET_ENCOUNTER_ENEMIES: {
           actions: [assign({ enemies: ({ event }) => event.encounterEnemies })],
         },
-        PAUSE: ".paused", // Correct: Moves to playing.paused
+        PAUSE: ".paused",
       },
       states: {
         exploring: {
           on: {
-            ENTER_COMBAT: "inCombat", // Moves to playing.inCombat
+            ENTER_COMBAT: "inCombat",
           },
         },
         inCombat: {
@@ -135,7 +127,14 @@ export const gameMachine = gameSetup.createMachine({
           },
           on: {
             LEAVE_COMBAT: "exploring",
-            VICTORY: "exploring",
+            VICTORY: {
+              target: "exploring",
+              actions: assign({ player: ({ event }) => event.player }),
+            },
+            DEFEAT: {
+              target: "dead",
+              actions: ["resetPlayer"],
+            },
           },
         },
         paused: {

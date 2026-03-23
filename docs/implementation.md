@@ -10,15 +10,15 @@ Room architecture is modular. RoomManager drives entity placement, encounter tri
 Get the minimum viable game loop working end-to-end. Don't polish the starting room yet.
 
 ### 1.1 Death screen
-- On death state, show a full-screen overlay: "You've lost your way"
-- Options: Restart / Load save
-- Block all controls until player chooses
-- _Defers the amnesia/shopkeeper arc — that's Phase 3_
+<!-- - On death state, show a full-screen overlay: "You've lost your way" -->
+<!-- - Options: Restart (defer load save to later) -->
+<!-- - Block all controls until player chooses -->
+<!-- - _Defers the amnesia/shopkeeper arc — that's Phase 3_ -->
 
 ### 1.2 Start screen
-- New Game / Continue (disabled if no save)
-- Brief lore fragment or title treatment — set the tone early
-- No need for "About" yet; that's post-launch polish
+<!-- - New Game / Continue (disabled if no save) -->
+<!-- - Brief lore fragment or title treatment — set the tone early -->
+<!-- - No need for "About" yet; that's post-launch polish -->
 
 ### 1.3 Win/loss state plumbing
 - XState: add `PLAYER_DIED` and `COMBAT_WON` transitions to the machine

@@ -1,8 +1,8 @@
 import { Player, type Enemy } from "@/components/game/combat/types";
 import { calculateIncomingDamage } from "@/machines/utils";
-import { assign, fromPromise, sendParent, setup } from "xstate";
+import { assign, fromPromise, raise, sendParent, setup } from "xstate";
 
-export const combatMachine = setup({
+export const combatSetup = setup({
   types: {
     input: {} as { player: Player; enemies: Enemy[] },
     context: {} as {
@@ -19,7 +19,8 @@ export const combatMachine = setup({
       | { type: "FLEE" }
       | { type: "NEXT_ROUND" }
       | { type: "SET_VIEW"; view: "PLAYER" | "ENEMY" | "CHAT" }
-      | { type: "SELECT_ENEMY"; enemyId: string },
+      | { type: "SELECT_ENEMY"; enemyId: string }
+      | { type: "PLAYER_HIT"; damage: number },
   },
   actors: {
     enemyAI: fromPromise(
@@ -45,13 +46,14 @@ export const combatMachine = setup({
       },
     }),
   },
-
   guards: {
     allEnemiesVanquished: ({ context }) =>
       context.enemies.every((e) => e.health <= 0),
     playerDead: ({ context }) => context.player.health <= 0,
   },
-}).createMachine({
+});
+
+export const combatMachine = combatSetup.createMachine({
   id: "combat",
   initial: "playerTurn",
   context: ({ input }: { input: { player: Player; enemies: Enemy[] } }) => ({
@@ -71,6 +73,30 @@ export const combatMachine = setup({
             : context.selectedEnemyId,
       })),
     },
+    PLAYER_HIT: [
+      {
+        guard: ({ context, event }) =>
+          context.player.health - event.damage <= 0,
+        actions: [
+          assign({
+            player: ({ context }) => ({ ...context.player, health: 0 }),
+          }),
+          sendParent({ type: "SEE_RED", intensity: 1 }),
+        ],
+        target: ".defeat",
+      },
+      {
+        actions: [
+          assign({
+            player: ({ context, event }) => ({
+              ...context.player,
+              health: context.player.health - event.damage,
+            }),
+          }),
+          sendParent({ type: "SEE_RED", intensity: 0.5 }),
+        ],
+      },
+    ],
   },
   states: {
     playerTurn: {
@@ -112,7 +138,7 @@ export const combatMachine = setup({
       always: [
         {
           guard: ({ context }) => context.enemyAttackQueue.length === 0,
-          target: "checkPlayer",
+          target: "playerTurn",
         },
         { target: "enemyAttack" },
       ],
@@ -128,42 +154,33 @@ export const combatMachine = setup({
         onDone: {
           target: "enemyAttackQueue",
           actions: [
-            assign({
-              player: ({ context, event }) => ({
-                ...context.player,
-                health:
-                  context.player.health -
-                  calculateIncomingDamage({
-                    rawDamage: event.output.damage,
-                    isPlayerDefending: false,
-                    player: context.player,
-                  }),
+            raise(({ event, context }) => ({
+              type: "PLAYER_HIT",
+              damage: calculateIncomingDamage({
+                rawDamage: event.output.damage,
+                isPlayerDefending: false, //TODO
+                player: context.player,
               }),
-            }),
+            })),
             assign({
               enemyAttackQueue: ({ context }) =>
                 context.enemyAttackQueue.slice(1),
             }),
-            sendParent(({ event }) => ({
-              type: "PLAYER_HIT",
-              damage: event.output.damage,
-            })),
           ],
         },
       },
     },
-    checkPlayer: {
-      always: [
-        { guard: "playerDead", target: "defeat" },
-        { target: "playerTurn" },
-      ],
-    },
     victory: {
-      entry: sendParent({ type: "VICTORY" }),
+      entry: [
+        sendParent(({ context }) => ({
+          type: "VICTORY",
+          player: context.player,
+        })),
+      ],
       type: "final",
     },
     defeat: {
-      entry: sendParent({ type: "DEFEAT" }),
+      entry: [sendParent({ type: "DEFEAT" })],
       type: "final",
     },
   },

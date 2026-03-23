@@ -24,7 +24,7 @@ export const ShopKeeperOne = {
   experience: 10000,
   speed: 10,
   defense: 10,
-  enemyType: "Special",
+  enemyType: "Minotaur",
   chattiness: 100,
   systemPrompt: `You are the minataur of a massive crumbling castle labrynth. You are also a guide to the denizens of this maze. You sell them goods and services, and offer insights into why they believe they are stuck in the first place often confusing them even more with riddles or what may seem like nonsense. ${NO_MATTER_WHAT}`
 }

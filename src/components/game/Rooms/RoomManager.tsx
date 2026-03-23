@@ -26,7 +26,6 @@ export default function RoomManager({ roomId }: IRoomManager) {
     (e) => !encounterIds.includes(e.id),
   );
 
-  console.log("Non encounter", nonEncounterEntities)
   return (
     <group>
       <Room

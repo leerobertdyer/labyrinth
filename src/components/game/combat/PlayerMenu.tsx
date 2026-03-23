@@ -43,14 +43,13 @@ export default function PlayerMenu({
 }: PlayerMenuProps) {
   const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
   const selectedMenuIndexRef = useRef(selectedMenuIndex);
-  // @todo fix this:
+  // @TODO fix this:
   // eslint-disable-next-line react-hooks/refs
   selectedMenuIndexRef.current = selectedMenuIndex;
 
   const playerViewActive = selectedView === "PLAYER";
 
   useEffect(() => {
-    console.log("Entering useEffect in playerMenu: ", { combatActor });
     const handler = (event: KeyboardEvent) => {
       if (selectedView !== "PLAYER") return;
       const action = eventKeyToControl(event);
@@ -67,7 +66,7 @@ export default function PlayerMenu({
           if (idx === 0) combatActor.send({ type: "SET_VIEW", view: "ENEMY" });
           else if (idx === 1) combatActor.send({ type: "DEFEND" });
           else if (idx === 2)
-            combatActor.send({ type: "USE_ITEM", itemId: "todo" });
+            combatActor.send({ type: "USE_ITEM", itemId: "TODO" });
           else if (idx === 3) combatActor.send({ type: "FLEE" });
           else if (idx === 4) combatActor.send({ type: "SET_VIEW", view: "CHAT"})
           break;
@@ -95,11 +94,10 @@ export default function PlayerMenu({
   };
 
   const handleItem = () => {
-    combatActor?.send({ type: "USE_ITEM", itemId: "todo" });
+    combatActor?.send({ type: "USE_ITEM", itemId: "TODO" });
   };
 
   const handleChat = () => {
-    console.log("handleChat before: ", { combatActor, selectedView})
     combatActor?.send({ type: "SET_VIEW", view: "CHAT" });
   };
 
