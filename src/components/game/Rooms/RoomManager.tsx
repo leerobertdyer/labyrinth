@@ -29,7 +29,8 @@ export default function RoomManager({ roomId }: IRoomManager) {
   return (
     <group>
       <Room
-        size={room.size}
+        width={room.width}
+        length={room.length}
         scale={room.scale}
         tileSize={room.tileSize ?? 1}
         edges={edges}

@@ -18,7 +18,8 @@ export type IRoomObjects = {
 }
 
 export type IRoom = {
-  size: number; // floor grid size
+  width: number; // east-west amount of WallEdges (x axis)
+  length: number; // north-south amount of WallEdges (z axis)
   tileSize: number; // individual tile size
   edges?: WallEdge[]; // optional — default to all walls if omitted
   scale?: Vector3; // optional scale for walls/doors/ceiling height
@@ -38,12 +39,8 @@ export type EncounterConfig = {
   rotation: [number, number, number];
   entityId: string;
 };
-
-export type RoomConfig = {
+export type RoomConfig = Omit<IRoom, 'edges'>  & {
   id: string;
-  size: number;
-  tileSize?: number;
-  scale: Vector3;
   edges: { north: WallEdge, south: WallEdge, east: WallEdge, west: WallEdge },
   roomObjects: IRoomObjects[],
   encounters: EncounterConfig[],

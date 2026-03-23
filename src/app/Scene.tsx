@@ -24,7 +24,7 @@ export default function Scene() {
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 5]} intensity={1} />
       <Player />
-      <RoomManager roomId="startingRoom" />
+      <RoomManager roomId="greatHall" /> {/* TODO: make roomID dynamic */}
     </Physics>
   );
 }

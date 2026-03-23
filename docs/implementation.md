@@ -21,12 +21,12 @@ Get the minimum viable game loop working end-to-end. Don't polish the starting r
 <!-- - No need for "About" yet; that's post-launch polish -->
 
 ### 1.3 Win/loss state plumbing
-- XState: add `PLAYER_DIED` and `COMBAT_WON` transitions to the machine
-- Wire reward XP on `COMBAT_WON` (even if XP does nothing yet — plumbing first)
-- Death screen renders on `PLAYER_DIED`
+<!-- - XState: add `PLAYER_DIED` and `COMBAT_WON` transitions to the machine -->
+<!-- - Wire reward XP on `COMBAT_WON` (even if XP does nothing yet — plumbing first) -->
+<!-- - Death screen renders on `PLAYER_DIED` -->
 
 ### 1.4 Second room
-- Unlock south gate after shopkeeper encounter resolves (win or loss)
+- Unlock south gate after shopkeeper encounter resolves (win fight/talk past) - fight for now with low stats.
 - Doesn't need to be interesting yet — a hall with nothing in it proves the connection system works
 - Validates `connections` registry and room transition logic
 

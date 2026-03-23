@@ -9,7 +9,8 @@ import {
 import { RoomConfig } from "@/components/game/types";
 import { Euler, Vector3 } from "three";
 
-const roomSize = 40;
+const roomLength = 30;
+const roomWidth = 10;
 
 const barrels = placeObjects(
   {
@@ -18,37 +19,37 @@ const barrels = placeObjects(
     Model: Barrels,
   },
   [
-    new Vector3(roomSize / 2 - 1, 0.1, 0),
-    new Vector3(roomSize / 2 - 1, 0.1, 3),
-    new Vector3(roomSize / 2 - 1, 0.1, 6),
-    new Vector3(roomSize / 2 - 1, 0.1, -3),
+    new Vector3(roomLength / 2 - 1, 0.1, 0),
+    new Vector3(roomLength / 2 - 1, 0.1, 3),
+    new Vector3(roomLength / 2 - 1, 0.1, 6),
+    new Vector3(roomLength / 2 - 1, 0.1, -3),
   ],
 );
 const shopkeeperStartingPos = new Vector3(1, 0, 17);
 const shopkeeperStartingRot = new Vector3(0, Math.PI, 0);
 
-export const startingRoom: RoomConfig = {
-  id: "startingRoom",
-  width: roomSize,
-  length: roomSize,
+export const greatHall: RoomConfig = {
+  id: "greatHall",
+  width: roomWidth,
+  length: roomLength,
   tileSize: 1,
-  scale: new Vector3(1.7, 6, 4.5),
+  scale: new Vector3(1.7, 8, 4.5),
   edges: {
     north: {
       direction: "north",
-      slots: allWalls(roomSize),
+      slots: allWalls(roomWidth),
     },
     south: {
       direction: "south",
-      slots: wallsWithGate(roomSize, 18, 22),
+      slots: wallsWithGate(roomWidth, 2, 6),
     },
     east: {
       direction: "east",
-      slots: allWalls(roomSize),
+      slots: allWalls(roomLength),
     },
     west: {
       direction: "west",
-      slots: allWalls(roomSize),
+      slots: allWalls(roomLength),
     },
   },
   roomObjects: barrels,

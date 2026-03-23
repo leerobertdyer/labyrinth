@@ -1,7 +1,7 @@
 import { WoodFloor } from "@/components/game/models/kenney/retroMedieval/wood-floor";
 import FloorCeilingGrid from "@/components/game/structure/FloorCeilingGrid";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
-import {  Vector3 } from "three";
+import { Vector3 } from "three";
 import { Roof } from "@/components/game/models/kenney/retroMedieval/roof";
 import { WallBDetailPainted } from "../models/kenney/retroUrban/wall-b-detail-painted";
 import { WallBDetailPaintedFortifiedGate } from "../models/kenney/retroMedieval/wall-fortified-gate";
@@ -14,24 +14,34 @@ const EDGE_ROTATIONS: Record<string, [number, number, number]> = {
   west: [0, Math.PI / 2, 0],
 };
 
-function getEdgePositions(
-  direction: string,
-  slotIndex: number,
-  size: number,
-  tileSize: number,
-): [number, number, number] {
-  const half = (size * tileSize) / 2;
-  const offset = slotIndex * tileSize - half + tileSize / 2;
+interface IGetEdgePositions {
+  direction: string;
+  slotIndex: number;
+  width: number;
+  length: number;
+  tileSize: number;
+}
+function getEdgePositions({
+  direction,
+  slotIndex,
+  width,
+  length,
+  tileSize,
+}: IGetEdgePositions): [number, number, number] {
+  const halfWidth = (width * tileSize) / 2;
+  const halfLength = (length * tileSize) / 2;
+  const widthOffset = slotIndex * tileSize - halfWidth + tileSize / 2;
+  const lengthOffset = slotIndex * tileSize - halfLength + tileSize / 2;
 
   switch (direction) {
     case "north":
-      return [offset, 0, -half];
+      return [widthOffset, 0, -halfLength];
     case "south":
-      return [offset, 0, half];
+      return [widthOffset, 0, halfLength];
     case "east":
-      return [half, 0, offset];
+      return [halfWidth, 0, lengthOffset];
     case "west":
-      return [-half, 0, offset];
+      return [-halfWidth, 0, lengthOffset];
     default:
       return [0, 0, 0];
   }
@@ -40,20 +50,25 @@ function getEdgePositions(
 const DEFAULT_SCALE = new Vector3(1.7, 5, 4.5);
 
 export default function Room({
-  size = 30,
+  width = 30, // east/west
+  length = 30, // north/south
   tileSize = 1,
   edges,
   scale = DEFAULT_SCALE,
 }: IRoom) {
-  const defaultEdges: WallEdge[] = ["north", "south", "east", "west"].map(
-    (dir) => ({
-      direction: dir as "north" | "south" | "east" | "west",
-      slots: Array(size).fill("wall"),
-    }),
-  );
+  const defaultLengthEdges: WallEdge[] = ["north", "south"].map((dir) => ({
+    direction: dir as "north" | "south",
+    slots: Array(length).fill("wall"),
+  }));
+  const defaultWidthEdges: WallEdge[] = ["east", "west"].map((dir) => ({
+    direction: dir as "east" | "west",
+    slots: Array(width).fill("wall"),
+  }));
+  const defaultEdges = [...defaultLengthEdges, ...defaultWidthEdges];
 
   const resolvedEdges = edges ?? defaultEdges;
-  const half = (size * tileSize) / 2;
+  const halfWidth = (width * tileSize) / 2;
+  const halfLength = (length * tileSize) / 2;
 
   function getEdgeRuns(slots: SlotType[], runType: SlotType) {
     const runs = [];
@@ -73,7 +88,6 @@ export default function Room({
     return runs;
   }
 
-  const halfFloor = (size * tileSize) / 2;
   const floorHeight = 0.1; // floor surface at -0.1, so box center slightly below
   const floorColliderY = -0.1 - floorHeight / 2;
 
@@ -81,13 +95,14 @@ export default function Room({
     <RigidBody type="fixed" colliders={false}>
       {/* Floor collision: single cuboid so player doesn't fall through */}
       <CuboidCollider
-        args={[halfFloor, floorHeight / 2, halfFloor]}
+        args={[halfWidth, floorHeight / 2, halfLength]}
         position={[0, floorColliderY, 0]}
         friction={1.2}
       />
       {/* Floor */}
       <FloorCeilingGrid
-        size={size}
+        width={width}
+        length={length}
         tileSize={tileSize}
         Model={WoodFloor}
         type="floor"
@@ -96,18 +111,24 @@ export default function Room({
 
       {/* Ceiling */}
       <FloorCeilingGrid
-        size={size}
+        width={width}
+        length={length}
         tileSize={tileSize}
         Model={Roof}
         type="ceiling"
         height={scale.y}
       />
 
-
       {/* Visual Wall Runs */}
       {resolvedEdges.map((edge) =>
         edge.slots.map((slot, i) => {
-          const pos = getEdgePositions(edge.direction, i, size, tileSize);
+          const pos = getEdgePositions({
+            direction: edge.direction,
+            slotIndex: i,
+            width,
+            length,
+            tileSize,
+          });
           const rot = EDGE_ROTATIONS[edge.direction];
           const tilesToHeight = scale.y / tileSize;
 
@@ -132,19 +153,20 @@ export default function Room({
       {resolvedEdges.map((edge) =>
         getEdgeRuns(edge.slots, "gate").map(({ start, end }) => {
           const runLength = end - start;
-          const pos = getEdgePositions(
-            edge.direction,
-            (start + end) / 2,
-            size,
+          const pos = getEdgePositions({
+            direction: edge.direction,
+            slotIndex: (start + end) / 2,
+            width,
+            length,
             tileSize,
-          );
+          });
           return (
-              <WallBDetailPaintedFortifiedGate
-                key={`${edge.direction}-gate-${start}`}
-                position={[pos[0], pos[1], pos[2]]}
-                rotation={EDGE_ROTATIONS[edge.direction]}
-                scale={[runLength + 1 * tileSize, scale.y, scale.z]}
-              />
+            <WallBDetailPaintedFortifiedGate
+              key={`${edge.direction}-gate-${start}`}
+              position={[pos[0], pos[1], pos[2]]}
+              rotation={EDGE_ROTATIONS[edge.direction]}
+              scale={[runLength + 1 * tileSize, scale.y, scale.z]}
+            />
           );
         }),
       )}
@@ -153,25 +175,26 @@ export default function Room({
       {resolvedEdges.map((edge) => {
         const isNS = edge.direction === "north" || edge.direction === "south";
         return getEdgeRuns(edge.slots, "wall").map(({ start, end }) => {
-          const length = end - start;
-          const runCenter = start * tileSize + (length * tileSize) / 2 - half;
+          const runTiles = end - start;
+          const half = isNS ? halfWidth : halfLength;
+          const runCenter = start * tileSize + (runTiles * tileSize) / 2 - half;
 
           const position: [number, number, number] = isNS
             ? [
                 runCenter,
                 scale.y / 2,
-                edge.direction === "north" ? -half : half,
+                edge.direction === "north" ? -halfLength : halfLength,
               ]
             : [
-                edge.direction === "east" ? half : -half,
+                edge.direction === "east" ? halfWidth : -halfWidth,
                 scale.y / 2,
                 runCenter,
               ];
 
           const offset = -2.5;
           const args: [number, number, number] = isNS
-            ? [(tileSize * length) / 2, scale.y, scale.z + offset]
-            : [scale.z + offset, scale.y, (tileSize * length) / 2];
+            ? [(tileSize * runTiles) / 2, scale.y, scale.z + offset]
+            : [scale.z + offset, scale.y, (tileSize * runTiles) / 2];
 
           return (
             <CuboidCollider

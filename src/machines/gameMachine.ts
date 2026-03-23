@@ -56,7 +56,7 @@ export const gameMachine = gameSetup.createMachine({
           target: "playing",
           actions: assign({
             player: () => defaultPlayer, // TODO - load real player stats from db
-            room: () => "entrance",
+            room: () => "startingRoom", // TODO - check if this works with second room
           }),
         },
       },
