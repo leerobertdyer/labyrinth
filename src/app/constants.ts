@@ -13,7 +13,7 @@ export const explorationControls = [
     { name: "pause", keys: ["p", "P"] }
 ];
 
-export const playerSpeed = 8;
+export const playerSpeed = 6;
 export const playerRotateSpeed = 2;
 export const playerCamRotateSpeed = 1.5;
 export const playerCamRadius = 6;
@@ -29,7 +29,7 @@ export const defaultPlayer: Player = {
     maxHealth: 100,
     experience: 0,
     attack: 10,
-    speed: 5,
+    speed: playerSpeed,
     defense: 3,
     image: '/sprites/Hero.png'
 }
