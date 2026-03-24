@@ -1,18 +1,22 @@
 import EnemyEncounter from "@/components/game/characters/Enemies/EnemyEncounter";
 import { ROOMS } from "@/components/game/Rooms/roomRegistry";
 import Room from "@/components/game/structure/Room";
-import { Direction, EncounterConfig, IRoomObjects } from "@/components/game/types";
+import {
+  Direction,
+  EncounterConfig,
+  IRoomObjects,
+} from "@/components/game/types";
 import { CuboidCollider } from "@react-three/rapier";
 import {
   REMOVE_ENCOUNTER,
   MOVE_NPC,
   REMOVE_NPC,
   SHOW_NPC,
+  STARTING_POINT,
 } from "../../../app/constants";
 import React, { useEffect, useState } from "react";
 import { useGameMachine } from "@/contexts/GameMachineContext";
 import { useRoomStore } from "@/stores/useRoomStore";
-import { Vector3 } from "three";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 
 export default function RoomManager() {
@@ -23,9 +27,9 @@ export default function RoomManager() {
   const handleGateEnter = (direction: Direction) => {
     const destinationId = room.connections?.[direction];
     if (!destinationId) return;
-    const spawnPoint = new Vector3(0, 0, 0);
-    teleportPlayer(spawnPoint);
+    const spawnPoint = STARTING_POINT;
     transitionTo(destinationId);
+    setTimeout(() => teleportPlayer(spawnPoint), 0);
   };
 
   const [, , actor] = useGameMachine();
@@ -35,7 +39,7 @@ export default function RoomManager() {
   );
 
   function handleVictory(encounter: EncounterConfig) {
-    const e = encounter.onPlayerVictoryRegistry;
+    const e = encounter.afterPlayerVictory;
     switch (e) {
       case REMOVE_ENCOUNTER:
         setActiveEncounters((prev) =>
@@ -52,7 +56,6 @@ export default function RoomManager() {
   }
 
   useEffect(() => {
-    console.log("sctive encounters: ", activeEncounters);
     const sub = actor.on("BATTLE_WON", ({ encounter }) => {
       const thisEncounter = activeEncounters.find(
         (e) => e.entityId === encounter.entityId,
@@ -86,6 +89,7 @@ export default function RoomManager() {
         scale={room.scale}
         tileSize={room.tileSize ?? 1}
         edges={edges}
+        onGateEnter={handleGateEnter}
       />
       {roomObjects &&
         roomObjects.map((o: IRoomObjects, i) => {
@@ -100,12 +104,6 @@ export default function RoomManager() {
           );
         })}
       {activeEncounters.map((e, i) => {
-        console.log(
-          "encounter position:",
-          e.position,
-          "entity position:",
-          room.entities.find((r) => r.id === e.entityId)?.position,
-        );
         const entity = room.entities.find(
           (roomEntity) => roomEntity.id === e.entityId,
         );

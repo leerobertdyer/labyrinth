@@ -4,14 +4,13 @@ Command: npx gltfjsx@6.5.3 public/models/kenney/retroMedieval/wall-fortified-gat
 */
 
 import * as THREE from "three";
-import React, { useMemo } from "react";
+import React from "react";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { GLTFAction } from "@/components/game/types";
 import {
   CuboidCollider,
   RigidBody,
-  TrimeshCollider,
 } from "@react-three/rapier";
 
 type GLTFResult = GLTF & {
@@ -57,4 +56,4 @@ export function WallBDetailPaintedFortifiedGate(
   );
 }
 
-useGLTF.preload("/wall-fortified-gate.glb");
+useGLTF.preload("/models/kenney/retroMedieval/wall-fortified-gate.glb");

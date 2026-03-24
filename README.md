@@ -1,4 +1,5 @@
 Labyrinth — Working Document v2
+
 Concept
 A gothic castle RPG with a surrealist painterly aesthetic. Inspired by Gormenghast and Piranesi without being derivative of either. The castle is its own character — ancient, indifferent, alive in its own logic. The player is trapped, searching for something they can't fully remember.
 
@@ -99,3 +100,7 @@ Mechanics of chat
 - Same from player to enemy, but the player maybe has more control over what to chase after
 - Maybe a timer where if you talk too long and it isn't going well you lose your turn and enemy attacks
 - Ability to voice chat while taking your turn would be nice.
+
+
+More Ideas:
+- Amnesia could trigger a randomness on door entry that determines where you end up. High levels of amnesia could send you deep into the dungeon -> badder monsters - bigger rewards, or they could be entirely randomn and you may end up anywhere....

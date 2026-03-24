@@ -37,4 +37,4 @@ export function Roof(props: React.ComponentProps<'group'>) {
   )
 }
 
-useGLTF.preload('/roof.glb')
+useGLTF.preload('/models/kenney/retroMedieval/roof.glb')

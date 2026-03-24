@@ -1,3 +1,4 @@
+import { STARTING_ROOM } from "@/components/game/Rooms/constants";
 import { create } from "zustand";
 
 interface RoomStore {
@@ -6,6 +7,6 @@ interface RoomStore {
 }
 
 export const useRoomStore = create<RoomStore>((set) => ({
-  currentRoomId: "startingRoom",
+  currentRoomId: STARTING_ROOM,
   transitionTo: (roomId) => set({ currentRoomId: roomId }),
 }));

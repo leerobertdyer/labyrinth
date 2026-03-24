@@ -2,17 +2,16 @@ import { useKeyboardControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import {
   CapsuleCollider,
-  RapierRigidBody,
   RigidBody,
   useRapier,
 } from "@react-three/rapier";
-import { RefObject, useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { MainCharacter } from "@/components/game/models/mixamo/mainCharacter";
 import { updateMovement, type MovementKeys } from "./Movement";
 import { useGameMachine } from "@/contexts/GameMachineContext";
-import { MOVEMENT_DISABLED_STATES } from "@/app/constants";
+import { MOVEMENT_DISABLED_STATES, STARTING_POINT } from "@/app/constants";
 import { useDebugStore } from "@/stores/useDebugStore";
-import { Group, Vector3 } from "three";
+import { Group } from "three";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 
 export default function Player() {
@@ -26,6 +25,7 @@ export default function Player() {
 
   const playerFacingRef = useRef(0);
   const cameraAngleRef = useRef({ theta: Math.PI, phi: Math.PI / 3 });
+  const startingPoint = useMemo(() => STARTING_POINT, [])
 
   useFrame((_, delta) => {
     const playingState = (state.value as { playing?: string }).playing;
@@ -57,13 +57,14 @@ export default function Player() {
 
   useEffect(() => {
     if (ref.current && state.matches({ playing: "dead" })) {
-      ref.current.setTranslation(new Vector3(0), false);
+      ref.current.setTranslation(startingPoint, false);
     }
-  }, [ref, state]);
+  }, [ref, state, startingPoint]);
 
   return (
     <RigidBody
       ref={ref}
+      position={startingPoint}
       ccd={true}
       colliders={false}
       lockRotations

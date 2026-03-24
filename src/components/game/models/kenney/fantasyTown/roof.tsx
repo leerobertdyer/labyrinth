@@ -28,4 +28,4 @@ export function Roof(props: React.ComponentProps<'group'>) {
   )
 }
 
-useGLTF.preload('/roof.glb')
+useGLTF.preload('/models/kenney/fantasyTown/roof.glb')

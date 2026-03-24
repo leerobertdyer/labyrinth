@@ -1,4 +1,5 @@
 import { Player } from "@/components/game/combat/types";
+import { Vector3 } from "three";
 
 export const explorationControls = [
     { name: "moveForward", keys: ["w", "W"] },
@@ -17,6 +18,7 @@ export const playerSpeed = 6;
 export const playerRotateSpeed = 2;
 export const playerCamRotateSpeed = 1.5;
 export const playerCamRadius = 6;
+export const STARTING_POINT = new Vector3(0, .1, -8);
 
 export const JUMP_STRENGTH = 8;
 export const GROUND_RAY_LENGTH = 0.35;

@@ -19,7 +19,7 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-export function UbannerUred(props: React.ComponentProps<'group'>) {
+export function BannerRed(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/models/kenney/fantasyTown/banner-red.glb') as unknown as GLTFResult
   return (
     <group {...props} dispose={null}>
@@ -28,4 +28,4 @@ export function UbannerUred(props: React.ComponentProps<'group'>) {
   )
 }
 
-useGLTF.preload('/banner-red.glb')
+useGLTF.preload('/models/kenney/fantasyTown/banner-red.glb')

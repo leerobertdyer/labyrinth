@@ -28,4 +28,4 @@ export function UbannerUgreen(props: React.ComponentProps<'group'>) {
   )
 }
 
-useGLTF.preload('/banner-green.glb')
+useGLTF.preload('/models/kenney/fantasyTown/banner-green.glb')

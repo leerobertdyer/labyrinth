@@ -37,4 +37,4 @@ export function Barrels(props: React.ComponentProps<"group">) {
   );
 }
 
-useGLTF.preload("/barrels.glb");
+useGLTF.preload("/models/kenney/retroMedieval/barrels.glb");

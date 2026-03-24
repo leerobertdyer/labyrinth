@@ -26,4 +26,4 @@ export function ShopkeeperModel(props) {
   )
 }
 
-useGLTF.preload('/shopkeeper.glb')
+useGLTF.preload('/models/mixamo/shopkeeper.glb')

@@ -1,4 +1,4 @@
-import { CapsuleCollider, CuboidCollider, RigidBody } from "@react-three/rapier";
+import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { ShopkeeperModel } from "../../models/mixamo/Shopkeeper";
 import { Vector3 } from "three";
 

@@ -37,4 +37,4 @@ export function WallBDetailPainted(props: React.ComponentProps<'group'>) {
   )
 }
 
-useGLTF.preload('/wall-b-detail-painted.glb')
+useGLTF.preload('/models/kenney/retroUrban/wall-b-detail-painted.glb')

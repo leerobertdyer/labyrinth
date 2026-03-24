@@ -7,6 +7,7 @@ export type BattleStats = {
   attack: number;
   speed: number;
   defense: number;
+  //   intimidation: number;  // could effect enemy chats | surrenders | flee-rate
   //   accuracy: number;
   //   evasion: number;
   //   critical: number;

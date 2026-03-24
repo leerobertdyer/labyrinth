@@ -28,4 +28,4 @@ export function UbalconyWallBDetailPainted(props: React.ComponentProps<'group'>)
   )
 }
 
-useGLTF.preload('/balcony-wall.glb')
+useGLTF.preload('/models/kenney/fantasyTown/balcony-wall.glb')

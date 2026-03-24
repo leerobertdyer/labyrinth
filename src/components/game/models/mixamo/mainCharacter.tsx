@@ -44,4 +44,4 @@ export function MainCharacter(props: React.ComponentProps<'group'>) {
   )
 }
 
-useGLTF.preload('/mainCharacter.glb')
+useGLTF.preload('/models/mixamo/mainCharacter.glb')

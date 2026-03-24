@@ -92,6 +92,32 @@ export default function Room({
   const floorHeight = 0.1; // floor surface at -0.1, so box center slightly below
   const floorColliderY = -0.1 - floorHeight / 2;
 
+  function calculateArgsAndPos(edge: WallEdge, start: number, end: number) {
+    const isNS = edge.direction === "north" || edge.direction === "south";
+
+    const runTiles = end - start;
+    const half = isNS ? halfWidth : halfLength;
+    const runCenter = start * tileSize + (runTiles * tileSize) / 2 - half;
+
+    const position: [number, number, number] = isNS
+      ? [
+          runCenter,
+          scale.y / 2,
+          edge.direction === "north" ? -halfLength : halfLength,
+        ]
+      : [
+          edge.direction === "east" ? halfWidth : -halfWidth,
+          scale.y / 2,
+          runCenter,
+        ];
+
+    const offset = -2.5;
+    const args: [number, number, number] = isNS
+      ? [(tileSize * runTiles) / 2, scale.y, scale.z + offset]
+      : [scale.z + offset, scale.y, (tileSize * runTiles) / 2];
+    return { args, position };
+  }
+
   return (
     <RigidBody type="fixed" colliders={false}>
       {/* Floor collision: single cuboid so player doesn't fall through */}
@@ -174,39 +200,40 @@ export default function Room({
 
       {/* Physics Colliders */}
       {resolvedEdges.map((edge) => {
-        const isNS = edge.direction === "north" || edge.direction === "south";
         return getEdgeRuns(edge.slots, "wall").map(({ start, end }) => {
-          const runTiles = end - start;
-          const half = isNS ? halfWidth : halfLength;
-          const runCenter = start * tileSize + (runTiles * tileSize) / 2 - half;
-
-          const position: [number, number, number] = isNS
-            ? [
-                runCenter,
-                scale.y / 2,
-                edge.direction === "north" ? -halfLength : halfLength,
-              ]
-            : [
-                edge.direction === "east" ? halfWidth : -halfWidth,
-                scale.y / 2,
-                runCenter,
-              ];
-
-          const offset = -2.5;
-          const args: [number, number, number] = isNS
-            ? [(tileSize * runTiles) / 2, scale.y, scale.z + offset]
-            : [scale.z + offset, scale.y, (tileSize * runTiles) / 2];
+          const { args, position } = calculateArgsAndPos(edge, start, end);
 
           return (
             <CuboidCollider
               key={`${edge.direction}-${start}`}
               args={args}
               position={position}
-              sensor
-              onIntersectionEnter={() =>
-                onGateEnter?.(edge.direction as Direction)
-              }
             />
+          );
+        });
+      })}
+
+      {/* Gate sensor colliders */}
+      {resolvedEdges.map((edge) => {
+        return getEdgeRuns(edge.slots, "gate").map(({ start, end }) => {
+          console.log("EDGE!: ", edge);
+          const { args, position } = calculateArgsAndPos(edge, start, end);
+          console.log("ARGS POS: ", { args, position });
+          return (
+            <RigidBody
+              key={`${edge.direction}-gate-sensor-${start}`}
+              type="fixed"
+              colliders={false}
+            >
+              <CuboidCollider
+                args={args}
+                position={position}
+                sensor
+                onIntersectionEnter={() =>
+                  onGateEnter?.(edge.direction as Direction)
+                }
+              />
+            </RigidBody>
           );
         });
       })}

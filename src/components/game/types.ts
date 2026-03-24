@@ -38,8 +38,8 @@ export type EncounterConfig = {
   position: [number, number, number];
   rotation: [number, number, number];
   entityId: string;
-  onPlayerDefeatRegistry?: string; // TODO: Make union type
-  onPlayerVictoryRegistry?: string; // TODO: Make union type
+  afterPlayerDefeat?: string; // TODO: Make union type
+  afterPlayerVictory?: string; // TODO: Make union type
 };
 export type RoomConfig = Omit<IRoom, "edges"> & {
   id: string;

@@ -28,4 +28,4 @@ export function WoodFloor(props: React.ComponentProps<'group'>) {
   )
 }
 
-useGLTF.preload('/wood-floor.glb')
+useGLTF.preload('/models/kenney/retroMedieval/wood-floor.glb')

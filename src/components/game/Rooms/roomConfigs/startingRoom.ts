@@ -1,7 +1,9 @@
 import { REMOVE_ENCOUNTER } from "@/app/constants";
 import Shopkeeper from "@/components/game/characters/Shopkeeper/Shopkeeper";
 import { generateEnemy, ShopKeeperOne } from "@/components/game/combat/enemies";
+import { BannerRed } from "@/components/game/models/kenney/fantasyTown/banner-red";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
+import { GREAT_HALL, STARTING_ROOM } from "@/components/game/Rooms/constants";
 import {
   allWalls,
   placeObjects,
@@ -10,7 +12,8 @@ import {
 import { RoomConfig } from "@/components/game/types";
 import { Euler, Vector3 } from "three";
 
-const roomSize = 40;
+const roomLength = 40;
+const roomWidth = 25;
 
 const barrels = placeObjects(
   {
@@ -19,40 +22,65 @@ const barrels = placeObjects(
     Model: Barrels,
   },
   [
-    new Vector3(roomSize / 2 - 1, 0.1, 0),
-    new Vector3(roomSize / 2 - 1, 0.1, 3),
-    new Vector3(roomSize / 2 - 1, 0.1, 6),
-    new Vector3(roomSize / 2 - 1, 0.1, -3),
+    new Vector3(roomWidth / 2 - 1, 0.1, 0),
+    new Vector3(roomWidth / 2 - 1, 0.1, 3),
+    new Vector3(roomWidth / 2 - 1, 0.1, 6),
+    new Vector3(roomWidth / 2 - 1, 0.1, -3),
+    new Vector3(-roomWidth / 2 + 1, 0.1, 0),
+    new Vector3(-roomWidth / 2 + 1, 0.1, 3),
+    new Vector3(-roomWidth / 2 + 1, 0.1, 6),
+    new Vector3(-roomWidth / 2 + 1, 0.1, -3),
   ],
 );
+
+const lanterns = placeObjects(
+  {
+    rotation: new Euler(0, Math.PI / 2, 0),
+    scale: new Vector3(4, 4, 4),
+    Model: BannerRed,
+  },
+  [
+    new Vector3(roomWidth / 2 - 1, 0.1, 0),
+    new Vector3(roomWidth / 2 - 1, 0.1, 3),
+    new Vector3(roomWidth / 2 - 1, 0.1, 6),
+    new Vector3(roomWidth / 2 - 1, 0.1, 9),
+    new Vector3(roomWidth / 2 - 1, 0.1, -3),
+    new Vector3(-roomWidth / 2 + 1, 0.1, 0),
+    new Vector3(-roomWidth / 2 + 1, 0.1, 3),
+    new Vector3(-roomWidth / 2 + 1, 0.1, 6),
+    new Vector3(-roomWidth / 2 + 1, 0.1, 9),
+    new Vector3(-roomWidth / 2 + 1, 0.1, -3),
+  ],
+);
+
 const shopkeeperStartingPos = new Vector3(1, 0, 17);
 const shopkeeperStartingRot = new Vector3(0, Math.PI, 0);
 
 export const startingRoom: RoomConfig = {
-  id: "startingRoom",
-  width: roomSize,
-  length: roomSize,
+  id: STARTING_ROOM,
+  width: roomWidth,
+  length: roomLength,
   tileSize: 1,
   scale: new Vector3(1.7, 6, 4.5),
   edges: {
     north: {
       direction: "north",
-      slots: allWalls(roomSize),
+      slots: allWalls(roomWidth),
     },
     south: {
       direction: "south",
-      slots: wallsWithGate(roomSize, 18, 22),
+      slots: wallsWithGate(roomWidth, 18, 22),
     },
     east: {
       direction: "east",
-      slots: allWalls(roomSize),
+      slots: allWalls(roomLength),
     },
     west: {
       direction: "west",
-      slots: allWalls(roomSize),
+      slots: allWalls(roomLength),
     },
   },
-  roomObjects: barrels,
+  roomObjects: [...barrels, ...lanterns],
   encounters: [
     {
       encounterEnemies: [generateEnemy(ShopKeeperOne)],
@@ -67,8 +95,8 @@ export const startingRoom: RoomConfig = {
         shopkeeperStartingRot.z,
       ],
       entityId: "shopkeeper",
-      // onPlayerDefeatRegistry: REMOVE_ENCOUNTER, // TODO: this is what we could use to trigger alt to death...
-      onPlayerVictoryRegistry: REMOVE_ENCOUNTER,
+      // afterPlayerDefeat: REMOVE_ENCOUNTER,
+      afterPlayerVictory: REMOVE_ENCOUNTER,
     },
   ],
   entities: [
@@ -81,6 +109,6 @@ export const startingRoom: RoomConfig = {
     },
   ],
   connections: {
-    south: "great-hall", // what room each gate leads to
+    south: GREAT_HALL, // what room each gate leads to
   },
 };
