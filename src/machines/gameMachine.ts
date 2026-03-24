@@ -2,6 +2,7 @@ import { setup, assign, emit } from "xstate";
 import { combatMachine } from "./combatMachine";
 import { Enemy, Player } from "@/components/game/combat/types";
 import { defaultPlayer } from "@/app/constants";
+import { EncounterConfig } from "@/components/game/types";
 
 const gameSetup = setup({
   types: {
@@ -9,31 +10,32 @@ const gameSetup = setup({
     context: {} as {
       player: Player;
       room: string;
-      enemies: Enemy[];
+      encounter: EncounterConfig;
     },
-    // Define what events the machine can RECEIVE (for your UI events)
+    // Define what events the machine can RECEIVE (UI events)
     events: {} as
       | { type: "START_GAME" }
       | { type: "PLAYER_HIT"; damage: number }
-      | { type: "SET_ENCOUNTER_ENEMIES"; encounterEnemies: Enemy[] }
-      | { type: "ENTER_COMBAT" }
+      | { type: "ENTER_COMBAT"; encounter: EncounterConfig }
       | { type: "LEAVE_COMBAT" }
       | { type: "VICTORY"; player: Player }
+      | { type: "DEFEAT" }
       | { type: "PAUSE" }
       | { type: "UNPAUSE" }
       | { type: "RESPAWN"; room: string }
       | { type: "SEE_RED"; intensity: number }
       | { type: "COMBAT_LOST" },
-    // Define what events the machine can EMIT (for your UI listeners)
+    // Define what events the machine can EMIT (UI listeners)
     emitted: {} as
-      | { type: "SEE_RED"; intensity: number }
-      | { type: "SCREEN_EFFECT"; color: string; duration: number },
+      | { type: "SEE_RED"; intensity: number } // TODO make it FLASH_COLOR; intensity: number, color: string
+      | { type: "BATTLE_WON"; encounter: EncounterConfig }
+      | { type: "BATTLE_LOST"; encounter: EncounterConfig },
   },
   actors: {
     combatMachine: combatMachine,
   },
   actions: {
-    resetPlayer: assign({ player: defaultPlayer }),
+    resetGame: assign({ player: defaultPlayer }),
   },
 });
 
@@ -42,7 +44,7 @@ export const gameMachine = gameSetup.createMachine({
   context: ({ input }) => ({
     player: input?.player,
     room: "start",
-    enemies: [],
+    encounter: {} as EncounterConfig,
   }),
   initial: "startScreen",
   states: {
@@ -97,15 +99,15 @@ export const gameMachine = gameSetup.createMachine({
             ],
           },
         ],
-        SET_ENCOUNTER_ENEMIES: {
-          actions: [assign({ enemies: ({ event }) => event.encounterEnemies })],
-        },
         PAUSE: ".paused",
       },
       states: {
         exploring: {
           on: {
-            ENTER_COMBAT: "inCombat",
+            ENTER_COMBAT: {
+              actions: assign({ encounter: ({ event }) => event.encounter }),
+              target: "inCombat",
+            },
           },
         },
         inCombat: {
@@ -113,27 +115,33 @@ export const gameMachine = gameSetup.createMachine({
             id: "combatActor",
             src: "combatMachine",
             input: ({ context }) => ({
-              player: {
-                health: context.player.health,
-                attack: 10,
-                image: "hero.png",
-                maxHealth: 100,
-                experience: 0,
-                speed: context.player.speed,
-                defense: context.player.defense,
-              },
-              enemies: context.enemies,
+              player: context.player,
+              encounter: context.encounter,
             }),
           },
           on: {
             LEAVE_COMBAT: "exploring",
             VICTORY: {
               target: "exploring",
-              actions: assign({ player: ({ event }) => event.player }),
+              actions: [
+                assign({
+                  player: ({ event }) => event.player,
+                }),
+                emit(({ context }) => ({
+                  type: "BATTLE_WON",
+                  encounter: context.encounter,
+                })),
+              ],
             },
             DEFEAT: {
               target: "dead",
-              actions: ["resetPlayer"],
+              actions: [
+                "resetGame",
+                emit(({ context }) => ({
+                  type: "BATTLE_LOST",
+                  encounter: context.encounter,
+                })),
+              ],
             },
           },
         },
@@ -164,15 +172,5 @@ export const gameMachine = gameSetup.createMachine({
       },
     },
   },
-  actions: {
-    HEALTH_UP: assign({
-      health: ({ context, event }) => context.health + event.amount,
-    }),
-    HEALTH_DOWN: assign({
-      health: ({ context, event }) => context.health - event.amount,
-    }),
-    FULL_HEALTH: assign({
-      health: ({ context }) => (context.health = context.maxHealth),
-    }),
-  },
+  actions: {},
 });

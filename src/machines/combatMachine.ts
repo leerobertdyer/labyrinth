@@ -1,10 +1,11 @@
 import { Player, type Enemy } from "@/components/game/combat/types";
+import { EncounterConfig } from "@/components/game/types";
 import { calculateIncomingDamage } from "@/machines/utils";
 import { assign, fromPromise, raise, sendParent, setup } from "xstate";
 
 export const combatSetup = setup({
   types: {
-    input: {} as { player: Player; enemies: Enemy[] },
+    input: {} as { player: Player; encounter: EncounterConfig },
     context: {} as {
       enemies: Enemy[];
       player: Player;
@@ -56,12 +57,16 @@ export const combatSetup = setup({
 export const combatMachine = combatSetup.createMachine({
   id: "combat",
   initial: "playerTurn",
-  context: ({ input }: { input: { player: Player; enemies: Enemy[] } }) => ({
+  context: ({
+    input,
+  }: {
+    input: { player: Player; encounter: EncounterConfig };
+  }) => ({
     player: input.player,
-    enemies: input.enemies,
+    enemies: input.encounter.encounterEnemies ?? [],
     selectedEnemyId: null,
     selectedView: "PLAYER",
-    enemyAttackQueue: input.enemies.map((e) => e.id),
+    enemyAttackQueue: input.encounter.encounterEnemies.map((e) => e.id),
   }),
   on: {
     SET_VIEW: {

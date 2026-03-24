@@ -1,15 +1,57 @@
 import EnemyEncounter from "@/components/game/characters/Enemies/EnemyEncounter";
 import { ROOMS } from "@/components/game/Rooms/roomRegistry";
 import Room from "@/components/game/structure/Room";
-import { IRoomObjects } from "@/components/game/types";
+import { EncounterConfig, IRoomObjects } from "@/components/game/types";
 import { CuboidCollider } from "@react-three/rapier";
+import {
+  REMOVE_ENCOUNTER,
+  MOVE_NPC,
+  REMOVE_NPC,
+  SHOW_NPC,
+} from "../../../app/constants";
+import React, { useEffect, useState } from "react";
+import { useGameMachine } from "@/contexts/GameMachineContext";
 
 type IRoomManager = {
   roomId: string;
 };
 
 export default function RoomManager({ roomId }: IRoomManager) {
+  const [, , actor] = useGameMachine();
+
   const room = ROOMS[roomId];
+  const [activeEncounters, setActiveEncounters] = useState<EncounterConfig[]>(
+    room?.encounters ?? [],
+  );
+
+  function handleVictory(encounter: EncounterConfig) {
+    const e = encounter.onPlayerVictoryRegistry;
+    switch (e) {
+      case REMOVE_ENCOUNTER:
+        setActiveEncounters((prev) =>
+          prev.filter((e) => e.entityId !== encounter.entityId),
+        );
+        break;
+      case MOVE_NPC:
+        break; // TODO
+      case REMOVE_NPC:
+        break; // TODO
+      case SHOW_NPC:
+        break; // TODO
+    }
+  }
+
+  useEffect(() => {
+    console.log("sctive encounters: ", activeEncounters);
+    const sub = actor.on("BATTLE_WON", ({ encounter }) => {
+      const thisEncounter = activeEncounters.find(
+        (e) => e.entityId === encounter.entityId,
+      );
+      if (thisEncounter) handleVictory(thisEncounter);
+    });
+    return () => sub.unsubscribe();
+  }, [activeEncounters, actor]);
+
   if (!room) return null;
 
   const edges = [
@@ -47,15 +89,23 @@ export default function RoomManager({ roomId }: IRoomManager) {
             />
           );
         })}
-      {room.encounters.map((e, i) => {
+      {activeEncounters.map((e, i) => {
+        console.log(
+          "encounter position:",
+          e.position,
+          "entity position:",
+          room.entities.find((r) => r.id === e.entityId)?.position,
+        );
         const entity = room.entities.find(
-          (roomEntity) => (roomEntity.id = e.entityId),
+          (roomEntity) => roomEntity.id === e.entityId,
         );
         const Model = entity?.Model;
-        if (!Model) return;
+        if (!Model || !e) return;
         return (
-          <EnemyEncounter key={i} encounterEnemies={e.encounterEnemies}>
-            <CuboidCollider position={entity.position} args={[2, 3, 1.5]} />
+          <React.Fragment key={i}>
+            <EnemyEncounter encounter={e}>
+              <CuboidCollider args={[2, 3, 1.5]} />
+            </EnemyEncounter>
             <Model
               position={entity.position}
               rotation={[
@@ -65,7 +115,7 @@ export default function RoomManager({ roomId }: IRoomManager) {
               ]}
               scale={entity.modelScale}
             />
-          </EnemyEncounter>
+          </React.Fragment>
         );
       })}
       {nonEncounterEntities &&

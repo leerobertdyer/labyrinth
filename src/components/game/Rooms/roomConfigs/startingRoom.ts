@@ -1,3 +1,4 @@
+import { REMOVE_ENCOUNTER } from "@/app/constants";
 import Shopkeeper from "@/components/game/characters/Shopkeeper/Shopkeeper";
 import { generateEnemy, ShopKeeperOne } from "@/components/game/combat/enemies";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
@@ -66,6 +67,8 @@ export const startingRoom: RoomConfig = {
         shopkeeperStartingRot.z,
       ],
       entityId: "shopkeeper",
+      // onPlayerDefeatRegistry: REMOVE_ENCOUNTER, // TODO: this is what we could use to trigger alt to death...
+      onPlayerVictoryRegistry: REMOVE_ENCOUNTER,
     },
   ],
   entities: [

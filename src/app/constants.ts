@@ -33,3 +33,8 @@ export const defaultPlayer: Player = {
     defense: 3,
     image: '/sprites/Hero.png'
 }
+
+export const REMOVE_ENCOUNTER = "REMOVE_ENCOUNTER";
+export const MOVE_NPC = "MOVE_NPC";
+export const REMOVE_NPC = "REMOVE_NPC";
+export const SHOW_NPC = "SHOW_NPC"
