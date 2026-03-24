@@ -13,19 +13,18 @@ import React, { useEffect, useState } from "react";
 import { useGameMachine } from "@/contexts/GameMachineContext";
 import { useRoomStore } from "@/stores/useRoomStore";
 import { Vector3 } from "three";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 
 export default function RoomManager() {
   const { currentRoomId, transitionTo } = useRoomStore();
+  const { teleportPlayer } = usePlayerStore();
   const room = ROOMS[currentRoomId];
 
   const handleGateEnter = (direction: Direction) => {
     const destinationId = room.connections?.[direction];
     if (!destinationId) return;
-
-    // const destination = ROOMS[destinationId];
-    // const spawnPoint = new Vector3(0, 0, 0);
-
-    // teleportPlayer(spawnPoint);
+    const spawnPoint = new Vector3(0, 0, 0);
+    teleportPlayer(spawnPoint);
     transitionTo(destinationId);
   };
 

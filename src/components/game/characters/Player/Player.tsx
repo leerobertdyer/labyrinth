@@ -6,27 +6,19 @@ import {
   RigidBody,
   useRapier,
 } from "@react-three/rapier";
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import { RefObject, useEffect, useRef } from "react";
 import { MainCharacter } from "@/components/game/models/mixamo/mainCharacter";
 import { updateMovement, type MovementKeys } from "./Movement";
 import { useGameMachine } from "@/contexts/GameMachineContext";
 import { MOVEMENT_DISABLED_STATES } from "@/app/constants";
 import { useDebugStore } from "@/stores/useDebugStore";
-
-// export function teleportPlayer(position: Vector3) {
-//   const rb = playerRef.current;
-//   if (!rb) return;
-//   rb.setTranslation({ x: position.x, y: position.y, z: position.z }, true);
-//   rb.setLinvel({ x: 0, y: 0, z: 0 }, true);
-//   rb.setAngvel({ x: 0, y: 0, z: 0 }, true);
-// }
-
+import { Group, Vector3 } from "three";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 
 export default function Player() {
+  const { ref } = usePlayerStore();
   const setPlayerPos = useDebugStore((s) => s.setPlayerPos);
-  const ref = useRef<RapierRigidBody>(null);
-  const meshRef = useRef<THREE.Group>(null);
+  const meshRef = useRef<Group>(null);
   const [, get] = useKeyboardControls();
   const { camera } = useThree();
   const { world, rapier } = useRapier();
@@ -65,7 +57,7 @@ export default function Player() {
 
   useEffect(() => {
     if (ref.current && state.matches({ playing: "dead" })) {
-      ref.current.setTranslation(new THREE.Vector3(0), false);
+      ref.current.setTranslation(new Vector3(0), false);
     }
   }, [ref, state]);
 
