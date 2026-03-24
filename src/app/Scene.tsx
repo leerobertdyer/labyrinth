@@ -5,11 +5,8 @@ import { Physics } from "@react-three/rapier";
 import * as THREE from "three";
 import Player from "@/components/game/characters/Player/Player";
 import RoomManager from "@/components/game/Rooms/RoomManager";
-import { useRoomStore } from "@/stores/useRoomStore";
 
 export default function Scene() {
-
-  const { currentRoomId } = useRoomStore();
 
   const playerPos = useRef<THREE.Vector3>(new THREE.Vector3());
   const orbitRef = useRef<OrbitControlsImpl>(null);
@@ -27,7 +24,7 @@ export default function Scene() {
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 5]} intensity={1} />
       <Player />
-      <RoomManager roomId={currentRoomId} />
+      <RoomManager />
     </Physics>
   );
 }

@@ -5,7 +5,7 @@ import { Vector3 } from "three";
 import { Roof } from "@/components/game/models/kenney/retroMedieval/roof";
 import { WallBDetailPainted } from "../models/kenney/retroUrban/wall-b-detail-painted";
 import { WallBDetailPaintedFortifiedGate } from "../models/kenney/retroMedieval/wall-fortified-gate";
-import { IRoom, SlotType, WallEdge } from "@/components/game/types";
+import { Direction, IRoom, SlotType, WallEdge } from "@/components/game/types";
 
 const EDGE_ROTATIONS: Record<string, [number, number, number]> = {
   north: [0, 0, 0],
@@ -55,6 +55,7 @@ export default function Room({
   tileSize = 1,
   edges,
   scale = DEFAULT_SCALE,
+  onGateEnter,
 }: IRoom) {
   const defaultLengthEdges: WallEdge[] = ["north", "south"].map((dir) => ({
     direction: dir as "north" | "south",
@@ -201,6 +202,10 @@ export default function Room({
               key={`${edge.direction}-${start}`}
               args={args}
               position={position}
+              sensor
+              onIntersectionEnter={() =>
+                onGateEnter?.(edge.direction as Direction)
+              }
             />
           );
         });

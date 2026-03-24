@@ -1,7 +1,7 @@
 import EnemyEncounter from "@/components/game/characters/Enemies/EnemyEncounter";
 import { ROOMS } from "@/components/game/Rooms/roomRegistry";
 import Room from "@/components/game/structure/Room";
-import { EncounterConfig, IRoomObjects } from "@/components/game/types";
+import { Direction, EncounterConfig, IRoomObjects } from "@/components/game/types";
 import { CuboidCollider } from "@react-three/rapier";
 import {
   REMOVE_ENCOUNTER,
@@ -11,15 +11,26 @@ import {
 } from "../../../app/constants";
 import React, { useEffect, useState } from "react";
 import { useGameMachine } from "@/contexts/GameMachineContext";
+import { useRoomStore } from "@/stores/useRoomStore";
+import { Vector3 } from "three";
 
-type IRoomManager = {
-  roomId: string;
-};
+export default function RoomManager() {
+  const { currentRoomId, transitionTo } = useRoomStore();
+  const room = ROOMS[currentRoomId];
 
-export default function RoomManager({ roomId }: IRoomManager) {
+  const handleGateEnter = (direction: Direction) => {
+    const destinationId = room.connections?.[direction];
+    if (!destinationId) return;
+
+    // const destination = ROOMS[destinationId];
+    // const spawnPoint = new Vector3(0, 0, 0);
+
+    // teleportPlayer(spawnPoint);
+    transitionTo(destinationId);
+  };
+
   const [, , actor] = useGameMachine();
 
-  const room = ROOMS[roomId];
   const [activeEncounters, setActiveEncounters] = useState<EncounterConfig[]>(
     room?.encounters ?? [],
   );

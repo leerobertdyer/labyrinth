@@ -14,6 +14,15 @@ import { useGameMachine } from "@/contexts/GameMachineContext";
 import { MOVEMENT_DISABLED_STATES } from "@/app/constants";
 import { useDebugStore } from "@/stores/useDebugStore";
 
+// export function teleportPlayer(position: Vector3) {
+//   const rb = playerRef.current;
+//   if (!rb) return;
+//   rb.setTranslation({ x: position.x, y: position.y, z: position.z }, true);
+//   rb.setLinvel({ x: 0, y: 0, z: 0 }, true);
+//   rb.setAngvel({ x: 0, y: 0, z: 0 }, true);
+// }
+
+
 export default function Player() {
   const setPlayerPos = useDebugStore((s) => s.setPlayerPos);
   const ref = useRef<RapierRigidBody>(null);

@@ -1,12 +1,12 @@
 // General Game Types
 
-import { Enemy } from '@/components/game/combat/types';
-import { ComponentType } from 'react';
-import { AnimationClip, Euler, Vector3 } from 'three'
+import { Enemy } from "@/components/game/combat/types";
+import { ComponentType } from "react";
+import { AnimationClip, Euler, Vector3 } from "three";
 
 export type GLTFAction = AnimationClip & {
-  name: string
-}
+  name: string;
+};
 
 export type IRoomObjects = {
   pos: Vector3;
@@ -14,7 +14,7 @@ export type IRoomObjects = {
   rotation: Euler;
   Model: ComponentType<{ position: Vector3; scale?: Vector3; rotation: Euler }>;
   onColide?: () => void;
-}
+};
 
 export type IRoom = {
   width: number; // east-west amount of WallEdges (x axis)
@@ -23,12 +23,13 @@ export type IRoom = {
   edges?: WallEdge[]; // optional — default to all walls if omitted
   scale?: Vector3; // optional scale for walls/doors/ceiling height
   roof?: boolean; // optional flag to show sky or not
-}
-
+  onGateEnter?: (direction: Direction) => void; // trigger teleport | room exit
+};
+export type Direction = "north" | "south" | "east" | "west";
 export type WallEdge = {
-  direction: "north" | "south" | "east" | "west";
+  direction: Direction;
   slots: SlotType[]; // length = number of tiles along that edge
-}
+};
 
 export type SlotType = "wall" | "gate" | "empty";
 
@@ -40,29 +41,33 @@ export type EncounterConfig = {
   onPlayerDefeatRegistry?: string; // TODO: Make union type
   onPlayerVictoryRegistry?: string; // TODO: Make union type
 };
-export type RoomConfig = Omit<IRoom, 'edges'>  & {
+export type RoomConfig = Omit<IRoom, "edges"> & {
   id: string;
-  edges: { north: WallEdge, south: WallEdge, east: WallEdge, west: WallEdge },
-  roomObjects: IRoomObjects[],
-  encounters: EncounterConfig[],
-  entities: Entities[], // Npcs | Enemies | Encounter Objects | Models
+  edges: { north: WallEdge; south: WallEdge; east: WallEdge; west: WallEdge };
+  roomObjects: IRoomObjects[];
+  encounters: EncounterConfig[];
+  entities: Entities[]; // Npcs | Enemies | Encounter Objects | Models
   connections: {
-    north?: string;   // what room each gate leads to eg "northern-starting-hall"
-    south?: string;   
-    east?: string;  
+    north?: string; // what room each gate leads to eg "northern-starting-hall"
+    south?: string;
+    east?: string;
     west?: string;
-  }
-}
+  };
+};
 
 export type Entities = {
   id: string;
   position: Vector3;
   rotation: Vector3;
   modelScale: number;
-  Model: ComponentType<{ position: Vector3, rotation: [number, number, number], scale: number }>
+  Model: ComponentType<{
+    position: Vector3;
+    rotation: [number, number, number];
+    scale: number;
+  }>;
   // name
   // prompt: EntityPrompt // the initial prompt for conversation injection
-  // alignment: Alignment // Whether they are friend foe or confused 
+  // alignment: Alignment // Whether they are friend foe or confused
   // amnesia: number // may be cool to have the same amnesia status that main character does
-  // stats: CombatStats 
-}
+  // stats: CombatStats
+};
