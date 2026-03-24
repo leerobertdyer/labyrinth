@@ -22,7 +22,7 @@ export type MovementKeys = {
   camUp: boolean;
   camDown: boolean;
   jump: boolean;
-}
+};
 
 export type MovementContext = {
   body: RapierRigidBody;
@@ -34,7 +34,8 @@ export type MovementContext = {
   playerFacingRef: RefObject<number>;
   cameraAngleRef: RefObject<{ theta: number; phi: number }>;
   delta: number;
-}
+  cameraRadiusRef: RefObject<number | null>;
+};
 
 /**
  * One frame of player movement: camera orbit, rotation, horizontal velocity,
@@ -61,12 +62,17 @@ export function updateMovement(ctx: MovementContext): void {
     playerFacingRef,
     cameraAngleRef,
     delta,
+    cameraRadiusRef,
   } = ctx;
+
+  if (cameraRadiusRef.current === null) {
+    cameraRadiusRef.current = 0;
+  }
 
   const playerPos = body.translation();
 
   // --- Vertical camera orbit ---
-  const phiMax = 2.5
+  const phiMax = 1.4;
 
   if (camUp) cameraAngleRef.current.phi -= playerCamRotateSpeed * delta;
   if (camDown) cameraAngleRef.current.phi += playerCamRotateSpeed * delta;
@@ -88,11 +94,7 @@ export function updateMovement(ctx: MovementContext): void {
     0,
     Math.cos(facing),
   );
-  const playerRight = new THREE.Vector3(
-    Math.cos(facing),
-    0,
-    -Math.sin(facing),
-  );
+  const playerRight = new THREE.Vector3(Math.cos(facing), 0, -Math.sin(facing));
 
   const moveDir = new THREE.Vector3();
   if (moveForward) moveDir.add(playerForward);
@@ -148,16 +150,68 @@ export function updateMovement(ctx: MovementContext): void {
   cameraAngleRef.current.theta += diff * 5 * delta;
 
   // --- Update camera position ---
-  const { 
+  const {
     theta, // longitude (horizontal rotation)
-    phi // latitude (vertical angle from top)
+    phi, // latitude (vertical angle from top)
   } = cameraAngleRef.current;
 
-  camera.position.set(
-    playerPos.x + playerCamRadius * Math.sin(phi) * Math.sin(theta),
-    playerPos.y + playerCamRadius * Math.cos(phi*.5),
-    playerPos.z + playerCamRadius * Math.sin(phi) * Math.cos(theta),
+  const horizontalDist = Math.sin(phi); // XZ component magnitude
+  const verticalDist = Math.cos(phi / 4); // Y component
+
+  const dirToCamera = new THREE.Vector3(
+    horizontalDist * Math.sin(theta),
+    verticalDist,
+    horizontalDist * Math.cos(theta),
+  ).normalize();
+
+  const SPHERE_RADIUS = 0.25;
+  const sphere = new rapier.Ball(SPHERE_RADIUS);
+
+  // Pull origin back by sphere radius so it doesn't start clipping the player capsule
+  const castOrigin = {
+    x: playerPos.x + dirToCamera.x * SPHERE_RADIUS,
+    y: playerPos.y + 1 + dirToCamera.y * SPHERE_RADIUS,
+    z: playerPos.z + dirToCamera.z * SPHERE_RADIUS,
+  };
+
+  const hit = world.castShape(
+    castOrigin,
+    { w: 1, x: 0, y: 0, z: 0 },
+    { x: dirToCamera.x, y: dirToCamera.y, z: dirToCamera.z },
+    sphere,
+    0, // targetDistance: register hits on contact
+    playerCamRadius, // maxToi: sweep this far
+    true,
+    undefined,
+    undefined,
+    undefined,
+    body,
   );
 
-  camera.lookAt(playerPos.x, playerPos.y+2, playerPos.z);
+  const targetRadius =
+    hit !== null ? Math.max(0.8, hit.time_of_impact * 0.85) : playerCamRadius;
+
+  const lerpSpeed = targetRadius < cameraRadiusRef.current ? 25 : 8;
+  cameraRadiusRef.current = THREE.MathUtils.lerp(
+    cameraRadiusRef.current,
+    targetRadius,
+    lerpSpeed * delta,
+  );
+
+  const r = cameraRadiusRef.current;
+
+  // Always keep camera at least this far above player origin
+  const MIN_CAM_HEIGHT = 1.5;
+  const preferredY = playerPos.y + playerCamRadius * Math.cos(phi);
+  const camY = Math.max(playerPos.y + MIN_CAM_HEIGHT, preferredY);
+
+  const compressedXZ = r * Math.sin(phi);
+
+  camera.position.set(
+    playerPos.x + compressedXZ * Math.sin(theta),
+    camY, // not scaled by r — height stays fixed
+    playerPos.z + compressedXZ * Math.cos(theta),
+  );
+
+  camera.lookAt(playerPos.x, playerPos.y + 2, playerPos.z);
 }

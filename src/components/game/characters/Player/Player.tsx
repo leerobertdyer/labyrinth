@@ -9,7 +9,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { MainCharacter } from "@/components/game/models/mixamo/mainCharacter";
 import { updateMovement, type MovementKeys } from "./Movement";
 import { useGameMachine } from "@/contexts/GameMachineContext";
-import { MOVEMENT_DISABLED_STATES, STARTING_POINT } from "@/app/constants";
+import { MOVEMENT_DISABLED_STATES, playerCamRadius, STARTING_POINT } from "@/app/constants";
 import { useDebugStore } from "@/stores/useDebugStore";
 import { Group } from "three";
 import { usePlayerStore } from "@/stores/usePlayerStore";
@@ -22,11 +22,13 @@ export default function Player() {
   const { camera } = useThree();
   const { world, rapier } = useRapier();
   const [state] = useGameMachine();
-
+  
+  
   const playerFacingRef = useRef(0);
   const cameraAngleRef = useRef({ theta: Math.PI, phi: Math.PI / 3 });
   const startingPoint = useMemo(() => STARTING_POINT, [])
-
+  const cameraRadiusRef = useRef(playerCamRadius); 
+  
   useFrame((_, delta) => {
     const playingState = (state.value as { playing?: string }).playing;
     if (
@@ -52,6 +54,7 @@ export default function Player() {
       playerFacingRef,
       cameraAngleRef,
       delta,
+      cameraRadiusRef
     });
   });
 
