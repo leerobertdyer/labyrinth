@@ -104,3 +104,4 @@ Mechanics of chat
 
 More Ideas:
 - Amnesia could trigger a randomness on door entry that determines where you end up. High levels of amnesia could send you deep into the dungeon -> badder monsters - bigger rewards, or they could be entirely randomn and you may end up anywhere....
+- I have a local file dice.html that showcases how to build a dice using browser css and javascript pretty awesome - I may use this idea to create real animations for player "rolls"

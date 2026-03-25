@@ -17,7 +17,7 @@ const gameSetup = setup({
       | { type: "START_GAME" }
       | { type: "PLAYER_HIT"; damage: number }
       | { type: "ENTER_COMBAT"; encounter: EncounterConfig }
-      | { type: "LEAVE_COMBAT" }
+      | { type: "LEAVE_COMBAT"; player: Player }
       | { type: "VICTORY"; player: Player }
       | { type: "DEFEAT" }
       | { type: "PAUSE" }
@@ -120,7 +120,12 @@ export const gameMachine = gameSetup.createMachine({
             }),
           },
           on: {
-            LEAVE_COMBAT: "exploring",
+            LEAVE_COMBAT: {
+              target: "exploring",
+              actions: assign({
+                player: ({ event }) => event.player,
+              }),
+            },
             VICTORY: {
               target: "exploring",
               actions: [

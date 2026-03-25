@@ -26,9 +26,9 @@ Get the minimum viable game loop working end-to-end. Don't polish the starting r
 <!-- - Death screen renders on `PLAYER_DIED` -->
 
 ### 1.4 Second room
-- Unlock south gate after shopkeeper encounter resolves (win fight/talk past) - fight for now with low stats.
-- Doesn't need to be interesting yet — a hall with nothing in it proves the connection system works
-- Validates `connections` registry and room transition logic
+<!-- - Unlock south gate after shopkeeper encounter resolves (win fight/talk past) - fight for now with low stats. -->
+<!-- - Doesn't need to be interesting yet — a hall with nothing in it proves the connection system works -->
+<!-- - Validates `connections` registry and room transition logic -->
 
 ---
 

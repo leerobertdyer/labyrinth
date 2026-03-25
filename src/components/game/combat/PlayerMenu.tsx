@@ -1,32 +1,9 @@
 import { useGameMachine } from "@/contexts/GameMachineContext";
-import { useEffect, useRef, useState } from "react";
-import { eventKeyToControl } from "./combatControls";
+import { useEffect, useEffectEvent, useState } from "react";
 import type { CombatViews } from "./types";
+import { eventKeyToControl } from "@/components/game/combat/combatControls";
 
-const MENU_ACTION_COUNT = 5;
-
-function ActionButton({
-  label,
-  onClick,
-  isSelected,
-}: {
-  label: string;
-  onClick: () => void;
-  isSelected?: boolean;
-}) {
-  return (
-    <button
-      className={`w-full border-2 cursor-pointer transition-all duration-300 ${
-        isSelected
-          ? "bg-gray-600 border-yellow-500 hover:bg-gray-600"
-          : "bg-gray-400 border-black hover:bg-gray-500"
-      }`}
-      onClick={onClick}
-    >
-      {label}
-    </button>
-  );
-}
+const playerMenuActions = ["ATTACK", "DEFEND", "USE_ITEM", "FLEE", "CHAT"];
 
 type PlayerMenuProps = {
   isPlayersTurn: boolean;
@@ -34,7 +11,7 @@ type PlayerMenuProps = {
   combatActor: NonNullable<
     ReturnType<typeof useGameMachine>[0]["children"]["combatActor"]
   >;
-}
+};
 
 export default function PlayerMenu({
   isPlayersTurn,
@@ -42,51 +19,11 @@ export default function PlayerMenu({
   combatActor,
 }: PlayerMenuProps) {
   const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
-  const selectedMenuIndexRef = useRef(selectedMenuIndex);
-  // @TODO fix this:
-  // eslint-disable-next-line react-hooks/refs
-  selectedMenuIndexRef.current = selectedMenuIndex;
 
   const playerViewActive = selectedView === "PLAYER";
 
-  useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
-      if (selectedView !== "PLAYER") return;
-      const action = eventKeyToControl(event);
-      if (!action || !combatActor || !isPlayersTurn) return;
-      switch (action) {
-        case "MENU_UP":
-          setSelectedMenuIndex((i) => Math.max(0, i - 1));
-          break;
-        case "MENU_DOWN":
-          setSelectedMenuIndex((i) => Math.min(MENU_ACTION_COUNT - 1, i + 1));
-          break;
-        case "SELECT":
-          const idx = selectedMenuIndexRef.current;
-          if (idx === 0) combatActor.send({ type: "SET_VIEW", view: "ENEMY" });
-          else if (idx === 1) combatActor.send({ type: "DEFEND" });
-          else if (idx === 2)
-            combatActor.send({ type: "USE_ITEM", itemId: "TODO" });
-          else if (idx === 3) combatActor.send({ type: "FLEE" });
-          else if (idx === 4) combatActor.send({ type: "SET_VIEW", view: "CHAT"})
-          break;
-        case "BACK":
-          break;
-        default:
-          break;
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [selectedView, isPlayersTurn, combatActor]);
-
   const handleAttack = () => {
-    if (!combatActor) return;
-    combatActor.send({ type: "SET_VIEW", view: "ENEMY" });
-  };
-
-  const handleRun = () => {
-    combatActor?.send({ type: "FLEE" });
+    combatActor?.send({ type: "SET_VIEW", view: "ENEMY" });
   };
 
   const handleDefend = () => {
@@ -97,21 +34,56 @@ export default function PlayerMenu({
     combatActor?.send({ type: "USE_ITEM", itemId: "TODO" });
   };
 
+  const handleFleeAttempt = () => {
+    const EXPONENT = 2;
+    const context = combatActor.getSnapshot().context;
+    const playerSpeedCheck = Math.pow(
+      Math.random() * context.player.speed,
+      EXPONENT,
+    );
+    const fastestEnemyCheck = Math.pow(
+      Math.random() * Math.max(0, ...context.enemies.map((e) => e.speed)),
+      EXPONENT,
+    );
+    const success = playerSpeedCheck > fastestEnemyCheck;
+    combatActor.send({ type: "FLEE", success});
+  };
+
   const handleChat = () => {
     combatActor?.send({ type: "SET_VIEW", view: "CHAT" });
   };
 
+  const onKeyDown = useEffectEvent((event: KeyboardEvent) => {
+    if (selectedView !== "PLAYER") return;
+    const action = eventKeyToControl(event);
+    if (!action || !combatActor || !isPlayersTurn) return;
+
+    switch (action) {
+      case "MENU_UP":
+        setSelectedMenuIndex((i) => Math.max(0, i - 1));
+        break;
+      case "MENU_DOWN":
+        setSelectedMenuIndex((i) =>
+          Math.min(playerMenuActions.length - 1, i + 1),
+        );
+        break;
+      case "SELECT":
+        if (selectedMenuIndex === 0) handleAttack();
+        else if (selectedMenuIndex === 1) handleDefend();
+        else if (selectedMenuIndex === 2) handleItem();
+        else if (selectedMenuIndex === 3) handleFleeAttempt();
+        else if (selectedMenuIndex === 4) handleChat();
+        break;
+    }
+  });
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
   const player = combatActor?.getSnapshot().context.player;
   if (!player) return null;
-
-  function StatView({ label, value }: { label: string; value: string }) {
-    return (
-      <div className="flex justify-between bg-black px-2 rounded-md text-xs text-white w-full text-center">
-        {label && <p>{label}</p>}
-        <p>{value}</p>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -152,7 +124,7 @@ export default function PlayerMenu({
         />
         <ActionButton
           label="Run"
-          onClick={isPlayersTurn ? handleRun : () => {}}
+          onClick={isPlayersTurn ? handleFleeAttempt : () => {}}
           isSelected={selectedMenuIndex === 3}
         />
         <ActionButton
@@ -168,6 +140,38 @@ export default function PlayerMenu({
         <StatView label="HP" value={`${player.health} / ${player.maxHealth}`} />
         <StatView label="Attack" value={`${player.attack}`} />
       </div>
+    </div>
+  );
+}
+
+function ActionButton({
+  label,
+  onClick,
+  isSelected,
+}: {
+  label: string;
+  onClick: () => void;
+  isSelected?: boolean;
+}) {
+  return (
+    <button
+      className={`w-full border-2 cursor-pointer transition-all duration-300 ${
+        isSelected
+          ? "bg-gray-600 border-yellow-500 hover:bg-gray-600"
+          : "bg-gray-400 border-black hover:bg-gray-500"
+      }`}
+      onClick={onClick}
+    >
+      {label}
+    </button>
+  );
+}
+
+function StatView({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between bg-black px-2 rounded-md text-xs text-white w-full text-center">
+      {label && <p>{label}</p>}
+      <p>{value}</p>
     </div>
   );
 }

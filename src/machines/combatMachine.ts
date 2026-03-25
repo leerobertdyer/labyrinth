@@ -1,7 +1,7 @@
 import { Player, type Enemy } from "@/components/game/combat/types";
 import { EncounterConfig } from "@/components/game/types";
 import { calculateIncomingDamage } from "@/machines/utils";
-import { assign, fromPromise, raise, sendParent, setup } from "xstate";
+import { assign, emit, fromPromise, raise, sendParent, setup } from "xstate";
 
 export const combatSetup = setup({
   types: {
@@ -17,7 +17,7 @@ export const combatSetup = setup({
       | { type: "ATTACK" }
       | { type: "DEFEND" }
       | { type: "USE_ITEM"; itemId: string }
-      | { type: "FLEE" }
+      | { type: "FLEE"; success: boolean }
       | { type: "NEXT_ROUND" }
       | { type: "SET_VIEW"; view: "PLAYER" | "ENEMY" | "CHAT" }
       | { type: "SELECT_ENEMY"; enemyId: string }
@@ -121,9 +121,20 @@ export const combatMachine = combatSetup.createMachine({
         USE_ITEM: {
           actions: () => {},
         },
-        FLEE: {
-          actions: [sendParent({ type: "LEAVE_COMBAT" })],
-        },
+        FLEE: [
+          {
+            guard: ({ event }) => event.success,
+            actions: [
+              sendParent(({ context }) => ({
+                type: "LEAVE_COMBAT",
+                player: context.player,
+              })),
+            ],
+          },
+          {
+            target: "enemyTurn",
+          },
+        ],
       },
     },
     checkEnemies: {
