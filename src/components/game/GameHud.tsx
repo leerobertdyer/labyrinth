@@ -2,32 +2,40 @@ import { useGameMachine } from "@/contexts/GameMachineContext";
 import { useDebugStore } from "@/stores/useDebugStore";
 import { useEffect, useState } from "react";
 
-const HIT_FLASH_DURATION_MS = 250;
+const HIT_FLASH_DURATION_MS = 350;
 
 export default function GameHUD() {
   const [state, send, actor] = useGameMachine();
-  const [showHitFlash, setShowHitFlash] = useState(false);
+  const [flash, setFlash] = useState<{
+    color: string;
+    intensity: number;
+  } | null>(null);
   const { playerPos } = useDebugStore();
   const player = state.context.player;
 
   useEffect(() => {
-    const subscription = actor.on("SEE_RED", () => {
-      setShowHitFlash(true);
-      setTimeout(() => setShowHitFlash(false), 100);
+    const subscription = actor.on("FLASH_SCREEN", (event) => {
+      setFlash({ color: event.color, intensity: event.intensity });
+      setTimeout(() => setFlash(null), 100);
     });
     return () => subscription.unsubscribe();
   }, [actor]);
 
   useEffect(() => {
-    if (!showHitFlash) return;
-    const t = setTimeout(() => setShowHitFlash(false), HIT_FLASH_DURATION_MS);
+    if (!flash) return;
+    console.log(flash)
+    const t = setTimeout(() => setFlash(null), HIT_FLASH_DURATION_MS * flash.intensity);
     return () => clearTimeout(t);
-  }, [showHitFlash]);
+  }, [flash]);
 
   return (
     <>
-      {showHitFlash && (
-        <div className="animate-hit-flash absolute inset-0 bg-red-500 bg-opacity-50 pointer-events-none z-999" />
+      {flash && (
+        <div
+          style={{ backgroundColor: flash.color}}
+          className={`animate-hit-flash absolute inset-0 
+           bg-opacity-50 pointer-events-none z-999`}
+        />
       )}
       {state.matches({ playing: "paused" }) && (
         <div

@@ -1,7 +1,7 @@
 import { Player, type Enemy } from "@/components/game/combat/types";
 import { EncounterConfig } from "@/components/game/types";
 import { calculateIncomingDamage } from "@/machines/utils";
-import { assign, emit, fromPromise, raise, sendParent, setup } from "xstate";
+import { assign, fromPromise, raise, sendParent, setup } from "xstate";
 
 export const combatSetup = setup({
   types: {
@@ -86,7 +86,7 @@ export const combatMachine = combatSetup.createMachine({
           assign({
             player: ({ context }) => ({ ...context.player, health: 0 }),
           }),
-          sendParent({ type: "SEE_RED", intensity: 1 }),
+          sendParent({ type: "FLASH_SCREEN", color: "RED", intensity: 3 }),
         ],
         target: ".defeat",
       },
@@ -98,7 +98,7 @@ export const combatMachine = combatSetup.createMachine({
               health: context.player.health - event.damage,
             }),
           }),
-          sendParent({ type: "SEE_RED", intensity: 0.5 }),
+          sendParent({ type: "FLASH_SCREEN", color: "RED", intensity: 0.35 }),
         ],
       },
     ],
@@ -174,7 +174,7 @@ export const combatMachine = combatSetup.createMachine({
               type: "PLAYER_HIT",
               damage: calculateIncomingDamage({
                 rawDamage: event.output.damage,
-                isPlayerDefending: false, //TODO
+                isPlayerDefending: false, // TODO
                 player: context.player,
               }),
             })),

@@ -19,6 +19,7 @@ export const playerRotateSpeed = 2;
 export const playerCamRotateSpeed = 1.5;
 export const playerCamRadius = 6;
 export const STARTING_POINT = new Vector3(0, .1, -8);
+export const BLUE = "#3983c4"
 
 export const JUMP_STRENGTH = 8;
 export const GROUND_RAY_LENGTH = 0.35;

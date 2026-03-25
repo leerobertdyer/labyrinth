@@ -1,6 +1,6 @@
 import { setup, assign, emit } from "xstate";
 import { combatMachine } from "./combatMachine";
-import { Enemy, Player } from "@/components/game/combat/types";
+import { Player } from "@/components/game/combat/types";
 import { defaultPlayer } from "@/app/constants";
 import { EncounterConfig } from "@/components/game/types";
 
@@ -23,11 +23,11 @@ const gameSetup = setup({
       | { type: "PAUSE" }
       | { type: "UNPAUSE" }
       | { type: "RESPAWN"; room: string }
-      | { type: "SEE_RED"; intensity: number }
+      | { type: "FLASH_SCREEN"; color: string, intensity: number }
       | { type: "COMBAT_LOST" },
     // Define what events the machine can EMIT (UI listeners)
     emitted: {} as
-      | { type: "SEE_RED"; intensity: number } // TODO make it FLASH_COLOR; intensity: number, color: string
+      | { type: "FLASH_SCREEN"; color: string, intensity: number }
       | { type: "BATTLE_WON"; encounter: EncounterConfig }
       | { type: "BATTLE_LOST"; encounter: EncounterConfig },
   },
@@ -66,9 +66,10 @@ export const gameMachine = gameSetup.createMachine({
     playing: {
       initial: "exploring",
       on: {
-        SEE_RED: {
+        FLASH_SCREEN: {
           actions: emit(({ event }) => ({
-            type: "SEE_RED",
+            type: "FLASH_SCREEN",
+            color: event.color,
             intensity: event.intensity,
           })),
         },
@@ -83,7 +84,7 @@ export const gameMachine = gameSetup.createMachine({
                   health: 0,
                 }),
               }),
-              emit({ type: "SEE_RED", intensity: 1 }),
+              emit({ type: "FLASH_SCREEN", color: "RED", intensity: 3 }),
             ],
             target: ".dead",
           },
@@ -95,7 +96,7 @@ export const gameMachine = gameSetup.createMachine({
                   health: context.player.health - event.damage,
                 }),
               }),
-              emit({ type: "SEE_RED", intensity: 0.5 }),
+              emit({ type: "FLASH_SCREEN", color: "RED", intensity: 0.35 }),
             ],
           },
         ],
