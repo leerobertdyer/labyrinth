@@ -20,7 +20,7 @@ export const ShopKeeperOne = {
   image: "shopkeeper.png",
   maxHealth: 50,
   minHealth: 50,
-  attack: 100,
+  attack: 10,
   experience: 10000,
   speed: 6,
   defense: 10,

@@ -3,7 +3,7 @@ import Shopkeeper from "@/components/game/characters/Shopkeeper/Shopkeeper";
 import { generateEnemy, ShopKeeperOne } from "@/components/game/combat/enemies";
 import { BannerRed } from "@/components/game/models/kenney/fantasyTown/banner-red";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
-import { GREAT_HALL, STARTING_ROOM } from "@/components/game/Rooms/constants";
+import { HALLWAY_ONE, STARTING_ROOM } from "@/components/game/Rooms/constants";
 import {
   allWalls,
   placeObjects,
@@ -109,6 +109,6 @@ export const startingRoom: RoomConfig = {
     },
   ],
   connections: {
-    south: GREAT_HALL, // what room each gate leads to
+    south: HALLWAY_ONE, // what room each gate leads to
   },
 };

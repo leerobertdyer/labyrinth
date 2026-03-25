@@ -23,7 +23,6 @@ export default function GameHUD() {
 
   useEffect(() => {
     if (!flash) return;
-    console.log(flash)
     const t = setTimeout(() => setFlash(null), HIT_FLASH_DURATION_MS * flash.intensity);
     return () => clearTimeout(t);
   }, [flash]);

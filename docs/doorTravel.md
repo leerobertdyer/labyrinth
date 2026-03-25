@@ -24,7 +24,7 @@ interface RoomStore {
 }
 
 export const useRoomStore = create<RoomStore>((set) => ({
-  currentRoomId: "greatHall",
+  currentRoomId: "hallwayOne",
   transitionTo: (roomId) => set({ currentRoomId: roomId }),
 }));
 ```
@@ -37,11 +37,11 @@ You need a lookup from `roomId → RoomConfig`. Centralize this.
 
 ```ts
 // Rooms/roomRegistry.ts
-import { greatHall } from "./greatHall";
+import { hallwayOne } from "./hallwayOne";
 import { RoomConfig } from "@/components/game/types";
 
 export const ROOM_REGISTRY: Record<string, RoomConfig> = {
-  greatHall,
+  hallwayOne,
   // nextRoom,
 };
 ```
@@ -61,7 +61,7 @@ interface RoomConfig {
 ```
 
 ```ts
-// greatHall.ts addition
+// hallwayOne.ts addition
 spawnPoints: {
   south: new Vector3(0, 0, roomLength / 2 - 2), // just inside south gate
   north: new Vector3(0, 0, -(roomLength / 2 - 2)),

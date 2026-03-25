@@ -1,7 +1,7 @@
 import Shopkeeper from "@/components/game/characters/Shopkeeper/Shopkeeper";
 import { generateEnemy, ShopKeeperOne } from "@/components/game/combat/enemies";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
-import { GREAT_HALL, STARTING_ROOM } from "@/components/game/Rooms/constants";
+import { HALLWAY_ONE, STARTING_ROOM } from "@/components/game/Rooms/constants";
 import {
   allWalls,
   placeObjects,
@@ -30,8 +30,8 @@ const barrels = placeObjects(
 const shopkeeperStartingPos = new Vector3(1, 0, 17);
 const shopkeeperStartingRot = new Vector3(0, Math.PI, 0);
 
-export const greatHall: RoomConfig = {
-  id: GREAT_HALL,
+export const hallwayOne: RoomConfig = {
+  id: HALLWAY_ONE,
   width: roomWidth,
   length: roomLength,
   tileSize: 1,

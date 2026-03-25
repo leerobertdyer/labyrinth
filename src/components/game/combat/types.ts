@@ -35,6 +35,7 @@ export type Enemy = BattleStats & {
 
 export type Player = BattleStats & {
   image: string;
+  isDefending: boolean;
   // inventory: Item[];
 }
 

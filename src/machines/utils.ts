@@ -14,5 +14,6 @@ export function calculateIncomingDamage({
   const defenseMultiplier = 4;
   const defenseBuffer =
     player.defense * (isPlayerDefending ? defenseMultiplier : 1);
+    console.log({defenseBuffer, defenseMultiplier, player})
   return Math.max(0, rawDamage - defenseBuffer);
 }

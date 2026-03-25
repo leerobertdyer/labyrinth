@@ -1,5 +1,5 @@
 import { startingRoom } from "@/components/game/Rooms/roomConfigs/startingRoom";
-import { greatHall } from "@/components/game/Rooms/roomConfigs/greatHall";
+import { hallwayOne } from "@/components/game/Rooms/roomConfigs/hallwayOne";
 import { IRoomObjects, RoomConfig, SlotType } from "@/components/game/types";
 import { Vector3 } from "three";
 
@@ -22,5 +22,5 @@ export function placeObjects(
 
 export const ROOMS: Record<string, RoomConfig> = {
   startingRoom,
-  greatHall,
+  hallwayOne,
 };

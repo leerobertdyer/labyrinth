@@ -57,11 +57,37 @@ Once the loop exists, the combat system is worth expanding.
 - Simple level-up threshold (XP table or formula)
 - Level affects stats — even rudimentary scaling matters for feel
 
+--
+Phase x: 
+- Better UX around combat:
+  - Pointer to which enemy card
+  - Obvious Option to move back from enemy view
+  - Enter Screen with character settings
+    - Certain amount of starting points player can divvy up between core stats
+        - Speed
+        - ???? 
+    - Get's more on level up
+---
+## Phase 3 or 5? - AUDIO!?
+- Add music
+  - Combat
+  - Exploration
+- Add SFX
+    - Attack
+    - Player Hit
+    - Defended
+    - Use Item
+    - Use Spell
+    - Click on menu change
+    - Enter battle noise
+    - Mumbles/grumbles for speech during chat
+    - Dice roll sound
+        - Speaking of dice rolls see ../dice.html (outside of repo) for css based 3d dice idea.
 ---
 
-## Phase 3 — The shopkeeper arc _(ambitious, do last)_
+## Phase 4 — The shopkeeper arc _(ambitious, do last)_
 
-This is the most narratively interesting part but also the most complex. Don't let it block Phase 1/2.
+This is the most narratively interesting part but also the most complex. Don't let it block Prev phases.
 
 ### What needs to exist first
 - Win/loss states (Phase 1.3)

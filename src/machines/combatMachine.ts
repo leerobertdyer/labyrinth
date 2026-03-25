@@ -1,3 +1,4 @@
+import { BLUE, RED } from "@/app/constants";
 import { Player, type Enemy } from "@/components/game/combat/types";
 import { EncounterConfig } from "@/components/game/types";
 import { calculateIncomingDamage } from "@/machines/utils";
@@ -80,17 +81,26 @@ export const combatMachine = combatSetup.createMachine({
     },
     PLAYER_HIT: [
       {
+        // blocked entirely
+        guard: ({ event }) => event.damage === 0,
+        actions: [
+          sendParent({ type: "FLASH_SCREEN", color: BLUE, intensity: 0.35 }),
+        ],
+      },
+      {
+        // fatal hit
         guard: ({ context, event }) =>
           context.player.health - event.damage <= 0,
         actions: [
           assign({
             player: ({ context }) => ({ ...context.player, health: 0 }),
           }),
-          sendParent({ type: "FLASH_SCREEN", color: "RED", intensity: 3 }),
+          sendParent({ type: "FLASH_SCREEN", color: RED, intensity: 3 }),
         ],
         target: ".defeat",
       },
       {
+        // normal hit
         actions: [
           assign({
             player: ({ context, event }) => ({
@@ -98,7 +108,7 @@ export const combatMachine = combatSetup.createMachine({
               health: context.player.health - event.damage,
             }),
           }),
-          sendParent({ type: "FLASH_SCREEN", color: "RED", intensity: 0.35 }),
+          sendParent({ type: "FLASH_SCREEN", color: RED, intensity: 0.35 }),
         ],
       },
     ],
@@ -116,7 +126,9 @@ export const combatMachine = combatSetup.createMachine({
           actions: ["applyPlayerDamage"],
         },
         DEFEND: {
-          actions: () => {},
+          actions: assign(({ context }) => ({
+            player: { ...context.player, isDefending: true },
+          })),
         },
         USE_ITEM: {
           actions: () => {},
@@ -174,7 +186,7 @@ export const combatMachine = combatSetup.createMachine({
               type: "PLAYER_HIT",
               damage: calculateIncomingDamage({
                 rawDamage: event.output.damage,
-                isPlayerDefending: false, // TODO
+                isPlayerDefending: context.player.isDefending,
                 player: context.player,
               }),
             })),
@@ -182,6 +194,9 @@ export const combatMachine = combatSetup.createMachine({
               enemyAttackQueue: ({ context }) =>
                 context.enemyAttackQueue.slice(1),
             }),
+            assign(({ context }) => ({
+              player: { ...context.player, isDefending: false },
+            })),
           ],
         },
       },
