@@ -46,7 +46,7 @@ export default function PlayerMenu({
       EXPONENT,
     );
     const success = playerSpeedCheck > fastestEnemyCheck;
-    combatActor.send({ type: "FLEE", success});
+    combatActor.send({ type: "FLEE", success });
   };
 
   const handleChat = () => {
@@ -54,18 +54,23 @@ export default function PlayerMenu({
   };
 
   const onKeyDown = useEffectEvent((event: KeyboardEvent) => {
+    const lastIndex = playerMenuActions.length - 1;
     if (selectedView !== "PLAYER") return;
     const action = eventKeyToControl(event);
     if (!action || !combatActor || !isPlayersTurn) return;
 
     switch (action) {
       case "MENU_UP":
-        setSelectedMenuIndex((i) => Math.max(0, i - 1));
+        setSelectedMenuIndex((i) => {
+          if (i === 0) return lastIndex;
+          return Math.max(0, i - 1);
+        });
         break;
       case "MENU_DOWN":
-        setSelectedMenuIndex((i) =>
-          Math.min(playerMenuActions.length - 1, i + 1),
-        );
+        setSelectedMenuIndex((i) => {
+          if (i === lastIndex) return 0;
+          return Math.min(lastIndex, i + 1);
+        });
         break;
       case "SELECT":
         if (selectedMenuIndex === 0) handleAttack();

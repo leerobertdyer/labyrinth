@@ -216,9 +216,7 @@ export default function Room({
       {/* Gate sensor colliders */}
       {resolvedEdges.map((edge) => {
         return getEdgeRuns(edge.slots, "gate").map(({ start, end }) => {
-          console.log("EDGE!: ", edge);
           const { args, position } = calculateArgsAndPos(edge, start, end);
-          console.log("ARGS POS: ", { args, position });
           return (
             <RigidBody
               key={`${edge.direction}-gate-sensor-${start}`}
