@@ -1,7 +1,7 @@
 import { useGameMachine } from "@/contexts/GameMachineContext";
-import Arena from "./Arena";
-import PlayerMenu from "./PlayerMenu";
-import EnemyChat from "./EnemyChat";
+import Arena from "./Arena/Arena";
+import PlayerMenu from "./Player/PlayerMenu";
+import EnemyChat from "./Chat/EnemyChat";
 import { useSelector } from "@xstate/react";
 import { CombatViews } from "./types";
 

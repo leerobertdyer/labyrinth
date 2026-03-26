@@ -1,6 +1,6 @@
 import { REMOVE_ENCOUNTER } from "@/app/constants";
 import Shopkeeper from "@/components/game/characters/Shopkeeper/Shopkeeper";
-import { generateEnemy, ShopKeeperOne } from "@/components/game/combat/enemies";
+import { generateEnemy, ShopKeeperOne } from "@/components/game/combat/registry/enemies";
 import { BannerRed } from "@/components/game/models/kenney/fantasyTown/banner-red";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
 import { HALLWAY_ONE, STARTING_ROOM } from "@/components/game/Rooms/constants";

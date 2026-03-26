@@ -2,7 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 import { useMachine } from "@xstate/react";
-import { gameMachine } from "@/machines/gameMachine";
+import { gameMachine } from "@/machines/gameMachine/gameMachine";
 import { defaultPlayer } from "@/app/constants";
 
 const GameMachineContext = createContext<ReturnType<

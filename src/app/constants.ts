@@ -1,3 +1,8 @@
+import {
+  generateConsumable,
+  minorHealthPotion,
+  skipTurn,
+} from "@/components/game/combat/registry/consumables";
 import { Player } from "@/components/game/combat/types";
 import { Vector3 } from "three";
 
@@ -37,6 +42,13 @@ export const defaultPlayer: Player = {
   defense: 3,
   image: "/sprites/Hero.png",
   isDefending: false,
+  inventory: [
+    { item: generateConsumable(minorHealthPotion), quantity: 1 },
+    {
+      item: generateConsumable(skipTurn),
+      quantity: 1,
+    },
+  ],
 };
 
 export const REMOVE_ENCOUNTER = "REMOVE_ENCOUNTER";
