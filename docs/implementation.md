@@ -165,3 +165,8 @@ Don't do this until gameplay is solid. Visuals are expensive and you'll redo the
 - npc manipulation of game
 - amnesia stat what it does how it works
 - filtering scene look and feel based on amnesia scale
+
+
+
+TODO:
+- Camera still clips through ROOFS
