@@ -1,13 +1,9 @@
 # Labyrinth — Implementation Roadmap
 
-## Where we are
-Room architecture is modular. RoomManager drives entity placement, encounter triggers, and wall configs from a registry. Combat is triggerable. First room is functional if not yet final.
-
----
 
 ## Phase 1 — Core loop before content
 
-Get the minimum viable game loop working end-to-end. Don't polish the starting room yet.
+<!-- Get the minimum viable game loop working end-to-end. Don't polish the starting room yet. -->
 
 ### 1.1 Death screen
 <!-- - On death state, show a full-screen overlay: "You've lost your way" -->
@@ -34,26 +30,28 @@ Get the minimum viable game loop working end-to-end. Don't polish the starting r
 
 ## Phase 2 — Combat depth
 
-Once the loop exists, the combat system is worth expanding.
+<!-- Once the loop exists, the combat system is worth expanding. -->
 
 ### 2.1 Run mechanic
-- Success probability based on player speed vs enemy speed stat
-- Failed run: enemy gets a free attack
-- Adds meaningful decision-making without much system work
+<!-- - Success probability based on player speed vs enemy speed stat -->
+<!-- - Failed run: enemy gets a free attack -->
+<!-- - Adds meaningful decision-making without much system work -->
 
 ### 2.2 Items / defense / magic stubs
-- Define item and spell types even if only 1–2 exist
-- Prioritize: healing item, one attack spell, one defense buff
-- Luck stat: small random modifier on hit/crit calculations
+<!-- - Define item and spell types even if only 1–2 exist -->
+<!-- - Prioritize: healing item, one attack spell, one defense buff -->
+Later: - Luck stat: small random modifier on hit/crit calculations
+Later: - Armor for increased defense, sometimes at expense of speed
+Later: - Weapons for increased att, also sometimes at expense of speed
+Later: - Amnesia skills unlock at certail thresholds (spells basically)
 
 ### 2.3 Enemy conversation
-- `talkative` stat (0–1) on Enemy type
+<!-- - `talkative` stat (0–1) on Enemy type -->
 - On combat start: roll against stat, if true show dialogue before first turn
 - Shopkeeper has high talkative — sets up the Phase 3 arc naturally
-- Can stub with hardcoded dialogue for now, Anthropic API integration later
 
 ### 2.4 XP and leveling
-- Track XP after combat conclusion
+<!-- - Track XP after combat conclusion -->
 - Simple level-up threshold (XP table or formula)
 - Level affects stats — even rudimentary scaling matters for feel
 

@@ -1,6 +1,6 @@
-import Shopkeeper from "@/components/game/characters/Shopkeeper/Shopkeeper";
-import { generateEnemy, ShopKeeperOne } from "@/components/game/combat/registry/enemies";
+import { generateEnemy, skeleton } from "@/components/game/combat/registry/enemies";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
+import { Skeleton } from "@/components/game/models/ldyer/Skeleton";
 import { HALLWAY_ONE, STARTING_ROOM } from "@/components/game/Rooms/constants";
 import {
   allWalls,
@@ -27,8 +27,8 @@ const barrels = placeObjects(
   ],
 );
 
-const shopkeeperStartingPos = new Vector3(1, 0, 17);
-const shopkeeperStartingRot = new Vector3(0, Math.PI, 0);
+const skeletonStartingPos = new Vector3(0, .1, 3);
+const skeletonStartingRot = new Vector3(0, Math.PI, 0);
 
 export const hallwayOne: RoomConfig = {
   id: HALLWAY_ONE,
@@ -54,30 +54,30 @@ export const hallwayOne: RoomConfig = {
       slots: allWalls(roomLength),
     },
   },
-  roomObjects: barrels,
+  roomObjects: [...barrels,],
   encounters: [
     {
-      encounterEnemies: [generateEnemy(ShopKeeperOne)],
+      encounterEnemies: [generateEnemy(skeleton)],
       position: [
-        shopkeeperStartingPos.x,
-        shopkeeperStartingPos.y,
-        shopkeeperStartingPos.z,
+        skeletonStartingPos.x+1,
+        skeletonStartingPos.y+1,
+        skeletonStartingPos.z+1,
       ],
       rotation: [
-        shopkeeperStartingRot.x,
-        shopkeeperStartingRot.y,
-        shopkeeperStartingRot.z,
+        skeletonStartingRot.x,
+        skeletonStartingRot.y,
+        skeletonStartingRot.z,
       ],
-      entityId: "shopkeeper",
+      entityId: "Skeleton",
     },
   ],
   entities: [
     {
-      id: "shopkeeper",
-      position: shopkeeperStartingPos,
-      rotation: shopkeeperStartingRot,
-      modelScale: 2.5,
-      Model: Shopkeeper,
+      id: "Skeleton",
+      position: skeletonStartingPos,
+      rotation: skeletonStartingRot,
+      modelScale: 1.5,
+      Model: Skeleton,
     },
   ],
   connections: {

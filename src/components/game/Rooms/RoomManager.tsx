@@ -38,6 +38,11 @@ export default function RoomManager() {
     room?.encounters ?? [],
   );
 
+  useEffect(() => {
+    //eslint-disable-next-line
+  setActiveEncounters(room?.encounters ?? []);
+}, [currentRoomId, room]);
+
   function handleVictory(encounter: EncounterConfig) {
     const e = encounter.afterPlayerVictory;
     switch (e) {
