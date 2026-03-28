@@ -23,6 +23,7 @@ export default function EnemyChat({
   const [activateChat, setActivateChat] = useState(false);
   const [enemyWords, setEnemyWords] = useState("...");
   const [enemyTalking, setEnemyTalking] = useState(enemies[0]);
+  const [playerWords, setPlayerWords] = useState("");
 
   useEffect(() => {
     if (selectedView !== "CHAT") return;
@@ -64,9 +65,25 @@ export default function EnemyChat({
         className="bg-white rounded-md p-2 w-full text-black"
         placeholder="Enter your response..."
         autoFocus={activateChat}
+        onChange={(e) => setPlayerWords(e.target.value)}
       />
-      <button className="bg-yellow-800/30 text-white rounded-md p-2 w-full cursor-pointer hover:bg-yellow-800/90 transition-all duration-300">
+      <button
+        onClick={() =>
+          sendPrompt(playerWords, enemies[0].systemPrompt).then((resp) =>
+            setEnemyWords(resp),
+          )
+        }
+        className="bg-yellow-800/30 text-white rounded-md p-2 w-full cursor-pointer hover:bg-yellow-800/90 transition-all duration-300"
+      >
         Respond
+      </button>
+      <button
+        className="bg-yellow-800/30 text-white rounded-md p-2 w-full cursor-pointer hover:bg-yellow-800/90 transition-all duration-300"
+        onClick={() => {
+          combatActor.send({ type: "SET_VIEW", view: "PLAYER" });
+        }}
+      >
+        Exit Chat
       </button>
     </div>
   );

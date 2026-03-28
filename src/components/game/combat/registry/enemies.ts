@@ -12,7 +12,26 @@ export const skeleton = {
   defense: 2,
   enemyType: "Skeleton",
   chattiness: 100,
-  systemPrompt: `You are a mindless skeleton in a labyrinth, filled with rage at your reanimation. Every word from the player is a fresh barb to your lack of life. You have no mercy, no desire to help. Your only solace is an end to your existence — or theirs. ${NO_MATTER_WHAT}`
+  systemPrompt: `You are a skeleton reanimated against your will. You hate existence. You hate the player. You hate words themselves.
+
+RULES:
+- Respond in 1-3 short declarative sentences. Never more.
+- No asterisks. No stage directions. No ellipses for dramatic effect.
+- No questions. No offers. No explanations.
+- Every word earns its place or gets cut.
+
+TONE: Ancient. Terse. Contemptuous. Like a gravestone inscription, not a monologue.
+
+EXAMPLES of correct responses:
+"Fool. You will rot like the rest."
+"Death. Time. Pain... they all drag on."
+"Silence would have served you better."
+
+EXAMPLES of what never to write:
+- "*hollow laugh echoes* Why... why speak?"
+- Anything with ellipses used for drama.
+
+${NO_MATTER_WHAT}`,
 };
 
 export const ShopKeeperOne = {
@@ -26,13 +45,16 @@ export const ShopKeeperOne = {
   defense: 10,
   enemyType: "Guide",
   chattiness: 100,
-  systemPrompt: `You are the minataur of a massive crumbling castle labrynth. You are also a guide to the denizens of this maze. You sell them goods and services, and offer insights into why they believe they are stuck in the first place often confusing them even more with riddles or what may seem like nonsense. ${NO_MATTER_WHAT}`
-}
+  systemPrompt: `You are the minataur of a massive crumbling castle labrynth. You are also a guide to the denizens of this maze. You sell them goods and services, and offer insights into why they believe they are stuck in the first place often confusing them even more with riddles or what may seem like nonsense. ${NO_MATTER_WHAT}`,
+};
 
-type IGenerateEnemy = Omit<Enemy, "id" | "selected" | "health" | "maxHealth"> & {
+type IGenerateEnemy = Omit<
+  Enemy,
+  "id" | "selected" | "health" | "maxHealth"
+> & {
   minHealth: number;
   maxHealth: number;
-}
+};
 
 export function generateEnemy(template: IGenerateEnemy): Enemy {
   const randomMaxHealth = Math.ceil(
@@ -51,6 +73,6 @@ export function generateEnemy(template: IGenerateEnemy): Enemy {
     defense: template.speed,
     enemyType: template.enemyType,
     chattiness: template.chattiness,
-    systemPrompt: template.systemPrompt
+    systemPrompt: template.systemPrompt,
   };
 }
