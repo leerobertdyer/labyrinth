@@ -120,12 +120,12 @@ export function Skeleton(props: JSX.IntrinsicElements["group"]) {
           {/* original skin — hidden */}
           {/* <skinnedMesh name="MAW" geometry={nodes.MAW.geometry} material={materials.MAW_MAT} skeleton={nodes.MAW.skeleton} /> */}
         </group>
-        <pointLight
+        {/* <pointLight
           position={[0, 2.5, 1.25]} // tweak Y up/down to center in skull
           color="#FF1234"
           intensity={3}
           distance={4}
-        />
+        /> */}
       </group>
     </group>
   );

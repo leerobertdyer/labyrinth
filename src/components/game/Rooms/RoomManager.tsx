@@ -39,8 +39,10 @@ export default function RoomManager() {
   );
 
   useEffect(() => {
+    if (room) {
     //eslint-disable-next-line
-  setActiveEncounters(room?.encounters ?? []);
+    setActiveEncounters(room?.encounters ?? []);
+  }
 }, [currentRoomId, room]);
 
   function handleVictory(encounter: EncounterConfig) {

@@ -1,3 +1,4 @@
+import { REMOVE_ENCOUNTER } from "@/app/constants";
 import { generateEnemy, skeleton } from "@/components/game/combat/registry/enemies";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
 import { Skeleton } from "@/components/game/models/ldyer/Skeleton";
@@ -69,6 +70,7 @@ export const hallwayOne: RoomConfig = {
         skeletonStartingRot.z,
       ],
       entityId: "Skeleton",
+      afterPlayerVictory: REMOVE_ENCOUNTER,
     },
   ],
   entities: [
