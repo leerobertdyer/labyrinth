@@ -42,7 +42,7 @@ export default function RoomManager() {
     if (room) {
     // TODO: Fix this
     //eslint-disable-next-line 
-    setActiveEncounters(room?.encounters ?? []);
+    setActiveEncounters(room?.encounters);
   }
 }, [currentRoomId, room]);
 

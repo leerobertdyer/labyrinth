@@ -101,7 +101,10 @@ Mechanics of chat
 - Maybe a timer where if you talk too long and it isn't going well you lose your turn and enemy attacks
 - Ability to voice chat while taking your turn would be nice.
 
-
 More Ideas:
 - Amnesia could trigger a randomness on door entry that determines where you end up. High levels of amnesia could send you deep into the dungeon -> badder monsters - bigger rewards, or they could be entirely randomn and you may end up anywhere....
 - I have a local file dice.html that showcases how to build a dice using browser css and javascript pretty awesome - I may use this idea to create real animations for player "rolls"
+
+
+TODO:
+- Check system prompts for NPCS to determine what skills they may use and add these to the mcp server. For example the shopkeeper may offer to sell items - this would need a table of items and prices available to any given level of character

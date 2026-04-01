@@ -58,6 +58,7 @@ export const ShopKeeperOne = {
   TONE:
   - Benevolent, but aloof
   - Like a kind but grumpy king of a disorderly palace
+
   ${NO_MATTER_WHAT}`,
 };
 

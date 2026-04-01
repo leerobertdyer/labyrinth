@@ -44,35 +44,37 @@ export default function EnemyChat({
     setupChat();
   }, [selectedView, enemyTalking]);
 
+  function handlePlayerResponse() {
+    sendPrompt(playerWords, enemies[0].systemPrompt)
+      .then((resp) => setEnemyWords(resp))
+      .finally(() => setPlayerWords(""));
+  }
+
   return (
     <div
       className={`
         col-span-4 row-span-2 
-        bg-black/60 p-2 text-white 
+        bg-black/60 p-10 text-white 
         overflow-x-hidden max-h-50
         rounded-xs w-full border-2 
         flex flex-col items-center justify-center gap-2
         ${selectedView === "CHAT" ? "border-yellow-800" : "border-white"} 
         `}
     >
-      <div className="flex flex-col items-center justify-center bg-white rounded-md p-4 text-black w-full">
+      <div className="flex flex-col items-center justify-center bg-white rounded-md p-4 mt-8 text-black w-full">
         <p className="max-h-10 text-sm overflow-y-scroll">
           {enemyTalking.enemyType}: &quot;{enemyWords}&quot;
         </p>
       </div>
       <input
-        type="text"
+        value={playerWords}
         className="bg-white rounded-md p-2 w-full text-black"
         placeholder="Enter your response..."
         autoFocus={activateChat}
         onChange={(e) => setPlayerWords(e.target.value)}
       />
       <button
-        onClick={() =>
-          sendPrompt(playerWords, enemies[0].systemPrompt).then((resp) =>
-            setEnemyWords(resp),
-          )
-        }
+        onClick={() => handlePlayerResponse()}
         className="bg-yellow-800/30 text-white rounded-md p-2 w-full cursor-pointer hover:bg-yellow-800/90 transition-all duration-300"
       >
         Respond

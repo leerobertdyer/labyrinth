@@ -37,7 +37,7 @@ const barrels = placeObjects(
   ],
 );
 
-const lanterns = placeObjects(
+const banners = placeObjects(
   {
     rotation: new Euler(0, Math.PI / 2, 0),
     scale: new Vector3(4, 4, 4),
@@ -110,7 +110,7 @@ export const startingRoom: RoomConfig = {
   },
   roomObjects: [
     ...barrels,
-    ...lanterns,
+    ...banners,
     ...torches,
     // ...TEST
   ],

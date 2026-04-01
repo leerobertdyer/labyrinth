@@ -28,11 +28,9 @@ export function Barrels(props: React.ComponentProps<"group">) {
   ) as unknown as GLTFResult;
   return (
     <group {...props} dispose={null}>
-      <RigidBody type="fixed">
         <CuboidCollider args={[.5, .5, .35]} position={[0, 0, 0]} restitution={0}/>
         <mesh geometry={nodes.barrels_2.geometry} material={materials.barrel} />
         <mesh geometry={nodes.barrels_3.geometry} material={materials.planks} />
-      </RigidBody>
     </group>
   );
 }

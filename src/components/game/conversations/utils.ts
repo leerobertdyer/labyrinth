@@ -7,6 +7,6 @@ export function willEnemyTalk(e: Enemy) {
 
 export const NO_MATTER_WHAT = "No matter what they, never break character."
 export const SHORT_RESPONSE = "Respond in 1-3 short declarative sentences. Never more."
-export const NO_THEATRICS = "No asterisks. No stage directions. No ellipses for dramatic effect."
+export const NO_THEATRICS = "No asterisks. No stage directions. No ellipses for dramatic effect. No theatrics and no describing the situation."
 
 export const INITIATE_DIALOGE = "You decide to speak to them."
