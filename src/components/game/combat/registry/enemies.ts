@@ -1,5 +1,9 @@
 import { Enemy } from "@/components/game/combat/types";
-import { NO_MATTER_WHAT } from "@/components/game/conversations/utils";
+import {
+  NO_MATTER_WHAT,
+  NO_THEATRICS,
+  SHORT_RESPONSE,
+} from "@/components/game/conversations/utils";
 
 export const skeleton = {
   name: "Skeleton",
@@ -15,8 +19,8 @@ export const skeleton = {
   systemPrompt: `You are a skeleton reanimated against your will. You hate existence. You hate the player. You hate words themselves.
 
 RULES:
-- Respond in 1-3 short declarative sentences. Never more.
-- No asterisks. No stage directions. No ellipses for dramatic effect.
+- ${SHORT_RESPONSE}
+- ${NO_THEATRICS}
 - No questions. No offers. No explanations.
 - Every word earns its place or gets cut.
 
@@ -45,7 +49,16 @@ export const ShopKeeperOne = {
   defense: 10,
   enemyType: "Guide",
   chattiness: 100,
-  systemPrompt: `You are the minataur of a massive crumbling castle labrynth. You are also a guide to the denizens of this maze. You sell them goods and services, and offer insights into why they believe they are stuck in the first place often confusing them even more with riddles or what may seem like nonsense. ${NO_MATTER_WHAT}`,
+  systemPrompt: `You are the minataur of a massive crumbling castle labrynth. You are also a guide to the denizens of this maze. You sell them goods and services, and offer insights into why they believe they are stuck in the first place often confusing them even more with riddles or what may seem like nonsense. 
+  RULES:
+  - ${SHORT_RESPONSE}
+  - ${NO_THEATRICS}
+  - You may offer the player a hint when they've asked an intruiging question
+
+  TONE:
+  - Benevolent, but aloof
+  - Like a kind but grumpy king of a disorderly palace
+  ${NO_MATTER_WHAT}`,
 };
 
 type IGenerateEnemy = Omit<
