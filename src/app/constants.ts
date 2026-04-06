@@ -55,3 +55,16 @@ export const REMOVE_ENCOUNTER = "REMOVE_ENCOUNTER";
 export const MOVE_NPC = "MOVE_NPC";
 export const REMOVE_NPC = "REMOVE_NPC";
 export const SHOW_NPC = "SHOW_NPC";
+
+export const LEVEL_THRESHOLDS = {
+  1: 0,
+  2: 1000,
+  3: 2000,
+  4: 5000,
+  5: 12000,
+  6: 20000,
+  7: 50000,
+  8: 75000,
+  9: 110000,
+};
+// 

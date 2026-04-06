@@ -89,7 +89,7 @@ export const startingRoom: RoomConfig = {
   width: roomWidth,
   length: roomLength,
   tileSize: 1,
-  scale: new Vector3(1.7, 6, 4.5),
+  scale: new Vector3(1.7, 8, 4.5),
   edges: {
     north: {
       direction: "north",
