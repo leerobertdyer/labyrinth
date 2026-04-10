@@ -18,6 +18,7 @@ import { Euler, Vector3 } from "three";
 
 const roomLength = 40;
 const roomWidth = 25;
+const roomScale = new Vector3(1.7, 8, 4.5)
 
 const barrels = placeObjects(
   {
@@ -89,7 +90,7 @@ export const startingRoom: RoomConfig = {
   width: roomWidth,
   length: roomLength,
   tileSize: 1,
-  scale: new Vector3(1.7, 8, 4.5),
+  scale: roomScale,
   edges: {
     north: {
       direction: "north",
@@ -113,6 +114,15 @@ export const startingRoom: RoomConfig = {
     ...banners,
     ...torches,
     // ...TEST
+  ],
+  triggers: [
+    {
+      event: { type: "FLASH_SCREEN", color: "blue", intensity: 1},
+      collider:  { shape: "cuboid", args: [roomWidth * .5, roomScale.y * .5, 1] },
+      position: [0, 0, -4],
+      rotation: [0, 0, 0],
+      onlyOnce: false,
+    }
   ],
   encounters: [
     {

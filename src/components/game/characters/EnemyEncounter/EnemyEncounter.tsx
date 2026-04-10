@@ -3,6 +3,8 @@ import { useGameMachine } from "@/contexts/GameMachineContext";
 import { RigidBody } from "@react-three/rapier";
 import { EncounterConfig } from "@/components/game/types";
 
+// TODO: replace with src/components/game/Encounters/TriggerEvent.tsx
+
 export type EnemyEncounterProps = {
   encounter: EncounterConfig
   children: React.ReactNode;

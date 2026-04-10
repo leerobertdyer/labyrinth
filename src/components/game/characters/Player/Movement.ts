@@ -65,6 +65,8 @@ export function updateMovement(ctx: MovementContext): void {
     cameraRadiusRef,
   } = ctx;
 
+  const EXCLUDE_SENSORS = rapier.QueryFilterFlags.EXCLUDE_SENSORS;
+
   if (cameraRadiusRef.current === null) {
     cameraRadiusRef.current = 0;
   }
@@ -130,7 +132,7 @@ export function updateMovement(ctx: MovementContext): void {
     ray,
     GROUND_RAY_LENGTH,
     true,
-    undefined,
+    EXCLUDE_SENSORS,
     undefined,
     body.collider(0),
     body,
@@ -139,7 +141,19 @@ export function updateMovement(ctx: MovementContext): void {
 
   if (jump && isGrounded) {
     const vel = body.linvel();
-    body.setLinvel({ x: vel.x, y: JUMP_STRENGTH, z: vel.z }, true);
+    // Zero out any existing Y velocity first so the impulse is consistent
+    body.setLinvel({ x: vel.x, y: 0, z: vel.z }, true);
+    body.applyImpulse({ x: 0, y: JUMP_STRENGTH * body.mass(), z: 0 }, true);
+  }
+
+  // Apply extra gravity on descent
+  if (currentLinvel.y < 0) {
+    body.applyImpulse({ x: 0, y: -30 * delta, z: 0 }, true);
+  }
+
+  // Optional: also cut the jump short if they release jump early
+  if (currentLinvel.y > 0 && !jump) {
+    body.applyImpulse({ x: 0, y: -15 * delta, z: 0 }, true);
   }
 
   // --- Camera lazy-follows player facing ---
@@ -182,7 +196,7 @@ export function updateMovement(ctx: MovementContext): void {
     0, // targetDistance: register hits on contact
     playerCamRadius, // maxToi: sweep this far
     true,
-    undefined,
+    EXCLUDE_SENSORS, // Allow invisible events like TriggerEvents.tsx to pass through camera
     undefined,
     undefined,
     body,

@@ -1,6 +1,7 @@
 // General Game Types
 
 import { Enemy } from "@/components/game/combat/types";
+import { TriggerEventProps } from "@/components/game/Encounters/TriggerEvent";
 import { ComponentType } from "react";
 import { AnimationClip, Euler, Vector3 } from "three";
 
@@ -24,6 +25,7 @@ export type IRoom = {
   scale?: Vector3; // optional scale for walls/doors/ceiling height
   roof?: boolean; // optional flag to show sky or not
   onGateEnter?: (direction: Direction) => void; // trigger teleport | room exit
+  triggers?: TriggerEventProps[]
 };
 export type Direction = "north" | "south" | "east" | "west";
 export type WallEdge = {
