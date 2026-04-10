@@ -118,7 +118,7 @@ export const startingRoom: RoomConfig = {
   triggers: [
     {
       event: { type: "FLASH_SCREEN", color: "blue", intensity: 1},
-      collider:  { shape: "cuboid", args: [roomWidth * .5, roomScale.y * .5, 1] },
+      collider:  { shape: "cuboid", args: [roomWidth * .5, roomScale.y, 1] },
       position: [0, 0, -4],
       rotation: [0, 0, 0],
       onlyOnce: false,

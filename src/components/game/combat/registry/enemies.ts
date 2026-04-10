@@ -44,7 +44,7 @@ export const ShopKeeperOne = {
   maxHealth: 50,
   minHealth: 50,
   attack: 30,
-  experience: 10000,
+  experience: 500,
   speed: 6,
   defense: 10,
   enemyType: "Guide",

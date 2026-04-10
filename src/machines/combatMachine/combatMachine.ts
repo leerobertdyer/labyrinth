@@ -2,6 +2,7 @@ import { BLUE, RED } from "@/app/constants";
 import { Player, type Enemy } from "@/components/game/combat/types";
 import { EncounterConfig } from "@/components/game/types";
 import { CombatContext, CombatEvent } from "@/machines/combatMachine/types";
+import { applyExperienceGain } from "@/machines/combatMachine/utils";
 import { calculateIncomingDamage } from "@/machines/gameMachine/utils";
 import { assign, fromPromise, raise, sendParent, setup } from "xstate";
 
@@ -58,7 +59,7 @@ export const combatMachine = combatSetup.createMachine({
   }),
   on: {
     SKIP_TURN: {
-      target: ".enemyTurn"
+      target: ".enemyTurn",
     },
     SET_VIEW: {
       actions: assign(({ context, event }) => ({
@@ -214,16 +215,18 @@ export const combatMachine = combatSetup.createMachine({
     victory: {
       entry: [
         assign({
-          player: ({ context }) => ({
-            ...context.player,
-            experience:
-              context.player.experience +
-              context.enemies.reduce((acc, e) => acc + e.experience, 0),
-          }),
+          player: ({ context }) => {
+            const gained = context.enemies.reduce(
+              (acc, e) => acc + e.experience,
+              0,
+            );
+            return applyExperienceGain(context.player, gained);
+          },
         }),
+          // TODO: handle comparing previous level to current level: if new level Switch to Level Up UI allow player to assign points instead of manually updating them
         sendParent(({ context }) => ({
           type: "VICTORY",
-          player: context.player,
+          player: context.player, // now reflects the assigned value
         })),
       ],
       type: "final",
