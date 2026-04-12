@@ -1,7 +1,7 @@
 import { setup, assign, emit } from "xstate";
 import { combatMachine } from "../combatMachine/combatMachine";
 import { Player } from "@/components/game/combat/types";
-import { defaultPlayer } from "@/app/constants";
+import { startingPlayer } from "@/app/constants";
 import { EncounterConfig } from "@/components/game/types";
 import { GameContext, GameEmit, GameEvent } from "@/machines/gameMachine/types";
 
@@ -16,7 +16,7 @@ const gameSetup = setup({
     combatMachine: combatMachine,
   },
   actions: {
-    resetGame: assign({ player: defaultPlayer }),
+    resetGame: assign({ player: startingPlayer }),
   },
 });
 
@@ -32,15 +32,21 @@ export const gameMachine = gameSetup.createMachine({
     startScreen: {
       initial: "idle",
       states: {
-        idle: {},
-      },
-      on: {
-        START_GAME: {
-          target: "playing",
-          actions: assign({
-            player: () => defaultPlayer, // TODO - load real player stats from db
-            room: () => "startingRoom", // TODO - check if this works with second room
-          }),
+        idle: {
+          on: {
+            NEW_GAME: "statSelection",
+          },
+        },
+        statSelection: {
+          on: {
+            CONFIRM_STATS: {
+              target: "#game.playing",
+              actions: assign({
+                player: () => startingPlayer, // TODO - load real player stats from db
+                room: () => "startingRoom", // TODO - check if this works with second room
+              }),
+            },
+          },
         },
       },
     },

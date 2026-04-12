@@ -8,7 +8,9 @@ export type GameContext = {
 };
 
 export type GameEvent =
-  | { type: "START_GAME" }
+  | { type: "LEVEL_UP"; level: number }
+  | { type: "CONFIRM_STATS" }
+  | { type: "NEW_GAME" }
   | { type: "PLAYER_HIT"; damage: number }
   | { type: "ENTER_COMBAT"; encounter: EncounterConfig }
   | { type: "LEAVE_COMBAT"; player: Player }

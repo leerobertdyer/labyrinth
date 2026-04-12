@@ -23,7 +23,7 @@ export default function Player() {
   const { world, rapier } = useRapier();
   const [state] = useGameMachine();
   
-  
+  const playerSpeed = state.context.player.speed
   const playerFacingRef = useRef(0);
   const cameraAngleRef = useRef({ theta: Math.PI, phi: Math.PI / 3 });
   const startingPoint = useMemo(() => STARTING_POINT, [])
@@ -54,7 +54,8 @@ export default function Player() {
       playerFacingRef,
       cameraAngleRef,
       delta,
-      cameraRadiusRef
+      cameraRadiusRef,
+      playerSpeed
     });
   });
 

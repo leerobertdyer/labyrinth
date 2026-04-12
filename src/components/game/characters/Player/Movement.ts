@@ -9,7 +9,6 @@ import {
   playerCamRadius,
   playerCamRotateSpeed,
   playerRotateSpeed,
-  playerSpeed,
 } from "@/app/constants";
 
 export type MovementKeys = {
@@ -35,6 +34,7 @@ export type MovementContext = {
   cameraAngleRef: RefObject<{ theta: number; phi: number }>;
   delta: number;
   cameraRadiusRef: RefObject<number | null>;
+  playerSpeed: number;
 };
 
 /**
@@ -63,6 +63,7 @@ export function updateMovement(ctx: MovementContext): void {
     cameraAngleRef,
     delta,
     cameraRadiusRef,
+    playerSpeed
   } = ctx;
 
   const EXCLUDE_SENSORS = rapier.QueryFilterFlags.EXCLUDE_SENSORS;

@@ -19,7 +19,6 @@ export const explorationControls = [
   { name: "pause", keys: ["p", "P"] },
 ];
 
-export const playerSpeed = 16;
 export const playerRotateSpeed = 2;
 export const playerCamRotateSpeed = 1.5;
 export const playerCamRadius = 6;
@@ -33,13 +32,13 @@ export const GROUND_RAY_ORIGIN_OFFSET = 0.05;
 
 export const MOVEMENT_DISABLED_STATES = ["paused", "dead", "inCombat"];
 
-export const defaultPlayer: Player = {
-  health: 100,
-  maxHealth: 100,
+export const startingPlayer: Player = {
+  health: 25,
+  maxHealth: 10,
   experience: 0,
-  attack: 10,
-  speed: playerSpeed,
-  defense: 3,
+  attack: 1,
+  speed: 1,
+  defense: 1,
   image: "/sprites/Hero.png",
   isDefending: false,
   inventory: [
@@ -49,6 +48,7 @@ export const defaultPlayer: Player = {
       quantity: 1,
     },
   ],
+  unspentPoints: 10
 };
 
 export const REMOVE_ENCOUNTER = "REMOVE_ENCOUNTER";
@@ -67,4 +67,3 @@ export const LEVEL_THRESHOLDS = {
   8: 75000,
   9: 110000,
 };
-// 

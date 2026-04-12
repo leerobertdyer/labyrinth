@@ -3,7 +3,7 @@
 import { createContext, useContext, type ReactNode } from "react";
 import { useMachine } from "@xstate/react";
 import { gameMachine } from "@/machines/gameMachine/gameMachine";
-import { defaultPlayer } from "@/app/constants";
+import { startingPlayer } from "@/app/constants";
 
 const GameMachineContext = createContext<ReturnType<
   typeof useMachine<typeof gameMachine>
@@ -11,7 +11,7 @@ const GameMachineContext = createContext<ReturnType<
 
 export function GameMachineProvider({ children }: { children: ReactNode }) {
   // TODO: instead of default load player values from save in db
-  const value = useMachine(gameMachine, { input: { player: defaultPlayer } });
+  const value = useMachine(gameMachine, { input: { player: startingPlayer } });
   return (
     <GameMachineContext.Provider value={value}>
       {children}

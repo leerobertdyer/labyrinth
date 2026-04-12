@@ -39,6 +39,7 @@ export type Player = BattleStats & {
   image: string;
   isDefending: boolean;
   inventory: InventoryItem[];
+  unspentPoints: number;
 };
 
 export type AnyItem = Weapon | Armor | Consumable;
