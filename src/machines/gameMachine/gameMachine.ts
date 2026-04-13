@@ -3,7 +3,12 @@ import { combatMachine } from "../combatMachine/combatMachine";
 import { Player } from "@/components/game/combat/types";
 import { startingPlayer } from "@/app/constants";
 import { EncounterConfig } from "@/components/game/types";
-import { GameContext, GameEmit, GameEvent } from "@/machines/gameMachine/types";
+import {
+  ConversationTrigger,
+  GameContext,
+  GameEmit,
+  GameEvent,
+} from "@/machines/gameMachine/types";
 import { getPlayerLevel } from "@/machines/combatMachine/utils";
 
 const gameSetup = setup({
@@ -27,6 +32,7 @@ export const gameMachine = gameSetup.createMachine({
     player: input?.player,
     room: "start",
     encounter: {} as EncounterConfig,
+    conversation: {} as ConversationTrigger,
   }),
   initial: "startScreen",
   states: {
@@ -43,7 +49,9 @@ export const gameMachine = gameSetup.createMachine({
             CONFIRM_STATS: {
               target: "#game.playing",
               actions: assign({
-                player: ({ event }) => event.player,
+                player: ({ event }) => {
+                  return { ...event.player, unspentPoints: 0 };
+                },
                 room: () => "startingRoom",
               }),
             },
@@ -97,6 +105,22 @@ export const gameMachine = gameSetup.createMachine({
               actions: assign({ encounter: ({ event }) => event.encounter }),
               target: "inCombat",
             },
+            START_TALKING: {
+              actions: assign({
+                conversation: ({ event }) => event.conversation,
+              }),
+              target: "talking",
+            },
+          },
+        },
+        talking: {
+          on: {
+            FINISH_TALKING: {
+              actions: assign({
+                conversation: {} as ConversationTrigger,
+              }),
+              target: "exploring",
+            },
           },
         },
         inCombat: {
@@ -117,11 +141,9 @@ export const gameMachine = gameSetup.createMachine({
             },
             VICTORY: [
               {
-                guard: ({ context, event }) =>{
-                  console.log('in guard: ', context, event)
-                 return getPlayerLevel(event.player.experience) >
-                  getPlayerLevel(context.player.experience)
-                },
+                guard: ({ context, event }) =>
+                  getPlayerLevel(event.player.experience) >
+                  getPlayerLevel(context.player.experience),
                 target: "levelUp",
                 actions: [
                   assign({ player: ({ event }) => event.player }),
@@ -159,7 +181,9 @@ export const gameMachine = gameSetup.createMachine({
             CONFIRM_STATS: {
               target: "exploring",
               actions: assign({
-                player: ({ event }) => event.player,
+                player: ({ event }) => {
+                  return { ...event.player, unspentPoints: 0 };
+                },
               }),
             },
           },

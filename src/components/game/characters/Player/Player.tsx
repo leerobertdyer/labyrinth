@@ -1,15 +1,15 @@
 import { useKeyboardControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import {
-  CapsuleCollider,
-  RigidBody,
-  useRapier,
-} from "@react-three/rapier";
+import { CapsuleCollider, RigidBody, useRapier } from "@react-three/rapier";
 import { useEffect, useMemo, useRef } from "react";
 import { MainCharacter } from "@/components/game/models/mixamo/mainCharacter";
 import { updateMovement, type MovementKeys } from "./Movement";
 import { useGameMachine } from "@/contexts/GameMachineContext";
-import { MOVEMENT_DISABLED_STATES, playerCamRadius, STARTING_POINT } from "@/app/constants";
+import {
+  MOVEMENT_DISABLED_STATES,
+  playerCamRadius,
+  STARTING_POINT,
+} from "@/app/constants";
 import { useDebugStore } from "@/stores/useDebugStore";
 import { Group } from "three";
 import { usePlayerStore } from "@/stores/usePlayerStore";
@@ -22,22 +22,21 @@ export default function Player() {
   const { camera } = useThree();
   const { world, rapier } = useRapier();
   const [state] = useGameMachine();
-  
-  const playerSpeed = state.context.player.speed
+
+  const playerSpeed = state.context.player.speed;
   const playerFacingRef = useRef(0);
   const cameraAngleRef = useRef({ theta: Math.PI, phi: Math.PI / 3 });
-  const startingPoint = useMemo(() => STARTING_POINT, [])
-  const cameraRadiusRef = useRef(playerCamRadius); 
-  
+  const startingPoint = useMemo(() => STARTING_POINT, []);
+  const cameraRadiusRef = useRef(playerCamRadius);
+
   useFrame((_, delta) => {
     const playingState = (state.value as { playing?: string }).playing;
-    if (
-      !playingState ||
-      !ref.current ||
-      !meshRef.current ||
-      MOVEMENT_DISABLED_STATES.includes(playingState)
-    )
+    if (!ref.current || !playingState || !meshRef.current) return;
+    if (MOVEMENT_DISABLED_STATES.includes(playingState)) {
+      ref.current.resetForces(false)
+      ref.current.setLinvel({ x: 0, y: 0, z: 0 }, false)
       return;
+    }
     const pos = ref.current.translation();
     setPlayerPos({
       x: Math.round(pos.x),
@@ -55,7 +54,7 @@ export default function Player() {
       cameraAngleRef,
       delta,
       cameraRadiusRef,
-      playerSpeed
+      playerSpeed,
     });
   });
 

@@ -38,7 +38,7 @@ function StatBox({
 
 export default function StatSelection({ p }: { p: Player }) {
   const [state, send] = useGameMachine();
-
+  
   const [remainingPoints, setRemainingPoints] = useState(p.unspentPoints);
   const [stats, setStats] = useState({
     health: p.health,
@@ -68,7 +68,7 @@ export default function StatSelection({ p }: { p: Player }) {
   ) {
     if (up && remainingPoints === 0) return;
     if (!up && stats[s] <= 1) return;
-    console.log("sdf");
+    if (!up && stats[s] <= p[s]) return
     setStats((prev) => ({ ...prev, [s]: up ? prev[s] + 1 : prev[s] - 1 }));
     setRemainingPoints((prev) => (up ? prev - 1 : prev + 1));
   }
@@ -93,7 +93,7 @@ export default function StatSelection({ p }: { p: Player }) {
             flex flex-col items-center justify-around"
         >
           <div>
-            <h1 className="text-center text-3xl text-amber-400">Stats</h1>
+            <h1 className="text-center text-3xl text-amber-400">Level Up</h1>
             <h2 className="text-center text-lg text-amber-200">
               Points: {remainingPoints}
             </h2>

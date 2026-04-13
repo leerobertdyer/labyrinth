@@ -1,4 +1,9 @@
 import { REMOVE_ENCOUNTER } from "@/app/constants";
+import {
+  narrationStartingRoom,
+  shopkeeperCharacter,
+  startingRoomPrompt,
+} from "@/components/game/characters/Shopkeeper/prompts";
 import Shopkeeper from "@/components/game/characters/Shopkeeper/Shopkeeper";
 import {
   generateEnemy,
@@ -18,7 +23,7 @@ import { Euler, Vector3 } from "three";
 
 const roomLength = 40;
 const roomWidth = 25;
-const roomScale = new Vector3(1.7, 8, 4.5)
+const roomScale = new Vector3(1.7, 8, 4.5);
 
 const barrels = placeObjects(
   {
@@ -117,12 +122,20 @@ export const startingRoom: RoomConfig = {
   ],
   triggers: [
     {
-      event: { type: "FLASH_SCREEN", color: "blue", intensity: 1},
-      collider:  { shape: "cuboid", args: [roomWidth * .5, roomScale.y, 1] },
-      position: [0, 0, -4],
+      event: {
+        type: "START_TALKING",
+        conversation: {
+          npcId: "shopkeeper",
+          prompt: startingRoomPrompt,
+          systemPrompt: shopkeeperCharacter,
+          narration: narrationStartingRoom
+        },
+      },
+      collider: { shape: "cuboid", args: [roomWidth * 0.5, roomScale.y, 1] },
+      position: [0, 0, 10],
       rotation: [0, 0, 0],
       onlyOnce: false,
-    }
+    },
   ],
   encounters: [
     {

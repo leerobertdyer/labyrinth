@@ -13,14 +13,22 @@ import CombatView from "@/components/game/combat/CombatView";
 import StartScreen from "@/components/game/Views/StartScreen";
 import DeathScreen from "@/components/game/Views/DeathScreen";
 import StatSelection from "@/components/game/Views/StatSelection";
+import DialogueView from "@/components/game/Views/DialogueView";
 
 function GameContent() {
   const [state] = useGameMachine();
   if (state.matches({ startScreen: "idle" })) return <StartScreen />;
-  if (state.matches({ startScreen: "statSelection" }) || state.matches({ playing: "levelUp"})) return <StatSelection p={state.context.player}/>;
+  if (
+    state.matches({ startScreen: "statSelection" }) ||
+    state.matches({ playing: "levelUp" })
+  )
+    return <StatSelection p={state.context.player} />;
 
   return (
     <KeyboardControls map={explorationControls}>
+      {state.matches({ playing: "talking" }) && (
+        <DialogueView conversation={state.context.conversation} />
+      )}
       <GameHUD />
       {state.matches({ playing: "inCombat" }) && <CombatView />}
       {state.matches({ playing: "dead" }) && (

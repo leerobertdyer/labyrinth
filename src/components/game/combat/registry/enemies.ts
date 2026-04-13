@@ -3,7 +3,7 @@ import {
   NO_MATTER_WHAT,
   NO_THEATRICS,
   SHORT_RESPONSE,
-} from "@/components/game/conversations/utils";
+} from "@/components/game/conversations/prompts";
 
 export const skeleton = {
   name: "Skeleton",

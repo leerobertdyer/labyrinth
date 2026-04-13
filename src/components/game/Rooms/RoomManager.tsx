@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 import { useGameMachine } from "@/contexts/GameMachineContext";
 import { useRoomStore } from "@/stores/useRoomStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import TriggerEvent from "@/components/game/Encounters/TriggerEvent";
+import TriggerEvent from "@/components/game/TriggerEvent/TriggerEvent";
 
 export default function RoomManager() {
   const { currentRoomId, transitionTo } = useRoomStore();
@@ -101,7 +101,7 @@ export default function RoomManager() {
         onGateEnter={handleGateEnter}
       />
       {room.triggers && room.triggers.map((t, i) => {
-       return <TriggerEvent key={i} collider={t.collider} event={t.event}>{t.children}</TriggerEvent>
+       return <TriggerEvent position={t.position} key={i} collider={t.collider} event={t.event}>{t.children}</TriggerEvent>
       })}
       {roomObjects &&
         roomObjects.map((o: IRoomObjects, i) => {

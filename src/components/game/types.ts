@@ -1,7 +1,7 @@
 // General Game Types
 
 import { Enemy } from "@/components/game/combat/types";
-import { TriggerEventProps } from "@/components/game/Encounters/TriggerEvent";
+import { TriggerEventProps } from "@/components/game/TriggerEvent/TriggerEvent";
 import { ComponentType } from "react";
 import { AnimationClip, Euler, Vector3 } from "three";
 

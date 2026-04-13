@@ -225,7 +225,7 @@ export const combatMachine = combatSetup.createMachine({
         }),
         sendParent(({ context }) => ({
           type: "VICTORY",
-          player: context.player, // now reflects the assigned value
+          player: context.player,
         })),
       ],
       type: "final",

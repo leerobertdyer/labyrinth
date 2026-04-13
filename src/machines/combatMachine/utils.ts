@@ -9,11 +9,8 @@ export function applyExperienceGain(player: Player, gainedXp: number): Player {
   return {
     ...player,
     experience: newXp,
-    // optionally recalculate stats here if level changed
   };
 }
-
-
 
 export function getPlayerLevel(totalXp: number): number {
   if (totalXp >= 1200) return 4;
@@ -24,6 +21,6 @@ export function getPlayerLevel(totalXp: number): number {
 
 export function levelUp(p: Player) {
     p.health += 5
-    p.unspentPoints += 10;
+    p.unspentPoints += 5;
     return p;
 }

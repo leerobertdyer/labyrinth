@@ -2,10 +2,8 @@ import { useEffect, useState } from "react";
 import { sendPrompt } from "@/lib/Anthropic/client";
 import { Enemy } from "@/components/game/combat/types";
 import { useGameMachine } from "@/contexts/GameMachineContext";
-import {
-  INITIATE_DIALOGE,
-  willEnemyTalk,
-} from "@/components/game/conversations/utils";
+import { willEnemyTalk } from "@/components/game/conversations/utils";
+import { INITIATE_DIALOGE } from "@/components/game/conversations/prompts";
 
 type EnemyChatProps = {
   selectedView: "PLAYER" | "ENEMY" | "CHAT";
