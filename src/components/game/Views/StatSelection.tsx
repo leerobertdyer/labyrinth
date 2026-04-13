@@ -39,27 +39,38 @@ function StatBox({
 export default function StatSelection({ p }: { p: Player }) {
   const [state, send] = useGameMachine();
 
-  const [remainingPoints, setRemainingPoints] = useState(p.unspentPoints)
+  const [remainingPoints, setRemainingPoints] = useState(p.unspentPoints);
   const [stats, setStats] = useState({
     health: p.health,
     attack: p.attack,
     defense: p.defense,
-    speed: p.speed
-  })
+    speed: p.speed,
+  });
 
   function finalizeStats() {
     // const actor = state.children.actor
     // if (!actor) return
-    send({ type: "CONFIRM_STATS" })
+    send({
+      type: "CONFIRM_STATS",
+      player: {
+        ...state.context.player,
+        health: stats.health,
+        attack: stats.attack,
+        defense: stats.defense,
+        speed: stats.speed,
+      },
+    });
   }
 
-
-  function handleStatChange(s: "health" | "attack" | "defense" | "speed", up: boolean) {
+  function handleStatChange(
+    s: "health" | "attack" | "defense" | "speed",
+    up: boolean,
+  ) {
     if (up && remainingPoints === 0) return;
     if (!up && stats[s] <= 1) return;
-    console.log('sdf')
-    setStats((prev) => ({...prev, [s]: up ? prev[s] + 1 : prev[s] - 1}))
-    setRemainingPoints((prev) => up ? prev - 1 : prev + 1)
+    console.log("sdf");
+    setStats((prev) => ({ ...prev, [s]: up ? prev[s] + 1 : prev[s] - 1 }));
+    setRemainingPoints((prev) => (up ? prev - 1 : prev + 1));
   }
 
   return (
@@ -83,7 +94,9 @@ export default function StatSelection({ p }: { p: Player }) {
         >
           <div>
             <h1 className="text-center text-3xl text-amber-400">Stats</h1>
-            <h2 className="text-center text-lg text-amber-200">Points: {remainingPoints}</h2>
+            <h2 className="text-center text-lg text-amber-200">
+              Points: {remainingPoints}
+            </h2>
           </div>
           <StatBox
             name="Health"
@@ -109,7 +122,14 @@ export default function StatSelection({ p }: { p: Player }) {
             onPlus={() => handleStatChange("speed", true)}
             onMinus={() => handleStatChange("speed", false)}
           />
-        {remainingPoints === 0 && <button className="border-2 border-white p-1 cursor-pointer bg-red-900 hover:bg-white hover:text-black rounded-sm h-fit" onClick={finalizeStats}>Confirm</button>}
+          {remainingPoints === 0 && (
+            <button
+              className="border-2 border-white p-1 cursor-pointer bg-red-900 hover:bg-white hover:text-black rounded-sm h-fit"
+              onClick={finalizeStats}
+            >
+              Confirm
+            </button>
+          )}
         </div>
       </div>
     </div>

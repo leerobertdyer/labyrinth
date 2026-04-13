@@ -36,8 +36,8 @@ export const startingPlayer: Player = {
   health: 25,
   maxHealth: 10,
   experience: 0,
-  attack: 1,
-  speed: 1,
+  attack: 100,
+  speed: 7,
   defense: 1,
   image: "/sprites/Hero.png",
   isDefending: false,
@@ -48,7 +48,7 @@ export const startingPlayer: Player = {
       quantity: 1,
     },
   ],
-  unspentPoints: 10
+  unspentPoints: 5
 };
 
 export const REMOVE_ENCOUNTER = "REMOVE_ENCOUNTER";

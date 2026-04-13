@@ -17,7 +17,7 @@ import StatSelection from "@/components/game/Views/StatSelection";
 function GameContent() {
   const [state] = useGameMachine();
   if (state.matches({ startScreen: "idle" })) return <StartScreen />;
-  if (state.matches({ startScreen: "statSelection" })) return <StatSelection p={state.context.player}/>;
+  if (state.matches({ startScreen: "statSelection" }) || state.matches({ playing: "levelUp"})) return <StatSelection p={state.context.player}/>;
 
   return (
     <KeyboardControls map={explorationControls}>

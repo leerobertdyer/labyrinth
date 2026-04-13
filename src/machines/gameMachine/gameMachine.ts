@@ -4,6 +4,7 @@ import { Player } from "@/components/game/combat/types";
 import { startingPlayer } from "@/app/constants";
 import { EncounterConfig } from "@/components/game/types";
 import { GameContext, GameEmit, GameEvent } from "@/machines/gameMachine/types";
+import { getPlayerLevel } from "@/machines/combatMachine/utils";
 
 const gameSetup = setup({
   types: {
@@ -42,8 +43,8 @@ export const gameMachine = gameSetup.createMachine({
             CONFIRM_STATS: {
               target: "#game.playing",
               actions: assign({
-                player: () => startingPlayer, // TODO - load real player stats from db
-                room: () => "startingRoom", // TODO - check if this works with second room
+                player: ({ event }) => event.player,
+                room: () => "startingRoom",
               }),
             },
           },
@@ -114,18 +115,33 @@ export const gameMachine = gameSetup.createMachine({
                 player: ({ event }) => event.player,
               }),
             },
-            VICTORY: {
-              target: "exploring",
-              actions: [
-                assign({
-                  player: ({ event }) => event.player,
-                }),
-                emit(({ context }) => ({
-                  type: "BATTLE_WON",
-                  encounter: context.encounter,
-                })),
-              ],
-            },
+            VICTORY: [
+              {
+                guard: ({ context, event }) =>{
+                  console.log('in guard: ', context, event)
+                 return getPlayerLevel(event.player.experience) >
+                  getPlayerLevel(context.player.experience)
+                },
+                target: "levelUp",
+                actions: [
+                  assign({ player: ({ event }) => event.player }),
+                  emit(({ context }) => ({
+                    type: "BATTLE_WON",
+                    encounter: context.encounter,
+                  })),
+                ],
+              },
+              {
+                target: "exploring",
+                actions: [
+                  assign({ player: ({ event }) => event.player }),
+                  emit(({ context }) => ({
+                    type: "BATTLE_WON",
+                    encounter: context.encounter,
+                  })),
+                ],
+              },
+            ],
             DEFEAT: {
               target: "dead",
               actions: [
@@ -135,6 +151,16 @@ export const gameMachine = gameSetup.createMachine({
                   encounter: context.encounter,
                 })),
               ],
+            },
+          },
+        },
+        levelUp: {
+          on: {
+            CONFIRM_STATS: {
+              target: "exploring",
+              actions: assign({
+                player: ({ event }) => event.player,
+              }),
             },
           },
         },
@@ -154,9 +180,10 @@ export const gameMachine = gameSetup.createMachine({
               actions: assign({
                 player: ({ context }) => ({
                   ...context.player,
-                  health: 100,
+                  health: context.player.maxHealth,
                 }),
                 room: ({ event }) =>
+                  // TODO: I don't think this is working -> always staying in the same room
                   event.type === "RESPAWN" ? event.room : "start",
               }),
             },

@@ -223,7 +223,6 @@ export const combatMachine = combatSetup.createMachine({
             return applyExperienceGain(context.player, gained);
           },
         }),
-          // TODO: handle comparing previous level to current level: if new level Switch to Level Up UI allow player to assign points instead of manually updating them
         sendParent(({ context }) => ({
           type: "VICTORY",
           player: context.player, // now reflects the assigned value
