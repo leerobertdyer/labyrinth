@@ -14,10 +14,21 @@ import StartScreen from "@/components/game/Views/StartScreen";
 import DeathScreen from "@/components/game/Views/DeathScreen";
 import StatSelection from "@/components/game/Views/StatSelection";
 import DialogueView from "@/components/game/Views/DialogueView";
+import { useRef } from "react";
 
 function GameContent() {
-  const [state] = useGameMachine();
-  if (state.matches({ startScreen: "idle" })) return <StartScreen />;
+  const [state, send] = useGameMachine();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  function handleStart() {
+    audioRef.current = new Audio("/audio/gameLoop.mp3");
+    audioRef.current.loop = true;
+    audioRef.current.volume = .05;
+    audioRef.current.play();
+    send({ type: "NEW_GAME" });
+  }
+
+  if (state.matches({ startScreen: "idle" })) return <StartScreen handleStart={handleStart} />;
   if (
     state.matches({ startScreen: "statSelection" }) ||
     state.matches({ playing: "levelUp" })
