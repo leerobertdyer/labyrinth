@@ -22,11 +22,19 @@ export default function EnemyChat({
   const [enemyWords, setEnemyWords] = useState("...");
   const [enemyTalking, setEnemyTalking] = useState(enemies[0]);
   const [playerWords, setPlayerWords] = useState("");
+  const [history, setHistory] = useState<
+    { role: "user" | "assistant"; content: string }[]
+  >([]);
 
   useEffect(() => {
     if (selectedView !== "CHAT") return;
     const initiateDialogue = async (prompt: string, system: string) => {
-      return await sendPrompt(prompt, system);
+      const nextHistory = [
+        { role: "user" as const, content: INITIATE_DIALOGE },
+        { role: "assistant" as const, content: enemyTalking.systemPrompt },
+      ];
+      setHistory(nextHistory);
+      return await sendPrompt(nextHistory, system);
     };
     const setupChat = () => {
       setActivateChat(true);
@@ -34,7 +42,9 @@ export default function EnemyChat({
       if (willTalk) {
         initiateDialogue(INITIATE_DIALOGE, enemyTalking.systemPrompt).then(
           (data) => {
-            setEnemyWords(data);
+            const dialogue = data.reply.text;
+            // const toolsCalled = data.reply.toosCalled;
+            setEnemyWords(dialogue);
           },
         );
       }
@@ -43,8 +53,17 @@ export default function EnemyChat({
   }, [selectedView, enemyTalking]);
 
   function handlePlayerResponse() {
-    sendPrompt(playerWords, enemies[0].systemPrompt)
-      .then((resp) => setEnemyWords(resp))
+    const nextHistory = [
+      ...history,
+      { role: "user" as const, content: playerWords },
+    ];
+    setHistory(nextHistory);
+    sendPrompt(nextHistory, enemies[0].systemPrompt)
+      .then((data) => {
+        const dialogue = data.reply.text;
+        // const toolsCalled = data.reply.toosCalled;
+        setEnemyWords(dialogue);
+      })
       .finally(() => setPlayerWords(""));
   }
 

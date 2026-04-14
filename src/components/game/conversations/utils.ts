@@ -4,3 +4,7 @@ export function willEnemyTalk(e: Enemy) {
     const chance = e.chattiness / 100;
     return Math.random() < chance;
 }
+
+export function splitBySentences(text: string) {
+    return text.match(/[^.!?]+[.!?]+/g) ?? [text];
+}

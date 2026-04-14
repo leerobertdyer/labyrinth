@@ -1,17 +1,11 @@
-'use server'
-import Anthropic from "@anthropic-ai/sdk";
+import { MessageParam } from "@anthropic-ai/sdk/resources.js";
 
-const client = new Anthropic({
-  apiKey: process.env["ANTHROPIC_API_KEY"]
-});
-
-export async function sendPrompt(userMessage: string, systemPrompt: string) {
-  const message = await client.messages.create({
-    model: "claude-haiku-4-5",
-    max_tokens: 1024,
-    messages: [{ role: "user", content: userMessage }],
-    system: systemPrompt
+export async function sendPrompt(history: MessageParam[], systemPrompt: string) {
+  const response = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ history, systemPrompt }),
   });
-  console.log("ANTHROPIC USED: ", message)
-  return message.content[0].type === 'text' ? message.content[0].text : '';
+  const data = await response.json();
+  return data;
 }
