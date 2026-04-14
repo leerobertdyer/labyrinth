@@ -31,7 +31,6 @@ export default function EnemyChat({
     const initiateDialogue = async (prompt: string, system: string) => {
       const nextHistory = [
         { role: "user" as const, content: INITIATE_DIALOGE },
-        { role: "assistant" as const, content: enemyTalking.systemPrompt },
       ];
       setHistory(nextHistory);
       return await sendPrompt(nextHistory, system);
@@ -90,20 +89,22 @@ export default function EnemyChat({
         autoFocus={activateChat}
         onChange={(e) => setPlayerWords(e.target.value)}
       />
-      <button
-        onClick={() => handlePlayerResponse()}
-        className="bg-yellow-800/30 text-white rounded-md p-2 w-full cursor-pointer hover:bg-yellow-800/90 transition-all duration-300"
-      >
-        Respond
-      </button>
-      <button
-        className="bg-yellow-800/30 text-white rounded-md p-2 w-full cursor-pointer hover:bg-yellow-800/90 transition-all duration-300"
-        onClick={() => {
-          combatActor.send({ type: "SET_VIEW", view: "PLAYER" });
-        }}
-      >
-        Exit Chat
-      </button>
+      <div id="btns" className="w-full flex justify-around items-center gap-2">
+        <button
+          className="bg-yellow-800/30 text-white rounded-md p-2 w-full cursor-pointer hover:bg-yellow-800/90 transition-all duration-300"
+          onClick={() => {
+            combatActor.send({ type: "SET_VIEW", view: "PLAYER" });
+          }}
+        >
+          Exit Chat
+        </button>
+        <button
+          onClick={() => handlePlayerResponse()}
+          className="bg-yellow-800/30 text-white rounded-md p-2 w-full cursor-pointer hover:bg-yellow-800/90 transition-all duration-300"
+        >
+          Respond
+        </button>
+      </div>
     </div>
   );
 }

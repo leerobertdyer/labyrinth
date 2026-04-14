@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const secret = process.env.CHAT_API_SECRET ?? "";
-
-  const resp = await fetch("http://localhost:3333/chat", {
+  const url = process.env.CHAT_API_URL ?? ""
+  const resp = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -33,6 +33,7 @@ EXAMPLES of correct responses:
 
 EXAMPLES of what never to write:
 - "*hollow laugh echoes* Why... why speak?"
+- "Bone grinds against bone." (narration, not speech)
 - Anything with ellipses used for drama.
 
 ${NO_MATTER_WHAT}`,
