@@ -78,7 +78,7 @@ export default function StatSelection({ p }: { p: Player }) {
       <div
         className="w-full h-full md:w-[60rem] md:h-[35rem] relative"
         style={{
-          backgroundImage: 'url("/images/backgrounds/statScreen.png")',
+          backgroundImage: 'url("/images/backgrounds/StatScreen.png")',
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
