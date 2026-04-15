@@ -23,7 +23,7 @@ export type IRoom = {
   tileSize: number; // individual tile size
   edges?: WallEdge[]; // optional — default to all walls if omitted
   scale?: Vector3; // optional scale for walls/doors/ceiling height
-  roof?: boolean; // optional flag to show sky or not
+  showRoof?: boolean; // optional flag to show sky or not
   onGateEnter?: (direction: Direction) => void; // trigger teleport | room exit
   triggers?: TriggerEventProps[]
 };

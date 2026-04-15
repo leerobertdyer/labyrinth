@@ -32,6 +32,7 @@ export function MainCharacter(props: React.ComponentProps<'group'>) {
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone) as unknown as GLTFResult
   const { actions } = useAnimations(animations, group)
+  // console.log("Actions in mainCharacter: ", actions)
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">

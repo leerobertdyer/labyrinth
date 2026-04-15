@@ -75,7 +75,7 @@ export default function StatSelection({ p }: { p: Player }) {
   }
 
   return (
-    <div className="absolute inset-0 z-1000 flex justify-center items-center w-full h-full gap-2">
+    <div id="mainStatDiv" className="absolute inset-0 z-1000 flex justify-center items-center w-full h-full gap-2 bg-black">
       <div
         className="w-full h-full md:w-[60rem] md:h-[35rem] relative"
         style={{

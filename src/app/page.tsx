@@ -14,49 +14,49 @@ import StartScreen from "@/components/game/Views/StartScreen";
 import DeathScreen from "@/components/game/Views/DeathScreen";
 import StatSelection from "@/components/game/Views/StatSelection";
 import DialogueView from "@/components/game/Views/DialogueView";
-import { useRef } from "react";
+import SkyBox from "@/components/game/Skybox/Skybox";
+import BackgroundMusicLoop from "@/components/game/Audio/BackgroundMusicLoop";
+import { Suspense } from "react";
 
-useGLTF.preload('/models/mixamo/lostSoul.glb');
-useGLTF.preload('/models/ldyer/Skeleton.glb');
-useGLTF.preload('/models/mixamo/mainCharacter.glb');
-useGLTF.preload('/models/mixamo/shopkeeper.glb');
-
+useGLTF.preload("/models/mixamo/lostSoul.glb");
+useGLTF.preload("/models/ldyer/Skeleton.glb");
+useGLTF.preload("/models/mixamo/mainCharacter.glb");
+useGLTF.preload("/models/mixamo/shopkeeper.glb");
 
 function GameContent() {
   const [state, send] = useGameMachine();
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   function handleStart() {
-    audioRef.current = new Audio("/audio/gameLoop.mp3");
-    audioRef.current.loop = true;
-    audioRef.current.volume = .05;
-    audioRef.current.play();
     send({ type: "NEW_GAME" });
   }
 
-  if (state.matches({ startScreen: "idle" })) return <StartScreen handleStart={handleStart} />;
-  if (
+  const isStart = state.matches({ startScreen: "idle" });
+  const isStatSelection =
     state.matches({ startScreen: "statSelection" }) ||
-    state.matches({ playing: "levelUp" })
-  )
-    return <StatSelection p={state.context.player} />;
+    state.matches({ playing: "levelUp" });
+  const isInCombat = state.matches({ playing: "inCombat" });
+  const isDead = state.matches({ playing: "dead" });
+  const isTalking = state.matches({ playing: "talking" });
 
   return (
     <KeyboardControls map={explorationControls}>
-      {state.matches({ playing: "talking" }) && (
-        <DialogueView conversation={state.context.conversation} />
-      )}
       <GameHUD />
-      {state.matches({ playing: "inCombat" }) && <CombatView />}
-      {state.matches({ playing: "dead" }) && (
-        <DeathScreen room={state.context.room} />
-      )}
       <Canvas
-        style={{ width: "100vw", height: "100vh", backgroundColor: "black" }}
+        style={{ width: "100vw", height: "100vh" }}
         camera={{ position: [0, 5, 10], fov: 60 }}
-      >
+      > 
+        <SkyBox />
+        <Suspense fallback={null}>
+        <BackgroundMusicLoop />
+        </Suspense>
         <Scene />
       </Canvas>
+
+      {isTalking && <DialogueView conversation={state.context.conversation} />}
+      {isStart && <StartScreen handleStart={handleStart} />}
+      {isStatSelection && <StatSelection p={state.context.player} />}
+      {isInCombat && <CombatView />}
+      {isDead && <DeathScreen room={state.context.room} />}
     </KeyboardControls>
   );
 }

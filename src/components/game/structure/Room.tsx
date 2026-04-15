@@ -54,6 +54,7 @@ export default function Room({
   length = 30, // north/south
   tileSize = 1,
   edges,
+  showRoof,
   scale = DEFAULT_SCALE,
   onGateEnter,
 }: IRoom) {
@@ -137,14 +138,16 @@ export default function Room({
       />
 
       {/* Ceiling */}
-      <FloorCeilingGrid
-        width={width}
-        length={length}
-        tileSize={tileSize}
-        Model={Roof}
-        type="ceiling"
-        height={scale.y}
-      />
+      {showRoof && (
+        <FloorCeilingGrid
+          width={width}
+          length={length}
+          tileSize={tileSize}
+          Model={Roof}
+          type="ceiling"
+          height={scale.y}
+        />
+      )}
 
       {/* Visual Wall Runs */}
       {resolvedEdges.map((edge) =>

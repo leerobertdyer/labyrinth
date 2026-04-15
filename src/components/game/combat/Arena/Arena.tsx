@@ -2,15 +2,17 @@ import Combatant from "./Combatant";
 import { type Enemy } from "../types";
 import { useGameMachine } from "@/contexts/GameMachineContext";
 import { useSelector } from "@xstate/react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { eventKeyToControl } from "../combatControls";
+import { BiPointer } from "react-icons/bi";
+import { LiaHandPointer } from "react-icons/lia";
 
 type ArenaProps = {
   enemies: Enemy[];
   background: string;
   selectedView: "PLAYER" | "ENEMY" | "CHAT";
   isPlayerTurn: boolean;
-}
+};
 
 export default function Arena({
   enemies,
@@ -20,9 +22,12 @@ export default function Arena({
 }: ArenaProps) {
   const [state] = useGameMachine();
   const actor = state.children.combatActor;
-  const isArenaView = selectedView === "ENEMY"
+  const isArenaView = selectedView === "ENEMY";
 
-  const selectedEnemyId = useSelector(actor, (snapshot) => snapshot?.context.selectedEnemyId ?? null);
+  const selectedEnemyId = useSelector(
+    actor,
+    (snapshot) => snapshot?.context.selectedEnemyId ?? null,
+  );
 
   useEffect(() => {
     if (selectedView !== "ENEMY" || !actor) return;
@@ -65,8 +70,8 @@ export default function Arena({
 
   if (!actor) return null;
 
-  function showSelected(id: string){
-    return selectedEnemyId === id && isPlayerTurn && isArenaView
+  function showSelected(id: string) {
+    return selectedEnemyId === id && isPlayerTurn && isArenaView;
   }
 
   return (
@@ -81,8 +86,14 @@ export default function Arena({
       }}
     >
       {enemies.map((enemy) => (
-        
-        <Combatant key={enemy.id} combatant={enemy} isSelected={showSelected(enemy.id)} />
+        <React.Fragment key={enemy.id}>
+          {showSelected(enemy.id) && <LiaHandPointer style={{ rotate: "90deg" }}/>}
+          <Combatant
+            
+            combatant={enemy}
+            isSelected={showSelected(enemy.id)}
+          />
+        </React.Fragment>
       ))}
     </div>
   );

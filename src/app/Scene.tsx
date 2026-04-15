@@ -5,6 +5,7 @@ import { Physics } from "@react-three/rapier";
 import * as THREE from "three";
 import Player from "@/components/game/characters/Player/Player";
 import RoomManager from "@/components/game/Rooms/RoomManager";
+import BackgroundMusicLoop from "@/components/game/Audio/BackgroundMusicLoop";
 
 export default function Scene() {
 

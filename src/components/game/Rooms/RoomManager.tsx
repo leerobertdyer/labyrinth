@@ -97,6 +97,7 @@ export default function RoomManager() {
         length={room.length}
         scale={room.scale}
         tileSize={room.tileSize ?? 1}
+        showRoof={room.showRoof ?? true}
         edges={edges}
         onGateEnter={handleGateEnter}
       />

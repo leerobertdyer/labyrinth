@@ -1,42 +1,29 @@
 import { REMOVE_ENCOUNTER } from "@/app/constants";
-import { generateEnemy, lostSoul } from "@/components/game/combat/registry/enemies";
-import { LostSoul } from "@/components/game/models/mixamo/LostSoul";
-import { MIDDLE_ROOM, HALLWAY_TWO, STARTING_ROOM } from "@/components/game/Rooms/constants";
 import {
-  allWalls,
-//   placeObjects,
-  wallsWithGate,
-} from "@/components/game/Rooms/roomRegistry";
+  generateEnemy,
+  lostSoul,
+} from "@/components/game/combat/registry/enemies";
+import { LostSoul } from "@/components/game/models/mixamo/LostSoul";
+import {
+  MIDDLE_ROOM,
+  HALLWAY_TWO,
+  STARTING_ROOM,
+} from "@/components/game/Rooms/constants";
+import { allWalls, wallsWithGate } from "@/components/game/Rooms/roomRegistry";
 import { RoomConfig } from "@/components/game/types";
-import { 
-    // Euler, 
-    Vector3 } from "three";
+import { Vector3 } from "three";
 
 const roomLength = 30;
 const roomWidth = 40;
 
-// const barrels = placeObjects(
-//   {
-//     rotation: new Euler(0, Math.PI / 2, 0),
-//     scale: new Vector3(4, 4, 4),
-//     Model: Barrels,
-//   },
-//   [
-//     new Vector3(roomWidth / 2 - 1, 0.1, 0),
-//     new Vector3(roomWidth / 2 - 1, 0.1, 3),
-//     new Vector3(roomWidth / 2 - 1, 0.1, 6),
-//     new Vector3(roomWidth / 2 - 1, 0.1, -3),
-//   ],
-// );
-
-const lostSoulStartingPos = new Vector3(0, .1, 3);
+const lostSoulStartingPos = new Vector3(0, 0.1, 3);
 const lostSoulStartingRot = new Vector3(0, Math.PI, 0);
 
 export const middleRoom: RoomConfig = {
   id: MIDDLE_ROOM,
   width: roomWidth,
   length: roomLength,
-  roof: false,
+  showRoof: false,
   tileSize: 1,
   scale: new Vector3(1.7, 8, 4.5),
   edges: {
@@ -62,9 +49,9 @@ export const middleRoom: RoomConfig = {
     {
       encounterEnemies: [generateEnemy(lostSoul)],
       position: [
-        lostSoulStartingPos.x+1,
-        lostSoulStartingPos.y+1,
-        lostSoulStartingPos.z+1,
+        lostSoulStartingPos.x + 1,
+        lostSoulStartingPos.y + 1,
+        lostSoulStartingPos.z + 1,
       ],
       rotation: [
         lostSoulStartingRot.x,
@@ -86,6 +73,6 @@ export const middleRoom: RoomConfig = {
   ],
   connections: {
     south: HALLWAY_TWO,
-    north: STARTING_ROOM
+    north: STARTING_ROOM,
   },
 };

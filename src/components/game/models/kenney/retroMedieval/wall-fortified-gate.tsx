@@ -36,8 +36,7 @@ export function WallBDetailPaintedFortifiedGate(
 
   return (
     <group {...props} dispose={null}>
-      <RigidBody type="fixed" colliders={false}>
-        <mesh
+         <mesh
           geometry={nodes["wall-fortified-gate_2"].geometry}
           material={materials.planks}
         />
@@ -51,8 +50,7 @@ export function WallBDetailPaintedFortifiedGate(
           geometry={nodes["wall-fortified-gate_4"].geometry}
           material={materials.bricks}
         />
-      </RigidBody>
-    </group>
+     </group>
   );
 }
 
