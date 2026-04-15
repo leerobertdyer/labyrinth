@@ -2,7 +2,7 @@ import { REMOVE_ENCOUNTER } from "@/app/constants";
 import { generateEnemy, skeleton } from "@/components/game/combat/registry/enemies";
 import { Barrels } from "@/components/game/models/kenney/retroMedieval/barrels";
 import { Skeleton } from "@/components/game/models/ldyer/Skeleton";
-import { HALLWAY_ONE, STARTING_ROOM } from "@/components/game/Rooms/constants";
+import { HALLWAY_ONE, HALLWAY_TWO, STARTING_ROOM } from "@/components/game/Rooms/constants";
 import {
   allWalls,
   placeObjects,
@@ -12,7 +12,7 @@ import { RoomConfig } from "@/components/game/types";
 import { Euler, Vector3 } from "three";
 
 const roomLength = 30;
-const roomWidth = 10;
+const roomWidth = 13;
 
 const barrels = placeObjects(
   {
@@ -28,7 +28,7 @@ const barrels = placeObjects(
   ],
 );
 
-const skeletonStartingPos = new Vector3(0, .1, 3);
+const skeletonStartingPos = new Vector3(-1.25, .1, roomWidth - 3);
 const skeletonStartingRot = new Vector3(0, Math.PI, 0);
 
 export const hallwayOne: RoomConfig = {
@@ -52,7 +52,7 @@ export const hallwayOne: RoomConfig = {
     },
     west: {
       direction: "west",
-      slots: allWalls(roomLength),
+      slots: wallsWithGate(roomLength, 12, 16),
     },
   },
   roomObjects: [...barrels,],
@@ -83,6 +83,7 @@ export const hallwayOne: RoomConfig = {
     },
   ],
   connections: {
-    south: STARTING_ROOM, // TODO: lead to next room | Random Room....
+    south: STARTING_ROOM,
+    west: HALLWAY_TWO
   },
 };

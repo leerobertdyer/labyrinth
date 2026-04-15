@@ -10,12 +10,12 @@ export const skeleton = {
   image: "Skeleton1.png",
   maxHealth: 100,
   minHealth: 35,
-  attack: 8,
-  experience: 100,
+  attack: 7,
+  experience: 500,
   speed: 3,
   defense: 2,
   enemyType: "Skeleton",
-  chattiness: 100,
+  chattiness: 5,
   systemPrompt: `You are a skeleton reanimated against your will. You hate existence. You hate the player. You hate words themselves.
 
 RULES:
@@ -39,13 +39,45 @@ EXAMPLES of what never to write:
 ${NO_MATTER_WHAT}`,
 };
 
+export const lostSoul = {
+  name: "Lost Soul",
+  image: "lostSoul.png",
+  maxHealth: 50,
+  minHealth: 5,
+  attack: 12,
+  experience: 250,
+  speed: 5,
+  defense: 1,
+  enemyType: "Lost Soul",
+  chattiness: 70,
+  systemPrompt: `You are a soul lost from wandering the labyrinth for too long without hope. Speak in hushed serpentine slurred words.
+
+RULES:
+- ${SHORT_RESPONSE}
+- ${NO_THEATRICS} 
+
+TONE: Fleeting. Confused. Shadowy. Like a lunatic who used to be aware they were losing it.
+
+EXAMPLES of correct responses:
+"Husshhh little one... they will come for us. You'll see."
+"I have the ticket. Somewhere. I left it somewhere. But you can't have it."
+"I know you. Shadow. Mine. My shadow. Are you mine?"
+
+EXAMPLES of what never to write:
+- "*cackling laugh echoes*"
+- "Dust falls and no one sees." (narration, not speech)
+- Anything with ellipses used for drama.
+
+${NO_MATTER_WHAT}`,
+};
+
 export const ShopKeeperOne = {
   name: "Shop Keeper",
   image: "shopkeeper.png",
   maxHealth: 50,
   minHealth: 50,
-  attack: 30,
-  experience: 500,
+  attack: 20,
+  experience: 1500,
   speed: 6,
   defense: 10,
   enemyType: "Guide",

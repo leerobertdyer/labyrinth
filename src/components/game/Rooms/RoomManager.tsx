@@ -14,7 +14,7 @@ import {
   SHOW_NPC,
   STARTING_POINT,
 } from "../../../app/constants";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useGameMachine } from "@/contexts/GameMachineContext";
 import { useRoomStore } from "@/stores/useRoomStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
@@ -41,11 +41,11 @@ export default function RoomManager() {
 
   useEffect(() => {
     if (room) {
-    // TODO: Fix this
-    //eslint-disable-next-line 
-    setActiveEncounters(room?.encounters);
-  }
-}, [currentRoomId, room]);
+      // TODO: Fix this
+      //eslint-disable-next-line
+      setActiveEncounters(room?.encounters);
+    }
+  }, [currentRoomId, room]);
 
   function handleVictory(encounter: EncounterConfig) {
     const e = encounter.afterPlayerVictory;
@@ -100,9 +100,10 @@ export default function RoomManager() {
         edges={edges}
         onGateEnter={handleGateEnter}
       />
-      {room.triggers && room.triggers.map((t, i) => {
-       return <TriggerEvent position={t.position} key={i} collider={t.collider} event={t.event}>{t.children}</TriggerEvent>
-      })}
+      {room.triggers &&
+        room.triggers.map((t, i) => {
+          return <TriggerEvent key={i} t={t} />;
+        })}
       {roomObjects &&
         roomObjects.map((o: IRoomObjects, i) => {
           const Model = o.Model;
@@ -142,8 +143,8 @@ export default function RoomManager() {
         nonEncounterEntities.map((entity, i) => {
           const Model = entity.Model;
           return (
+            <Suspense fallback={null} key={i}>
             <Model
-              key={i}
               position={entity.position}
               rotation={[
                 entity.rotation.x,
@@ -152,6 +153,7 @@ export default function RoomManager() {
               ]}
               scale={entity.modelScale}
             />
+            </Suspense>
           );
         })}
     </group>

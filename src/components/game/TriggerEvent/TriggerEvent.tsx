@@ -19,48 +19,40 @@ export type TriggerEventProps = {
   children?: React.ReactNode; // optional visible mesh
 };
 
-export default function TriggerEvent({
-  event,
-  position = [0, 0, 0],
-  rotation = [0, 0, 0],
-  collider,
-  onlyOnce = false,
-  filterType = "player",
-  children,
-}: TriggerEventProps) {
+export default function TriggerEvent({t}: { t: TriggerEventProps}) {
   const [, send] = useGameMachine();
   const isInContactRef = useRef(false);
   const firedRef = useRef(false);
 
   const colliderArgs =
-    collider.shape === "plane"
-      ? [collider.args[0], 0.05, collider.args[1]] // thin cuboid acts as a plane
-      : collider.args;
+    t.collider.shape === "plane"
+      ? [t.collider.args[0], 0.05, t.collider.args[1]] // thin cuboid acts as a plane
+      : t.collider.args;
 
   return (
     <RigidBody
       type="fixed"
       sensor // <-- key: no physics response, just overlap events
-      position={position}
-      rotation={rotation}
+      position={t.position}
+      rotation={t.rotation}
       onIntersectionEnter={({ other }) => {
-        if (filterType && other.rigidBodyObject?.userData?.type !== filterType)
+        if (t.filterType && other.rigidBodyObject?.userData?.type !== t.filterType)
           return;
-        if (onlyOnce && firedRef.current) return;
+        if (t.onlyOnce && firedRef.current) return;
         if (!isInContactRef.current) {
           isInContactRef.current = true;
           firedRef.current = true;
-          send(event);
+          send(t.event);
         }
       }}
       onIntersectionExit={({ other }) => {
-        if (other.rigidBodyObject?.userData?.type === filterType) {
+        if (other.rigidBodyObject?.userData?.type === t.filterType) {
           isInContactRef.current = false;
         }
       }}
     >
       <CuboidCollider args={colliderArgs as [number, number, number]} />
-      {children}
+      {t.children}
     </RigidBody>
   );
 }

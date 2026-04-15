@@ -21,8 +21,8 @@ export default function Scene() {
   return (
     <Physics gravity={[0, -10, 0]} debug={false}>
       {/* <axesHelper scale={13} position={[0, 1, 0]} />  */}
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 5]} intensity={1} />
+      <ambientLight intensity={0.05} />
+      <spotLight position={[0, 14, -4]} intensity={800} rotation={[0, 0, 0]} distance={50} penumbra={0.5}/>
       <Player />
       <RoomManager />
     </Physics>

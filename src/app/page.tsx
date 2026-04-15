@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { KeyboardControls } from "@react-three/drei";
+import { KeyboardControls, useGLTF } from "@react-three/drei";
 import {
   GameMachineProvider,
   useGameMachine,
@@ -15,6 +15,12 @@ import DeathScreen from "@/components/game/Views/DeathScreen";
 import StatSelection from "@/components/game/Views/StatSelection";
 import DialogueView from "@/components/game/Views/DialogueView";
 import { useRef } from "react";
+
+useGLTF.preload('/models/mixamo/lostSoul.glb');
+useGLTF.preload('/models/ldyer/Skeleton.glb');
+useGLTF.preload('/models/mixamo/mainCharacter.glb');
+useGLTF.preload('/models/mixamo/shopkeeper.glb');
+
 
 function GameContent() {
   const [state, send] = useGameMachine();

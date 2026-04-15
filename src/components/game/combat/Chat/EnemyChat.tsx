@@ -18,6 +18,8 @@ export default function EnemyChat({
   enemies,
   combatActor,
 }: EnemyChatProps) {
+  const [state] = useGameMachine();
+
   const [activateChat, setActivateChat] = useState(false);
   const [enemyWords, setEnemyWords] = useState("...");
   const [enemyTalking, setEnemyTalking] = useState(enemies[0]);
@@ -26,8 +28,11 @@ export default function EnemyChat({
     { role: "user" | "assistant"; content: string }[]
   >([]);
 
+  const actor = state.children.combatActor;
+
   useEffect(() => {
     if (selectedView !== "CHAT") return;
+    if (!actor) return;
     const initiateDialogue = async (prompt: string, system: string) => {
       const nextHistory = [
         { role: "user" as const, content: INITIATE_DIALOGE },
@@ -46,6 +51,8 @@ export default function EnemyChat({
             setEnemyWords(dialogue);
           },
         );
+      } else {
+        actor.send({ type: "SKIP_TURN" });
       }
     };
     setupChat();

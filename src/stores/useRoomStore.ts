@@ -1,4 +1,4 @@
-import { STARTING_ROOM } from "@/components/game/Rooms/constants";
+import {  STARTING_ROOM } from "@/components/game/Rooms/constants";
 import { create } from "zustand";
 
 interface RoomStore {

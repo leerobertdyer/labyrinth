@@ -41,7 +41,7 @@ export default function StatSelection({ p }: { p: Player }) {
   
   const [remainingPoints, setRemainingPoints] = useState(p.unspentPoints);
   const [stats, setStats] = useState({
-    health: p.health,
+    health: p.maxHealth,
     attack: p.attack,
     defense: p.defense,
     speed: p.speed,
@@ -54,6 +54,7 @@ export default function StatSelection({ p }: { p: Player }) {
       type: "CONFIRM_STATS",
       player: {
         ...state.context.player,
+        maxHealth: stats.health,
         health: stats.health,
         attack: stats.attack,
         defense: stats.defense,

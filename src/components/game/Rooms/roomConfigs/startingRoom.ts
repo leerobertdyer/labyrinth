@@ -134,7 +134,7 @@ export const startingRoom: RoomConfig = {
       collider: { shape: "cuboid", args: [roomWidth * 0.5, roomScale.y, 1] },
       position: [0, 0, 10],
       rotation: [0, 0, 0],
-      onlyOnce: false,
+      onlyOnce: true,
     },
   ],
   encounters: [

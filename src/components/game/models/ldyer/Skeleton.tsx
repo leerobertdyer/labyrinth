@@ -67,7 +67,6 @@ export function Skeleton(props: JSX.IntrinsicElements["group"]) {
 
   return (
     <group ref={group} {...props} dispose={null}>
-      <group name="Scene">
         <group name="Armature" rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
           <primitive object={nodes.mixamorigHips} />
           <primitive object={nodes.neutral_bone} />
@@ -120,13 +119,11 @@ export function Skeleton(props: JSX.IntrinsicElements["group"]) {
           {/* original skin — hidden */}
           {/* <skinnedMesh name="MAW" geometry={nodes.MAW.geometry} material={materials.MAW_MAT} skeleton={nodes.MAW.skeleton} /> */}
         </group>
-        {/* <pointLight
-          position={[0, 2.5, 1.25]} // tweak Y up/down to center in skull
-          color="#FF1234"
-          intensity={3}
-          distance={4}
-        /> */}
-      </group>
+        <directionalLight
+          position={[0, 0, 0]}
+          color="#12ffa0"
+          intensity={2}
+        />
     </group>
   );
 }

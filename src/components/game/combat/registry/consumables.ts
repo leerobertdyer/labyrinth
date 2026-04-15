@@ -5,10 +5,10 @@ export const minorHealthPotion = {
   name: "Health Potion",
   kind: "CONSUMABLE" as const,
   description: "Heal thyne fyne self",
-  value: 10,
+  value: 20,
   weight: 1,
   image: "/images/healthPotion.png",
-  onUse: () => ({ type: "HEAL", amount: 10 } as CombatEvent),
+  onUse: () => ({ type: "HEAL", amount: 20 } as CombatEvent),
 };
 
 export const skipTurn = {

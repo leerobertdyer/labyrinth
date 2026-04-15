@@ -33,10 +33,10 @@ export const GROUND_RAY_ORIGIN_OFFSET = 0.05;
 export const MOVEMENT_DISABLED_STATES = ["paused", "dead", "inCombat", "talking"];
 
 export const startingPlayer: Player = {
-  health: 25,
-  maxHealth: 10,
+  health: 30,
+  maxHealth: 30,
   experience: 0,
-  attack: 100,
+  attack: 5,
   speed: 7,
   defense: 1,
   image: "/sprites/Hero.png",
