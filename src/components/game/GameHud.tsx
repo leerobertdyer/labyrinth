@@ -75,7 +75,6 @@ export default function GameHUD() {
           </p>
         </div>
         <div className="flex flex-col items-center justify-center">
-          <p className="border-b-2 text-xl text-gray-400">Stats</p>
           <span>Speed {player.speed}</span>
           <span>XP {player.experience}</span>
         </div>

@@ -195,7 +195,7 @@ export default function Room({
               key={`${edge.direction}-gate-${start}`}
               position={[pos[0], pos[1], pos[2]]}
               rotation={EDGE_ROTATIONS[edge.direction]}
-              scale={[runLength + 1 * tileSize, scale.y, scale.z]}
+              scale={[runLength + 1 * tileSize, scale.y, scale.z * .5]}
             />
           );
         }),
