@@ -121,21 +121,21 @@ export const startingRoom: RoomConfig = {
     // ...TEST
   ],
   triggers: [
-    // {
-    //   event: {
-    //     type: "START_TALKING",
-    //     conversation: {
-    //       npcId: "shopkeeper",
-    //       prompt: startingRoomPrompt,
-    //       systemPrompt: shopkeeperCharacter,
-    //       narration: narrationStartingRoom
-    //     },
-    //   },
-    //   collider: { shape: "cuboid", args: [roomWidth * 0.5, roomScale.y, 1] },
-    //   position: [0, 0, 10],
-    //   rotation: [0, 0, 0],
-    //   onlyOnce: true,
-    // },
+    {
+      event: {
+        type: "START_TALKING",
+        conversation: {
+          npcId: "shopkeeper",
+          prompt: startingRoomPrompt,
+          systemPrompt: shopkeeperCharacter,
+          narration: narrationStartingRoom
+        },
+      },
+      collider: { shape: "cuboid", args: [roomWidth * 0.5, roomScale.y, 1] },
+      position: [0, 0, 10],
+      rotation: [0, 0, 0],
+      onlyOnce: true,
+    },
   ],
   encounters: [
     {
